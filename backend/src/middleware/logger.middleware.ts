@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from "express"
+import { Request, Response, NextFunction } from 'express'
 
-const requestLoggerMiddleware = ((req: Request, res: Response, next: NextFunction) => {
+const loggerMiddleware = ((req: Request, res: Response, next: NextFunction) => {
   console.info(`${req.method} ${req.originalUrl}`)
   const start = new Date().getTime()
   res.on('finish', () => {
@@ -10,4 +10,4 @@ const requestLoggerMiddleware = ((req: Request, res: Response, next: NextFunctio
   next()
 })
 
-export { requestLoggerMiddleware }
+export { loggerMiddleware }

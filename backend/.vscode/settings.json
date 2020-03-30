@@ -1,5 +1,10 @@
 {
   "cSpell.words": [
-    "esnext"
-  ]
+    "bodyparser",
+    "gameplay",
+    "nada",
+    "preroll",
+    "saladbowl"
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

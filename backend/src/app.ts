@@ -1,33 +1,39 @@
-import express, { Request, Response } from 'express'
+import cookieParser from 'cookie-parser'
+import express from 'express'
 import cors from 'cors'
 import bodyparser from 'body-parser'
-import { requestLoggerMiddleware } from './request.logger.middleware'
+import http from 'http'
+import { loggerMiddleware } from './middleware/logger.middleware'
+import { authMiddleware } from './middleware/auth.middleware'
+import userRoutes from './routes/users'
+import gamesRoutes from './routes/games'
+import { dbConnect } from './dbConnect'
+import { initSocket } from './socket'
 
-const app = express()
+require('dotenv').config()
 
+export const app = express()
+
+/* Middleware */
 app.use(cors())
+app.use(cookieParser())
+app.use(authMiddleware)
 app.use(bodyparser.urlencoded({ extended: true }))
 app.use(bodyparser.json())
-app.use(requestLoggerMiddleware)
+app.use(loggerMiddleware)
 
-app.get('/todo', (req: Request, res: Response) => {
-  res.json([{ id: 1, description: 'Buy bread' }])
+/* Server */
+export const server = http.createServer(app)
+const PORT = 8080
+server.listen(PORT)
+server.on('listening', async () => {
+  console.log(`Listening on port ${PORT}`) /* eslint-disable-line */
+  dbConnect()
 })
 
-app.post('/todo', (req: Request, res: Response) => {
-  console.log(req.body)
-  res.end()
-})
+/* Turn on the socket! */
+export const io = initSocket(server)
 
-app.put('/todo/:id', (req: Request, res: Response) => {
-  console.log(req.body)
-  console.log(req.params.id)
-  res.end()
-})
-
-app.delete('/todo/:id', (req: Request, res: Response) => {
-  console.log(req.params.id)
-  res.end()
-})
-
-export { app }
+/* Routes */
+app.use('/api/v1', userRoutes)
+app.use('/api/v1', gamesRoutes)
