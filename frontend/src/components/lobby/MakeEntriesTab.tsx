@@ -8,6 +8,7 @@ import TextButton from '../TextButton'
 import { AppState } from '../../store'
 import { createPhrase, deletePhrase } from '../../store/game/actions'
 import useMountEffect from '../../hooks/useMountEffect'
+import useScrollToTop from '../../hooks/useScrollToTop'
 
 const Container = styled('div')`
   ${animateEntrance('fadeSlideUp', 500)};
@@ -33,6 +34,8 @@ const MakeEntriesTab = ({
   const ref = useRef<HTMLTextAreaElement>(null)
   const dispatch = useDispatch()
   const game = useSelector((state: AppState) => state.game)
+
+  useScrollToTop()
 
   useMountEffect(() => {
     if (ref.current) ref.current.focus()

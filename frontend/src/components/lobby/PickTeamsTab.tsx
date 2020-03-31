@@ -7,6 +7,7 @@ import { HelperText } from '../styled/HelperText'
 import { AppState } from '../../store'
 import { joinTeam } from '../../store/game/actions'
 import { Team } from '../../store/game/types'
+import useScrollToTop from '../../hooks/useScrollToTop'
 
 const Container = styled('div')`
   ${animateEntrance('fadeSlideUp', 500)};
@@ -65,6 +66,8 @@ const PickTeamsTab = () => {
     }
     return null
   }, [game, authedUser])
+
+  useScrollToTop()
 
   function handleTeamClick(teamId: string) {
     if (game) {
