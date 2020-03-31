@@ -12,6 +12,7 @@ import { GameManager } from '../gameplay/GameManager'
 import { User } from '../models/user'
 import { randomNum } from '../utils/randomNum'
 import { solvePhrase } from '../services/solvePhrase'
+import { undoSolvePhrase } from '../services/undoSolvePhrase'
 
 const gameController = {
   async fetchGame(req: Request, res: Response) {
@@ -133,7 +134,7 @@ const gameController = {
     }
   },
 
-  async phraseSolved(req: Request, res: Response) {
+  async solvePhrase(req: Request, res: Response) {
     const { phraseId, timeRemaining } = req.body
     const { userId } = req
     const { gameId } = req.params
@@ -169,6 +170,25 @@ const gameController = {
       return res.status(404).send('Game not found')
     } catch (e) {
       return res.status(500).send(e)
+    }
+  },
+
+  async unsolvePhrase(req: Request, res: Response) {
+    const { gameId } = req.params
+    const { phraseId } = req.body
+    const { userId } = req
+    if (!gameId || !phraseId || !userId) return res.status(400).send('Missing required params')
+
+    const game = await Game.findById(gameId)
+    if (!game) return res.status(400).send('Invalid game ID')
+
+    try {
+      const updatedGame = undoSolvePhrase({ game, phraseId, userId })
+      await updatedGame.save()
+      io.to(game._id).emit(SocketMessages.GameUpdate, updatedGame)
+      return res.send({ game: updatedGame })
+    } catch (e) {
+      return res.status(500).send(e.message)
     }
   },
 
