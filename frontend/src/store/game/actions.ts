@@ -123,7 +123,7 @@ export const deletePhrase = (
   api.deletePhrase({ gameId, phraseId })
 }
 
-export const phraseSolved = ({
+export const solvePhrase = ({
   gameId,
   phraseId,
   timeRemaining,
@@ -132,7 +132,17 @@ export const phraseSolved = ({
   phraseId: string;
   timeRemaining: number;
 }): ThunkAction<void, AppState, {}, AnyAction> => () => {
-  api.phraseSolved({ gameId, phraseId, timeRemaining })
+  api.solvePhrase({ gameId, phraseId, timeRemaining })
+}
+
+export const unsolvePhrase = ({
+  gameId,
+  phraseId,
+}: {
+  gameId: string;
+  phraseId: string;
+}): ThunkAction<void, AppState, {}, AnyAction> => () => {
+  api.unsolvePhrase({ gameId, phraseId })
 }
 
 export const next = ({

@@ -82,6 +82,7 @@ const TosserSetup = () => {
               value={team2}
               onChange={(e) => setTeam2(e.target.value)}
               placeholder="Team Smart..."
+              onReturn={() => setStep(2)}
             />
             {team2.length > 2 && (
               <FontAwesomeIcon icon={['fas', 'check-circle']} />

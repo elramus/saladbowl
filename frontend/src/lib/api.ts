@@ -62,7 +62,7 @@ const api = {
     return axios.delete(`/games/${gameId}/phrases/${phraseId}`)
   },
 
-  phraseSolved: ({
+  solvePhrase: ({
     gameId,
     phraseId,
     timeRemaining,
@@ -72,6 +72,16 @@ const api = {
     timeRemaining: number;
   }): AxiosPromise => {
     return axios.put(`/games/${gameId}/phrase-solved`, { phraseId, timeRemaining })
+  },
+
+  unsolvePhrase: ({
+    gameId,
+    phraseId,
+  }: {
+    gameId: string;
+    phraseId: string;
+  }): AxiosPromise => {
+    return axios.put(`/games/${gameId}/unsolve-phrase`, { phraseId })
   },
 
   next: ({

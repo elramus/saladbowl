@@ -3,7 +3,7 @@ import styled from 'styled-components/macro'
 import { useSelector, useDispatch } from 'react-redux'
 import { AppState } from '../../store'
 import BigArrow from './BigArrow'
-import { phraseSolved, next } from '../../store/game/actions'
+import { solvePhrase, next, unsolvePhrase } from '../../store/game/actions'
 import TextButton from '../TextButton'
 import animateEntrance from '../../lib/animateEntrance'
 import Clock from './Clock'
@@ -45,10 +45,19 @@ const Prompter = () => {
       const elapsed = Math.floor((Date.now() - game.turns[0].startTime) / 1000)
       const timeRemaining = game.turns[0].turnLength - elapsed
 
-      dispatch(phraseSolved({
+      dispatch(solvePhrase({
         phraseId: phrase._id,
         gameId: game._id,
         timeRemaining,
+      }))
+    }
+  }
+
+  function handleUndo() {
+    if (game) {
+      dispatch(unsolvePhrase({
+        gameId: game._id,
+        phraseId: game.turns[0].solvedPhraseIds[game.turns[0].solvedPhraseIds.length - 1],
       }))
     }
   }
@@ -59,22 +68,23 @@ const Prompter = () => {
     }
   }
 
-  function handleUndo() {
-    //
-  }
-
   if (!game || !phrase) return <div />
 
   return (
     <Container>
       <header>
-        <TextButton
-          leadingIcon={['fas', 'long-arrow-left']}
-          text="Undo last phrase"
-          onClick={handleUndo}
-          color="white"
-          variant="simple"
-        />
+        {game && game.turns[0].solvedPhraseIds.length > 0
+          ? (
+            <TextButton
+              leadingIcon={['fas', 'long-arrow-left']}
+              text="Undo last phrase"
+              onClick={handleUndo}
+              color="white"
+              variant="simple"
+            />
+          ) : (
+            <div />
+          )}
         <Clock
           startTime={game.turns[0].startTime ?? 0}
           countdownFrom={game.turns[0].turnLength}

@@ -1,7 +1,6 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import styled from 'styled-components/macro'
 import useMountEffect from '../hooks/useMountEffect'
-import useReturnKeyListener from '../hooks/useReturnKeyListener'
 
 const Container = styled('div')`
   input {
@@ -26,35 +25,17 @@ const TextInput = ({
   focusOnMount = false,
 }: Props) => {
   const ref = useRef<HTMLInputElement>(null)
-  const [isFocused, setIsFocused] = useState(false)
-
-  function handleFocus() {
-    setIsFocused(true)
-  }
-
-  function handleBlur() {
-    setIsFocused(false)
-  }
-
   useMountEffect(() => {
     if (ref.current) {
-      ref.current.addEventListener('focus', handleFocus)
-      ref.current.addEventListener('blur', handleBlur)
       if (focusOnMount) ref.current.focus()
-    }
-    return () => {
-      ref.current?.removeEventListener('focus', handleFocus)
-      ref.current?.removeEventListener('blur', handleBlur)
     }
   })
 
-  function handleReturn() {
-    if (isFocused && onReturn) {
+  function handleKeyDown(key: string) {
+    if (key === 'Enter' && onReturn) {
       onReturn()
     }
   }
-
-  useReturnKeyListener(handleReturn)
 
   return (
     <Container className="text-input">
@@ -64,6 +45,7 @@ const TextInput = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        onKeyDown={(e) => handleKeyDown(e.key)}
       />
     </Container>
   )

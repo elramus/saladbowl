@@ -14,6 +14,7 @@ const Container = styled('div')`
   ${animateEntrance('fadeSlideUp', 500)};
   >textarea {
     width: 100%;
+    height: 3.25em;
     margin: 0.75em 0 1em 0;
   }
   >.controls {
@@ -52,6 +53,12 @@ const MakeEntriesTab = ({
     }
   }
 
+  function handleKeyPress(key: string) {
+    if (key === 'Enter') {
+      handleAdd()
+    }
+  }
+
   function handleDone() {
     setCurrentTab(1)
   }
@@ -69,8 +76,8 @@ const MakeEntriesTab = ({
         onChange={(e) => setEntry(e.target.value)}
         ref={ref}
         placeholder="Let your freak flag fly..."
-        rows={1}
         value={entry}
+        onKeyPress={(e) => handleKeyPress(e.key)}
       />
       <div className="controls">
         <TextButton
@@ -78,6 +85,7 @@ const MakeEntriesTab = ({
           trailingIcon={['fas', 'plus-circle']}
           variant="cta"
           onClick={handleAdd}
+          disabled={entry.length === 0 || isSubmitting}
         />
         <TextButton
           text="I'm Done"
