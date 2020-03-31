@@ -6,7 +6,7 @@ import { AppState } from '../../store'
 const Container = styled('div')`
   color: white;
   padding-top: 1em;
-  border-top: 1px solid ${(props) => props.theme.darkGreen};
+  border-top: 1px solid ${(props) => props.theme.middleGreen};
 `
 
 const WaitingOn = () => {

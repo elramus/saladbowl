@@ -19,9 +19,6 @@ const Container = styled('div')`
     max-width: 30em;
     margin: auto;
   }
-  .waiting {
-    border-top: 1px solid ${(props) => props.theme.darkGreen};
-  }
 `
 
 const Arena = () => {

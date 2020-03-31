@@ -5,7 +5,7 @@ import { AppState } from '../../store'
 
 const Container = styled('div')`
   padding-top: 1em;
-  border-bottom: 1px solid ${(props) => props.theme.darkGreen};
+  border-bottom: 1px solid ${(props) => props.theme.middleGreen};
   margin-bottom: 1em;
   text-align: center;
   font-style: italic;
