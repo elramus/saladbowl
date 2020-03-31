@@ -1,7 +1,6 @@
 import socketIo from 'socket.io'
 import { Server } from 'http'
 import { User, IUser } from './models/user'
-import { Game } from './models/game'
 
 export enum SocketMessages {
   PlayersUpdate = 'players-update',
@@ -20,10 +19,6 @@ function initSocket(server: Server) {
 
   io.on('connection', async (socket) => {
     const { gameId, userId } = socket.handshake.query
-    // Do two things:
-    // 1. Put the player in the game room.
-    // 2. Update the player in our players index.
-    // 3. Push out the players index.
 
     if (gameId && userId) {
       // Add this person to their game's room.
@@ -48,6 +43,7 @@ function initSocket(server: Server) {
         playersIndex[gameId] = updatedPlayers
 
         // Now broadcast an update of the players in the game.
+        console.log(playersIndex) /*eslint-disable-line*/
         io.to(gameId).emit(SocketMessages.PlayersUpdate, playersIndex[gameId])
       } catch (e) {
         throw new Error(e)
@@ -61,6 +57,7 @@ function initSocket(server: Server) {
       playersIndex[gameId] = updatedPlayers
 
       // Now broadcast an update of the players in the game.
+      console.log(playersIndex) /*eslint-disable-line*/
       io.to(gameId).emit(SocketMessages.PlayersUpdate, playersIndex[gameId])
     })
   })

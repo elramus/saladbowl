@@ -29,23 +29,19 @@ const GameSocket: React.FC = ({
 
       // Listen for players updates.
       socket.on(SocketMessages.PlayersUpdate, (data: UsersState) => {
-        console.log('Websocket players update received!', data) /* eslint-disable-line */
+        console.log('Websocket players update received:', data) /* eslint-disable-line */
         dispatch(receiveUsers(data))
       })
 
       // Listen for game updates.
       socket.on(SocketMessages.GameUpdate, (data: Game) => {
-        console.log('Websocket game update received!', data) /* eslint-disable-line */
+        console.log('Websocket game update received:', data) /* eslint-disable-line */
         dispatch(receiveGame(data))
       })
     }
   })
 
-  return (
-    <>
-      {children}
-    </>
-  )
+  return <>{children}</>
 }
 
 export default GameSocket

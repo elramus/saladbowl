@@ -40,7 +40,7 @@ routes.post('/login', async (req, res) => {
     const token = jwt.sign({ userId: user._id }, process.env.APP_SECRET)
     res.cookie('token', token, {
       httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24 * 365, // 1 year cookie
+      maxAge: 1000 * 60 * 60 * 24, // 1 day cookie
     })
     return res.send(user)
   }
