@@ -74,7 +74,8 @@ const GlobalStyles = createGlobalStyle`
     border-radius: 10px;
     box-shadow: 0 2px 23px transparent;
     border: 1px solid ${theme.lightGreen};
-    transition: box-shadow 150ms ease-out, border-color 150ms ease-out;;
+    -webkit-appearance: none;
+    transition: box-shadow 150ms ease-out, border-color 150ms ease-out;
     &:focus {
       border-color: transparent;
       box-shadow: 0 2px 23px ${theme.lightGreen};
@@ -82,7 +83,6 @@ const GlobalStyles = createGlobalStyle`
   }
   input[type=number]::-webkit-outer-spin-button,
   input[type=number]::-webkit-inner-spin-button {
-      -webkit-appearance: none;
       margin: 0;
   }
 

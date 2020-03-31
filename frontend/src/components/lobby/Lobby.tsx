@@ -6,6 +6,7 @@ import LobbyTabs from './LobbyTabs'
 import { AppState } from '../../store'
 import ReadyModal from './ReadyModal'
 import { next } from '../../store/game/actions'
+import useScrollToTop from '../../hooks/useScrollToTop'
 
 const Container = styled('div')`
   padding: 0 1em;
@@ -19,6 +20,8 @@ const Lobby = () => {
   const [isReady, setIsReady] = useState(false)
   const [shouldAskIfReady, setAskIfReady] = useState(false)
   const dispatch = useDispatch()
+
+  useScrollToTop()
 
   useEffect(() => {
     // Ready requirements: Picked a team.
