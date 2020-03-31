@@ -1,5 +1,6 @@
 import cookieParser from 'cookie-parser'
 import express from 'express'
+import helmet from 'helmet'
 import cors from 'cors'
 import bodyparser from 'body-parser'
 import http from 'http'
@@ -15,6 +16,7 @@ require('dotenv').config()
 export const app = express()
 
 /* Middleware */
+app.use(helmet())
 app.use(cors())
 app.use(cookieParser())
 app.use(authMiddleware)
