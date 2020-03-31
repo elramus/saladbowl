@@ -166,7 +166,7 @@ export class GameManager {
 
     // Create the turn.
     this.game.turns.unshift({
-      userId: this.user._id,
+      userId: upFirstId,
       round: roundNum,
     })
 
