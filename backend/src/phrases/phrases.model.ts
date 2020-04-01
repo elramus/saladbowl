@@ -1,10 +1,5 @@
 import mongoose from 'mongoose'
 
-export interface IPhrase extends mongoose.Document {
-  text: string;
-  authorId: string;
-}
-
 export const phraseSchema = new mongoose.Schema({
   text: {
     type: String,
@@ -16,5 +11,10 @@ export const phraseSchema = new mongoose.Schema({
     required: true,
   },
 })
+
+export interface IPhrase extends mongoose.Document {
+  text: string;
+  authorId: string;
+}
 
 export const Phrase = mongoose.model<IPhrase>('Phrase', phraseSchema)

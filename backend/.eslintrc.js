@@ -1,7 +1,7 @@
 module.exports = {
   env: {
-    browser: true,
     es6: true,
+    node: true,
   },
   extends: [
     'airbnb-base',
@@ -28,7 +28,6 @@ module.exports = {
     'no-unused-vars': 0,
     'radix': 0,
     'semi': [1, "never"],
-
   },
   'settings': {
     'import/resolver': {

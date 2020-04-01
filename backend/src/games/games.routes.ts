@@ -1,5 +1,5 @@
 import express from 'express'
-import gameController from '../controllers/gameController'
+import gameController from './games.controller'
 
 const routes = express.Router()
 

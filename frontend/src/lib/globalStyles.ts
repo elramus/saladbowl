@@ -88,6 +88,7 @@ const GlobalStyles = createGlobalStyle`
 
   input[type=number] {
       -moz-appearance: textfield;
+      -webkit-appearance: textfield;
   }
   textarea {
     padding: 0.75rem 1rem;

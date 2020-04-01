@@ -29,6 +29,8 @@ export const logInUser = (
 ) => {
   api.logInUser(name)
     .then(({ data }) => {
-      dispatch(receiveUser(data))
+      if (data.user) {
+        dispatch(receiveUser(data.user))
+      }
     })
 }

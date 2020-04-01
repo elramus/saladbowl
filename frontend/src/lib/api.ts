@@ -12,7 +12,7 @@ const api = {
 
   logInUser: (
     name: string,
-  ): AxiosPromise<User> => {
+  ): AxiosPromise<{ user: User}> => {
     return axios.post('/login', { name })
   },
 

@@ -1,6 +1,6 @@
 import socketIo from 'socket.io'
 import { Server } from 'http'
-import { User, IUser } from './models/user'
+import { User, IUser } from './users/users.model'
 
 export enum SocketMessages {
   PlayersUpdate = 'players-update',
@@ -32,7 +32,7 @@ function initSocket(server: Server) {
         // If this is the first person in the game, instantiate the game as a property.
         if (!playersIndex[gameId]) playersIndex[gameId] = []
 
-        // The player might already be on there, so clear them out first.
+        // The player might already be on there, so clear them out first so we don't duplicate.
         const updatedPlayers = playersIndex[gameId].filter((p) => p.user._id.toString() !== userId)
 
         // Update the index.

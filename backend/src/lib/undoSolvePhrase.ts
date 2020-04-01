@@ -1,4 +1,4 @@
-import { IGame } from '../models/game'
+import { IGame } from '../games/games.model'
 
 export const undoSolvePhrase = ({
   game,
@@ -9,7 +9,8 @@ export const undoSolvePhrase = ({
   phraseId: string;
   userId: string;
 }) => {
-  // Pop the last phrase off the current turn's solved phrases.
+  // Pop the last phrase off the current turn's solved phrases
+  // to undo the solving.
   game.turns[0].solvedPhraseIds.pop()
 
   // Unshift the passed phrase ID to the unsolved phrase array.

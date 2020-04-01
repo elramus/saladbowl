@@ -1,4 +1,4 @@
-import { Game } from '../models/game'
+import { Game } from '../games/games.model'
 
 const deletePhrase = async (
   gameId: string,
@@ -7,7 +7,9 @@ const deletePhrase = async (
   try {
     const game = await Game.findById(gameId)
     if (!game) throw new Error('Invalid game ID')
+
     game.phrases.pull(phraseId)
+
     await game.save()
     return game
   } catch (e) {

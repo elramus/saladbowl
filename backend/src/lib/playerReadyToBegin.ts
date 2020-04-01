@@ -1,4 +1,4 @@
-import { Game } from '../models/game'
+import { Game } from '../games/games.model'
 
 export const playerReadyToBegin = async ({
   gameId,

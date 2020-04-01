@@ -1,37 +1,34 @@
 import { Request, Response } from 'express'
-import mongoose from 'mongoose'
-import { Game } from '../models/game'
+import { Game } from './games.model'
 import { io } from '../app'
 import { SocketMessages } from '../socket'
-import joinTeam from '../services/joinTeam'
-import { createGamePhrase } from '../services/createGamePhrase'
-import deletePhrase from '../services/deletePhrase'
-import { playerReadyToBegin } from '../services/playerReadyToBegin'
-import { joinPlayerToGame } from '../services/joinPlayerToGame'
-import { GameManager } from '../gameplay/GameManager'
-import { User } from '../models/user'
-import { randomNum } from '../utils/randomNum'
-import { solvePhrase } from '../services/solvePhrase'
-import { undoSolvePhrase } from '../services/undoSolvePhrase'
+import joinTeam from '../lib/joinTeam'
+import { createGamePhrase } from '../lib/createGamePhrase'
+import deletePhrase from '../lib/deletePhrase'
+import { joinPlayerToGame } from '../lib/joinPlayerToGame'
+import { GameManager } from '../lib/TurnRunner'
+import { User } from '../users/users.model'
+import { solvePhrase } from '../lib/solvePhrase'
+import { undoSolvePhrase } from '../lib/undoSolvePhrase'
+import { createGame } from '../lib/createGame'
+import { findGame } from '../lib/findGame'
 
 const gameController = {
   async fetchGame(req: Request, res: Response) {
     const { gameId } = req.params // Can be an actual ID or a short ID!
     const { userId } = req
-    let game = null
+    if (!gameId) return res.status(400).send('Required param not found')
 
     try {
-      if (mongoose.Types.ObjectId.isValid(gameId)) {
-        game = await Game.findById(gameId)
-      } else {
-        game = await Game.findOne({ shortId: parseInt(gameId) })
-      }
+      const game = await findGame(gameId)
       if (!game) return res.send({ game: null })
-      // If we found a game, go ahead and attach the user requesting to it.
+
+      // If we have a userId, we'll go ahead and join them to it.
       if (userId) {
         const updatedGame = await joinPlayerToGame(userId, game.shortId)
         return res.send({ game: updatedGame })
       }
+
       // If for some reason there's no userId, just send back the game we found.
       return res.send({ game })
     } catch (e) {
@@ -43,16 +40,10 @@ const gameController = {
     const { userId } = req.body
     if (!userId) return res.status(400).send('User ID not found in request')
 
-    // TODO: make sure this new ID is unique.
-    const shortId = randomNum(1000, 9999)
-
-    const newGame = new Game({
-      shortId,
-      creator: userId,
-    })
-
     try {
+      const newGame = await createGame(userId)
       await newGame.save()
+
       // Before we return, attach the creator as a game player.
       const updatedGame = await joinPlayerToGame(userId, newGame.shortId)
 

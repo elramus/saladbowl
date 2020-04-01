@@ -9,6 +9,7 @@ import animateEntrance from '../lib/animateEntrance'
 import TextButton from './TextButton'
 import { AppState } from '../store'
 import { createTeams } from '../store/game/actions'
+import useReturnKeyListener from '../hooks/useReturnKeyListener'
 
 const Container = styled('div')`
   max-width: 40em;
@@ -62,6 +63,12 @@ const TosserSetup = () => {
       setStep(2)
     }
   }
+
+  useReturnKeyListener(() => {
+    if (step === 2) {
+      handleFinish()
+    }
+  })
 
   if (!game) return <div />
 

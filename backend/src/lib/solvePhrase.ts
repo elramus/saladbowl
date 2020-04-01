@@ -1,4 +1,4 @@
-import { IGame } from '../models/game'
+import { IGame } from '../games/games.model'
 
 export const solvePhrase = async (
   game: IGame,
@@ -20,6 +20,7 @@ export const solvePhrase = async (
     userTeam.score += 1
     game.teams.pull(userTeam._id)
     game.teams.push(userTeam)
+
     // Save
     await game.save()
   }

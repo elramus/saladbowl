@@ -1,10 +1,5 @@
 import mongoose from 'mongoose'
-import { userSchema, IUser } from './user'
-
-export interface IPlayer extends mongoose.Document {
-  user: IUser;
-  ready: boolean;
-}
+import { userSchema, IUser } from '../users/users.model'
 
 export const playerSchema = new mongoose.Schema({
   user: {
@@ -16,5 +11,10 @@ export const playerSchema = new mongoose.Schema({
     default: false,
   },
 })
+
+export interface IPlayer extends mongoose.Document {
+  user: IUser;
+  ready: boolean;
+}
 
 export const Player = mongoose.model<IPlayer>('Player', playerSchema)

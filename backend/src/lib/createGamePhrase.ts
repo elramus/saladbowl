@@ -1,4 +1,4 @@
-import { IGame, Game } from '../models/game'
+import { IGame, Game } from '../games/games.model'
 import { SocketMessages } from '../socket'
 import { io } from '../app'
 
@@ -7,7 +7,6 @@ export const createGamePhrase = async (
   gameId: string,
   phrase: string,
 ): Promise<IGame | null> => {
-  // If phrase is null, delete it instead.
   const game = await Game.findById(gameId)
   if (game) {
     if (phrase) {

@@ -1,6 +1,6 @@
-import { IGame } from '../models/game'
-import { IUser } from '../models/user'
-import { ITeam } from '../models/team'
+import { IGame } from '../games/games.model'
+import { IUser } from '../users/users.model'
+import { ITeam } from '../teams/teams.model'
 
 export const getNextTurn = (
   game: IGame,

@@ -1,4 +1,4 @@
-import { IGame } from '../models/game'
+import { IGame } from '../games/games.model'
 
 const joinTeam = async (
   game: IGame,

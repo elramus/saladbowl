@@ -1,12 +1,5 @@
 import mongoose from 'mongoose'
 
-export interface ITeam extends mongoose.Document {
-  name: string;
-  userIds: string[];
-  score: number;
-  lastPrompterIndex: number;
-}
-
 export const teamSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -25,5 +18,12 @@ export const teamSchema = new mongoose.Schema({
     default: 0,
   },
 })
+
+export interface ITeam extends mongoose.Document {
+  name: string;
+  userIds: string[];
+  score: number;
+  lastPrompterIndex: number;
+}
 
 export const Team = mongoose.model<ITeam>('Team', teamSchema)

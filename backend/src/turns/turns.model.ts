@@ -23,7 +23,7 @@ export const turnSchema = new mongoose.Schema({
 
 export interface ITurn extends mongoose.Document {
   userId: string;
-  round: number;
+  round: 0 | 1 | 2 | 3;
   turnLength: number;
   startTime: number | null;
   solvedPhraseIds: string[];

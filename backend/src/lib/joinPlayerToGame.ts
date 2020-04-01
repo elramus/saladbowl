@@ -1,5 +1,5 @@
-import { IGame, Game } from '../models/game'
-import { User } from '../models/user'
+import { IGame, Game } from '../games/games.model'
+import { User } from '../users/users.model'
 import { SocketMessages } from '../socket'
 import { io } from '../app'
 

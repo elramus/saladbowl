@@ -1,10 +1,5 @@
 import mongoose from 'mongoose'
 
-interface IUser extends mongoose.Document {
-  name: string;
-  socketId: string;
-}
-
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -15,6 +10,11 @@ const userSchema = new mongoose.Schema({
     default: null,
   },
 })
+
+interface IUser extends mongoose.Document {
+  name: string;
+  socketId: string;
+}
 
 const User = mongoose.model<IUser>('User', userSchema)
 

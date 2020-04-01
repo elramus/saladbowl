@@ -1,13 +1,13 @@
-import { IGame } from '../models/game'
+import { IGame } from '../games/games.model'
 import { io } from '../app'
 import { SocketMessages } from '../socket'
 import { shuffleArray } from '../utils/shuffleArray'
 import { randomNum } from '../utils/randomNum'
-import { IUser } from '../models/user'
-import { getNextTurn } from '../services/getNextTurn'
-import { ITurn } from '../models/turn'
+import { IUser } from '../users/users.model'
+import { getNextTurn } from './getNextTurn'
+import { ITurn } from '../turns/turns.model'
 
-interface ManagerConfig {
+interface TurnRunnerConfig {
   playerStatus?: boolean;
   timeRemaining?: number;
 }
@@ -15,7 +15,7 @@ interface ManagerConfig {
 export class GameManager {
   private game: IGame
   private user: IUser
-  private config: ManagerConfig | undefined
+  private config: TurnRunnerConfig | undefined
 
   constructor({
     game,
@@ -24,7 +24,7 @@ export class GameManager {
   }: {
     game: IGame;
     user: IUser;
-    config?: ManagerConfig;
+    config?: TurnRunnerConfig;
   }) {
     this.game = game
     this.user = user
@@ -50,6 +50,13 @@ export class GameManager {
       return
     }
 
+    if (currentRound === 3 && this.game.unsolvedPhraseIds.length === 0) {
+      // Game over man!!
+      this.game.gameOver = true
+      await this.game.save()
+      this.emit()
+    }
+
     const currentTurn: ITurn = this.game.turns[0]
 
     // If we're in a round but it hasn't started yet.
@@ -61,7 +68,7 @@ export class GameManager {
     }
 
     if (currentRound > 0 // We're in a round.
-      && currentTurn.startTime // The round has happened.
+      && currentTurn.startTime // The round has happened...
       && this.game.unsolvedPhraseIds.length > 0 // But there are more phrases!
     ) {
       try {
