@@ -12,11 +12,16 @@ const Container = styled('div')`
   display: grid;
   grid-template-rows: auto 1fr auto;
   color: white;
-  height: 100vh;
+  height: 90vh;
   header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    button {
+      position: relative;
+      top: 4px;
+      ${animateEntrance('fade', 200)}
+    }
   }
   .phrase {
     padding-top: 3em;
@@ -96,7 +101,6 @@ const Prompter = () => {
       </div>
       <div className="controls">
         <BigArrow onClick={handleSolve} />
-        <h4>Hit the arrow or press SPACE when your team gets it!</h4>
       </div>
     </Container>
   )

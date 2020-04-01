@@ -11,7 +11,7 @@ const Container = styled('div')`
   font-style: italic;
   p {
     margin: 1em auto 2em auto;
-    max-width: 15em;
+    max-width: 20em;
     color: white;
   }
 `
@@ -28,7 +28,7 @@ const RoundInfo = () => {
         <p>Use any words OTHER than what's on the phrase to prompt your teammates.</p>
       )}
       {game.turns[0].round === 2 && (
-        <p>MIME and use SOUND EFFECTS to prompt your teammates. No words!</p>
+        <p>Use ACTIONS and SOUND EFFECTS to prompt your teammates. No words!</p>
       )}
       {game.turns[0].round === 3 && (
         <p>You get ONE WORD to prompt your teammates. Choose wisely.</p>

@@ -13,6 +13,7 @@ const Container = styled('div')`
   h1 {
     margin-top: 2rem;
     font-style: italic;
+    line-height: 1.25;
   }
   .results {
     display: flex;
@@ -28,6 +29,7 @@ const Container = styled('div')`
     margin-top: 1rem;
     text-align: left;
     color: ${(props) => props.theme.black};
+    line-height: 1em;
   }
 `
 
@@ -51,7 +53,7 @@ const Promptee = () => {
         <FontAwesomeIcon icon={['fas', 'salad']} />
         <h4>{solvedPhraseIds.length} phrase{solvedPhraseIds.length === 1 ? '' : 's'} solved this turn</h4>
       </div>
-      {solvedPhraseIds.map((sPI) => {
+      {solvedPhraseIds.reverse().map((sPI) => {
         const phrase = game.phrases.find((p) => p._id === sPI)
         return <h2 key={sPI}>{phrase?.text}</h2>
       })}

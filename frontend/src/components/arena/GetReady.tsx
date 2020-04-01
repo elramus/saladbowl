@@ -7,7 +7,6 @@ import { next } from '../../store/game/actions'
 import RoundInfo from './RoundInfo'
 
 const Container = styled('div')`
-  padding-top: 2em;
   text-align: center;
   color: white;
   font-weight: 900;

@@ -22,6 +22,7 @@ const Container = styled('div')`
         display: inline-flex;
         justify-content: center;
         align-items: center;
+        flex-shrink: 0;
         height: 2.5rem;
         width: 2.5rem;
         font-size: ${(props) => props.theme.ms(1)};
@@ -52,6 +53,7 @@ const MyPhrases = ({
         <ul className="phrases">
           {game.phrases
             .filter((p) => p.authorId === authedUser._id)
+            .reverse()
             .map((p) => (
               <li key={p._id}>
                 <span>{p.text}</span>
