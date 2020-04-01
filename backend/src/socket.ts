@@ -43,7 +43,7 @@ function initSocket(server: Server) {
         playersIndex[gameId] = updatedPlayers
 
         // Now broadcast an update of the players in the game.
-        console.log(playersIndex) /*eslint-disable-line*/
+        console.log('Player joined', playersIndex) /*eslint-disable-line*/
         io.to(gameId).emit(SocketMessages.PlayersUpdate, playersIndex[gameId])
       } catch (e) {
         throw new Error(e)
@@ -57,7 +57,7 @@ function initSocket(server: Server) {
       playersIndex[gameId] = updatedPlayers
 
       // Now broadcast an update of the players in the game.
-      console.log(playersIndex) /*eslint-disable-line*/
+      console.log('Player left', playersIndex) /*eslint-disable-line*/
       io.to(gameId).emit(SocketMessages.PlayersUpdate, playersIndex[gameId])
     })
   })

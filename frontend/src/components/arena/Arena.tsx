@@ -9,6 +9,7 @@ import Prompter from './Prompter'
 import Scoreboard from './Scoreboard'
 import WaitingOn from './WaitingOn'
 import Promptee from './Promptee'
+import GameOver from '../GameOver'
 
 const Container = styled('div')`
   background: ${(props) => props.theme.green};
@@ -34,6 +35,9 @@ const Arena = () => {
   return (
     <Container>
       <div className="wrapped">
+        {game.gameOver && (
+          <GameOver />
+        )}
         {yourTurn && !game.turns[0].startTime && (
           <GetReady />
         )}

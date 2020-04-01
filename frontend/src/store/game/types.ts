@@ -39,6 +39,7 @@ export interface Game {
     firstUserId: string | null;
   };
   turns: [Turn];
+  gameOver: boolean;
   unsolvedPhraseIds: string[];
 }
 

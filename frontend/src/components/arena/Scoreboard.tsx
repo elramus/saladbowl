@@ -24,11 +24,13 @@ const Scoreboard = () => {
   if (!game) return <div />
 
   return (
-    <Container>
-      <h4>
-        <FontAwesomeIcon icon={['fas', 'salad']} />&nbsp;&nbsp;
-        {game.unsolvedPhraseIds.length} more phrase{game.unsolvedPhraseIds.length !== 1 ? 's' : ''} are up for grabs
-      </h4>
+    <Container className="scoreboard">
+      {!game.gameOver && (
+        <h4>
+          <FontAwesomeIcon icon={['fas', 'salad']} />&nbsp;&nbsp;
+          {game.unsolvedPhraseIds.length} more phrase{game.unsolvedPhraseIds.length !== 1 ? 's' : ''} are up for grabs
+        </h4>
+      )}
       {game.teams.map((t) => (
         <h1 key={t._id}>{t.name}: {t.score}</h1>
       ))}
