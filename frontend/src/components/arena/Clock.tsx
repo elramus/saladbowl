@@ -35,7 +35,9 @@ const Clock = ({
   useEffect(() => {
     if (remainingTime > 0) {
       setTimeout(() => {
-        const elapsed = Math.floor((Date.now() - startTime) / 1000)
+        // Round up so that we always have 1 second... if this calcs to 60,
+        // and we just set state to 60 again, it doesn't trigger a refresh.
+        const elapsed = Math.ceil((Date.now() - startTime) / 1000)
         const remaining = countdownFrom - elapsed
         setRemainingTime(remaining < 0 ? 0 : remaining)
       }, 1000)
