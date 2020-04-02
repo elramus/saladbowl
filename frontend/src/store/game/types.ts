@@ -17,7 +17,7 @@ export interface Phrase {
 export interface Turn {
   _id: string;
   userId: string;
-  round: number;
+  round: 0 | 1 | 2 | 3;
   turnLength: number;
   startTime: number | null;
   solvedPhraseIds: string[];
@@ -38,7 +38,7 @@ export interface Game {
     show: boolean;
     firstUserId: string | null;
   };
-  turns: [Turn];
+  turns: Turn[];
   gameOver: boolean;
   unsolvedPhraseIds: string[];
 }

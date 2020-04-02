@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import styled from 'styled-components/macro'
 import { useSelector } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -20,6 +20,18 @@ const Container = styled('div')`
 
 const Scoreboard = () => {
   const game = useSelector((state: AppState) => state.game)
+  const prevTurn = useMemo(() => {
+    if (game && game.turns.length > 1) {
+      return game.turns[1]
+    }
+    return null
+  }, [game])
+  const prevPrompter = useMemo(() => {
+    if (game && game.turns.length > 1) {
+      return game.players.find((p) => p.user._id === game.turns[1].userId)
+    }
+    return null
+  }, [game])
 
   if (!game) return <div />
 
@@ -28,7 +40,10 @@ const Scoreboard = () => {
       {!game.gameOver && (
         <h4>
           <FontAwesomeIcon icon={['fas', 'salad']} />&nbsp;&nbsp;
-          {game.unsolvedPhraseIds.length} more phrase{game.unsolvedPhraseIds.length !== 1 ? 's' : ''} are up for grabs
+          {prevTurn && prevPrompter && (
+            <>{prevPrompter.user.name} just got {prevTurn.solvedPhraseIds.length} phrase{prevTurn.solvedPhraseIds.length === 1 ? '' : 's'}. </>
+          )}
+          {game.unsolvedPhraseIds.length} more phrase{game.unsolvedPhraseIds.length !== 1 ? 's' : ''} are up for grabs.
         </h4>
       )}
       {game.teams.map((t) => (

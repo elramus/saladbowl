@@ -51,7 +51,7 @@ const Promptee = () => {
       <h1>{prompter.name} is prompting for {prompterTeam?.name}...</h1>
       <div className="results">
         <FontAwesomeIcon icon={['fas', 'salad']} />
-        <h4>{solvedPhraseIds.length} phrase{solvedPhraseIds.length === 1 ? '' : 's'} solved this turn</h4>
+        <h4>{solvedPhraseIds.length} phrase{solvedPhraseIds.length === 1 ? '' : 's'} solved this turn.</h4>
       </div>
       {solvedPhraseIds.reverse().map((sPI) => {
         const phrase = game.phrases.find((p) => p._id === sPI)
