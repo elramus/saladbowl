@@ -43,8 +43,12 @@ export class GameManager {
       // The game has not started yet, so this call is just someone changing their
       // ready status.
       await this.playerReadyToPlay()
-      // But if all players are now ready, we should start!
-      if (this.game.players.every((p) => p.ready)) {
+
+      // Okay, are we ready to start the game now?
+      const allPlayersReady = this.game.players.every((p) => p.ready)
+      const eachTeamHasPlayer = this.game.teams.every((t) => t.userIds.length > 0)
+
+      if (allPlayersReady && eachTeamHasPlayer) {
         await this.preRoll()
       }
       return
@@ -136,6 +140,8 @@ export class GameManager {
     const randomPlayerIndex = randomNum(0, firstTeam.userIds.length - 1)
     const firstUserId = firstTeam.userIds[randomPlayerIndex]
 
+    if (!firstUserId) throw new Error('Error getting first player ID')
+
     // Mark on the team the index of the chosen player.
     this.game.teams.pull(firstTeam._id)
     firstTeam.lastPrompterIndex = randomPlayerIndex
@@ -179,8 +185,12 @@ export class GameManager {
 
     // The frontend is now waiting on the prompter to push Ready,
     // triggering another reflow of next().
-    await this.game.save()
-    this.emit()
+    try {
+      await this.game.save()
+      this.emit()
+    } catch (e) {
+      throw new Error(e.message)
+    }
   }
 
   async beginPrompting() {

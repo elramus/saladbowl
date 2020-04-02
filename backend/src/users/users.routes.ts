@@ -4,6 +4,6 @@ import usersController from './users.controller'
 const routes = express.Router()
 
 routes.get('/login', usersController.getUser)
-routes.post('/login', usersController.loginUser)
+routes.post('/login', usersController.getOrCreateUser)
 
 export default routes

@@ -27,6 +27,7 @@ const ReadyModal = ({
   changeReadyStatus,
 }: Props) => {
   const game = useSelector((state: AppState) => state.game)
+
   const waitingOnList = useMemo(() => {
     const list: User[] = []
     if (game) {
@@ -35,17 +36,28 @@ const ReadyModal = ({
     return list
   }, [game])
 
+  const enoughPlayers = useMemo(() => {
+    return game?.teams.every((t) => t.userIds.length > 0)
+  }, [game])
+
   return (
     <Modal onClose={() => changeReadyStatus(false)}>
       <Container>
         <h3>You're so ready!</h3>
-        <p>Waiting on...</p>
-        {waitingOnList.length > 0 && (
-          <ul>
-            {waitingOnList.map((u) => (
-              <li key={u._id}>{u.name}</li>
-            ))}
-          </ul>
+        {!enoughPlayers && (
+          <p>Hmm, there needs to be at least one player on each team to start the game.</p>
+        )}
+        {enoughPlayers && (
+          <>
+            <p>Waiting on...</p>
+            {waitingOnList.length > 0 && (
+              <ul>
+                {waitingOnList.map((u) => (
+                  <li key={u._id}>{u.name}</li>
+                ))}
+              </ul>
+            )}
+          </>
         )}
         <TextButton
           text="Actually, I'm Not Ready"

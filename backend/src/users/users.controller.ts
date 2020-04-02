@@ -13,7 +13,7 @@ const usersController = {
     return res.send({ user })
   },
 
-  async loginUser(req: Request, res: Response) {
+  async getOrCreateUser(req: Request, res: Response) {
     const { name } = req.body
 
     try {
