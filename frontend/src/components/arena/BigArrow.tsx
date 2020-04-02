@@ -5,19 +5,18 @@ import useSpaceKeyListener from '../../hooks/useSpaceKeyListener'
 
 const Container = styled('button')`
   width: 100%;
-  max-width: 15em;
-  border-radius: 50px;
-  height: 10em;
-  border-radius: 50px;
+  max-width: 13em;
+  height: 7em;
+  border-radius: 25px;
   background: ${(props) => props.theme.green};
-  box-shadow: 12px 12px 24px #93bca0, -12px -12px 24px #bbf0cc;
+  box-shadow: 7px 7px 14px #93bca0, -7px -7px 14px #b2eac4;
   transition: box-shadow 50ms ease-out, background 50ms ease-out;
   span {
     display: flex;
     align-items: center;
     justify-content: center;
     svg {
-      font-size: ${(props) => props.theme.ms(6)};
+      font-size: ${(props) => props.theme.ms(5)};
     }
   }
   &:active {

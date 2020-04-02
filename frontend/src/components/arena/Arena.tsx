@@ -17,6 +17,7 @@ const Container = styled('div')`
   padding: 0 2em;
   ${animateEntrance('fade', 1000)}
   .wrapped {
+    min-height: 100vh;
     max-width: 30em;
     margin: auto;
   }

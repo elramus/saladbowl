@@ -11,6 +11,7 @@ import LogoHeader from './LogoHeader'
 const Container = styled('div')`
   text-align: center;
   max-width: 20em;
+  padding: 0 1em;
   margin: 0 auto 0 auto;
   .go-container {
     margin-top: 2em;

@@ -9,7 +9,7 @@ export const theme = {
   middleGreen: '#8FC6B0',
   green: '#A7D6B6',
   lightGreen: '#D1E9D9',
-  red: '#ec6412',
+  red: '#ec3d12',
 
   // Custom easing
   ease: {

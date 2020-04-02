@@ -14,6 +14,8 @@ const Container = styled('div')`
     margin-top: 2rem;
     font-style: italic;
     line-height: 1.25;
+    text-align: left;
+    font-size: ${(props) => props.theme.ms(2)};
   }
   .results {
     display: flex;

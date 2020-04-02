@@ -12,7 +12,7 @@ const Container = styled('div')`
   display: grid;
   grid-template-rows: auto 1fr auto;
   color: white;
-  height: 90vh;
+  height: 100vh;
   header {
     display: flex;
     align-items: center;
@@ -31,9 +31,6 @@ const Container = styled('div')`
   .controls {
     text-align: center;
     margin: 2em 0;
-    .big-arrow {
-      margin-bottom: 2em;
-    }
   }
 `
 
