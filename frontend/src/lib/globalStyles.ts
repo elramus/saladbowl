@@ -83,12 +83,12 @@ const GlobalStyles = createGlobalStyle`
   }
   input[type=number]::-webkit-outer-spin-button,
   input[type=number]::-webkit-inner-spin-button {
+      -webkit-appearance: none !important;
       margin: 0;
   }
 
   input[type=number] {
-      -moz-appearance: textfield;
-      -webkit-appearance: textfield;
+      -moz-appearance: textfield !important;
   }
   textarea {
     padding: 0.75rem 1rem;
