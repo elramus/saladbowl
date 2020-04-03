@@ -5,7 +5,7 @@ import { AppState } from '../../store'
 
 const Container = styled('div')`
   color: white;
-  padding-top: 1em;
+  padding: 1em 0;
   border-top: 1px solid ${(props) => props.theme.middleGreen};
 `
 

@@ -10,7 +10,7 @@ const Container = styled('div')`
   text-align: center;
   font-style: italic;
   p {
-    margin: 1em auto 2em auto;
+    margin: 1em auto;
     max-width: 20em;
     color: white;
   }

@@ -9,8 +9,10 @@ import { createGame } from '../store/game/actions'
 import { Game } from '../store/game/types'
 import LogoHeader from './LogoHeader'
 import JoinGameModal from './JoinGameModal'
+import useScrollToTop from '../hooks/useScrollToTop'
 
 const Container = styled('div')`
+  padding: 0 1em;
   .welcome {
     text-align: center;
     margin-bottom: 3em;
@@ -29,6 +31,8 @@ const SelectGame = () => {
   const [isJoining, setIsJoining] = useState(false)
   const dispatch = useDispatch()
   const history = useHistory()
+
+  useScrollToTop()
 
   function handleJoin() {
     setIsJoining(true)

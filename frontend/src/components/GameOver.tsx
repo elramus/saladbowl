@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components/macro'
 import Scoreboard from './arena/Scoreboard'
+import useScrollToTop from '../hooks/useScrollToTop'
 
 const Container = styled('div')`
   text-align: center;
@@ -19,12 +20,16 @@ const Container = styled('div')`
   }
 `
 
-const GameOver = () => (
-  <Container>
-    <h1 style={{ marginBottom: '2em' }}>Game over, man</h1>
-    <p>The final score was</p>
-    <Scoreboard />
-  </Container>
-)
+const GameOver = () => {
+  useScrollToTop()
+
+  return (
+    <Container>
+      <h1 style={{ marginBottom: '2em' }}>Game over, man</h1>
+      <p>The final score was</p>
+      <Scoreboard />
+    </Container>
+  )
+}
 
 export default GameOver

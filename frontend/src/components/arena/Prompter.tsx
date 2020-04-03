@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import styled from 'styled-components/macro'
 import { useSelector, useDispatch } from 'react-redux'
 import { AppState } from '../../store'
@@ -38,12 +38,13 @@ const Container = styled('div')`
 const Prompter = () => {
   const game = useSelector((state: AppState) => state.game)
   const dispatch = useDispatch()
+  const [ready, setReady] = useState(true)
   const phrase = useMemo(() => {
     return game?.phrases.find((p) => p._id === game?.unsolvedPhraseIds[0])
   }, [game])
 
   function handleSolve() {
-    if (phrase && game && game.turns[0].startTime) {
+    if (ready && phrase && game && game.turns[0].startTime) {
       // Include the amount of time left in the turn in case it was the last phrase.
       const elapsed = Math.floor((Date.now() - game.turns[0].startTime) / 1000)
       const timeRemaining = game.turns[0].turnLength - elapsed
@@ -54,6 +55,12 @@ const Prompter = () => {
         timeRemaining,
       }))
     }
+    // Set ready to false, and then back again in a second to
+    // prevent accidental spamming.
+    setReady(false)
+    setTimeout(() => {
+      setReady(true)
+    }, 750)
   }
 
   function handleUndo() {

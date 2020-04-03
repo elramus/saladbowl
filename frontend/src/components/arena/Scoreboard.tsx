@@ -7,11 +7,11 @@ import { AppState } from '../../store'
 const Container = styled('div')`
   text-align: left;
   color: white;
-  margin-bottom: 4em;
+  margin-bottom: 2em;
   h1 {
     margin-top: 2rem;
-    font-style: italic;
-    line-height: 0.5;
+    margin-bottom: 0;
+    line-height: 1em;
   }
 `
 

@@ -7,7 +7,6 @@ import MyPhrases from './MyPhrases'
 import TextButton from '../TextButton'
 import { AppState } from '../../store'
 import { createPhrase, deletePhrase } from '../../store/game/actions'
-import useMountEffect from '../../hooks/useMountEffect'
 import useScrollToTop from '../../hooks/useScrollToTop'
 
 const Container = styled('div')`
@@ -38,17 +37,15 @@ const MakeEntriesTab = ({
 
   useScrollToTop()
 
-  useMountEffect(() => {
-    if (ref.current) ref.current.focus()
-  })
-
   function handleAdd() {
-    if (entry.length && game) {
+    if (entry.length > 1 && game) {
       setIsSubmitting(true)
       dispatch(createPhrase(entry, game._id, () => {
         setIsSubmitting(false)
         setEntry('')
-        if (ref.current) ref.current.focus()
+        // We're gonna blur the input field so user sees them
+        // populate beneath the form.
+        if (ref.current) ref.current.blur()
       }))
     }
   }
@@ -85,7 +82,6 @@ const MakeEntriesTab = ({
           trailingIcon={['fas', 'plus-circle']}
           variant="cta"
           onClick={handleAdd}
-          disabled={entry.length === 0 || isSubmitting}
         />
         <TextButton
           text="I'm Done"

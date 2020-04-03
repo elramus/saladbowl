@@ -12,8 +12,7 @@ const Container = styled('div')`
   padding-top: 1em;
   border-top: 1px solid ${(props) => props.theme.darkGreen};
   h1 {
-    margin-top: 2rem;
-    font-style: italic;
+    margin-top: 1rem;
     line-height: 1.25;
     text-align: left;
     font-size: ${(props) => props.theme.ms(2)};
@@ -52,7 +51,7 @@ const Promptee = () => {
   return (
     <Container>
       <Clock time={timeRemaining} />
-      <h1>{prompter.name} is prompting for {prompterTeam?.name}...</h1>
+      <h1>{prompter.name} is prompting for {prompterTeam?.name}</h1>
       <div className="results">
         <FontAwesomeIcon icon={['fas', 'salad']} />
         <h4>{solvedPhraseIds.length} phrase{solvedPhraseIds.length === 1 ? '' : 's'} solved this turn.</h4>

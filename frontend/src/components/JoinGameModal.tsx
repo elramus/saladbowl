@@ -116,6 +116,7 @@ const JoinGameModal = ({
         </div>
         <input
           ref={ref}
+          pattern="[0-9]*"
           type="number"
           placeholder="0000"
           value={code}
