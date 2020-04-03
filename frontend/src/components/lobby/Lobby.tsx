@@ -5,7 +5,7 @@ import LobbyHeader from './LobbyHeader'
 import LobbyTabs from './LobbyTabs'
 import { AppState } from '../../store'
 import ReadyModal from './ReadyModal'
-import { next } from '../../store/game/actions'
+import { playerReadyStatus } from '../../store/game/actions'
 import useScrollToTop from '../../hooks/useScrollToTop'
 
 const Container = styled('div')`
@@ -33,13 +33,10 @@ const Lobby = () => {
     // Change internal status to show/hide the READY modal.
     setIsReady(status)
     // Tell the DB user changed status.
-    if (game && authedUser) {
-      dispatch(next({
+    if (game) {
+      dispatch(playerReadyStatus({
         gameId: game._id,
-        userId: authedUser._id,
-        config: {
-          playerStatus: status,
-        },
+        status,
       }))
     }
   }

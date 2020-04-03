@@ -6,13 +6,14 @@ import { randomNum } from '../utils/randomNum'
 import { IUser } from '../users/users.model'
 import { getNextTurn } from './getNextTurn'
 import { ITurn } from '../turns/turns.model'
+import { chooseFirstPlayer } from './chooseFirstPlayer'
 
 interface TurnRunnerConfig {
   playerStatus?: boolean;
   timeRemaining?: number;
 }
 
-export class GameManager {
+export class TurnRunner {
   private game: IGame
   private user: IUser
   private config: TurnRunnerConfig | undefined
@@ -39,23 +40,14 @@ export class GameManager {
       ? this.game.turns[0].round
       : 0
 
-    if (currentRound === 0) {
-      // The game has not started yet, so this call is just someone changing their
-      // ready status.
-      await this.playerReadyToPlay()
-
-      // Okay, are we ready to start the game now?
-      const allPlayersReady = this.game.players.every((p) => p.ready)
-      const eachTeamHasPlayer = this.game.teams.every((t) => t.userIds.length > 0)
-
-      if (allPlayersReady && eachTeamHasPlayer) {
-        await this.preRoll()
-      }
+    // Fire off the pre-game pre-roll!
+    if (currentRound === 0 && !this.game.preRoll.show) {
+      await this.gamePreRoll()
       return
     }
 
+    // Game over man!!
     if (currentRound === 3 && this.game.unsolvedPhraseIds.length === 0) {
-      // Game over man!!
       this.game.gameOver = true
       await this.game.save()
       this.emit()
@@ -63,11 +55,20 @@ export class GameManager {
 
     const currentTurn: ITurn = this.game.turns[0]
 
-    // If we're in a round but it hasn't started yet.
-    if (currentRound > 0 && !currentTurn.startTime) {
-      // This will timestamp it, starting the round on the front end.
-      // 60 seconds later, the turn ends and we trigger another reflow of next().
-      await this.beginPrompting()
+    // If we're in a round, and preRoll hasn't happened, and the turn hasn't started,
+    // then the player has just said they're ready to start prompting.
+    if (currentRound > 0 && !this.game.preRoll.show && !currentTurn.startTime) {
+      // Give 'em the countdown.
+      this.game.turns[0].showCountdown = true
+      await this.game.save()
+      this.emit()
+
+      // Frontend clock is counting down three seconds...
+      // Then we fire.
+      setTimeout(() => {
+        this.beginPrompting()
+      }, 3000)
+
       return
     }
 
@@ -75,6 +76,7 @@ export class GameManager {
       && currentTurn.startTime // The round has happened...
       && this.game.unsolvedPhraseIds.length > 0 // But there are more phrases!
     ) {
+      // Stay in this round, but make a new turn for the next person.
       try {
         const [nextPlayerIndex, nextPlayerId, teamUpNext] = getNextTurn(this.game, this.user)
 
@@ -83,15 +85,8 @@ export class GameManager {
         teamUpNext.lastPrompterIndex = nextPlayerIndex
         this.game.teams.push(teamUpNext)
 
-        // Create a new turn.
-        this.game.turns.unshift({
-          userId: nextPlayerId,
-          round: currentRound, // Same round as last time because we're not done.
-        })
-
-        // Ship it out!
-        await this.game.save()
-        this.emit()
+        // Prep for the next turn. Same round since there are more phrases.
+        this.prepNextTurn(currentRound, nextPlayerId)
       } catch (e) {
         throw new Error(e)
       }
@@ -103,8 +98,8 @@ export class GameManager {
     ) {
       // A turn just ended, but there are no more phrases.
       if (currentRound < 3) {
-        // New round!! Reset and shuffle the phrases.
-        this.game.unsolvedPhraseIds = shuffleArray(this.game.phrases.map((p) => p._id))
+        // New round!!
+        this.prepNewRound()
 
         // Create the turn.
         this.game.turns.unshift({
@@ -122,97 +117,84 @@ export class GameManager {
     }
   }
 
-  async preRoll() {
-    // Start the first pre-roll screen.
+  async gamePreRoll() {
+    // First we pick a random player to go first.
+    const { firstUserId, playerIndex, firstTeam } = chooseFirstPlayer(this.game)
+
+    // Mark on the team the index of the chosen player.
+    this.game.teams.pull(firstTeam._id)
+    firstTeam.lastPrompterIndex = playerIndex
+    this.game.teams.push(firstTeam)
+
+    // Now start the pre-game pre-roll!
     this.game.preRoll = {
       show: true,
       firstUserId: undefined,
     }
+
     await this.game.save()
     this.emit()
 
-    // The pre-roll is now happening on the frontend...
-
-    // Get a random team.
-    const randomTeamIndex = randomNum(0, this.game.teams.length - 1)
-    const firstTeam = this.game.teams[randomTeamIndex]
-    // Get a random player.
-    const randomPlayerIndex = randomNum(0, firstTeam.userIds.length - 1)
-    const firstUserId = firstTeam.userIds[randomPlayerIndex]
-
-    if (!firstUserId) throw new Error('Error getting first player ID')
-
-    // Mark on the team the index of the chosen player.
-    this.game.teams.pull(firstTeam._id)
-    firstTeam.lastPrompterIndex = randomPlayerIndex
-    this.game.teams.push(firstTeam)
-    await this.game.save()
+    // The Round Zero pre-roll is now happening on the frontend...
 
     // After 3 seconds from now, show who's up first.
     setTimeout(async () => {
-      const newPreRoll = {
+      this.game.preRoll = {
         show: true,
         firstUserId,
       }
-      this.game.preRoll = newPreRoll
       await this.game.save()
       this.emit()
     }, 3000)
 
-    // After 6 seconds from now, end pre-roll and fire off round one.
+    // After 6 seconds from now, end pre-roll and begin round 1.
     setTimeout(async () => {
-      this.prepNewRound(1, firstUserId)
-    }, 6000)
-  }
-
-  async prepNewRound(roundNum: number, upFirstId: string) {
-    // Reset the pre-roll.
-    if (roundNum === 1) {
+      // Reset the pre-roll.
       this.game.preRoll = {
         show: false,
         firstUserId: undefined,
       }
-    }
 
+      await this.prepNewRound()
+      this.prepNextTurn(1, firstUserId)
+    }, 6000)
+  }
+
+  async prepNewRound() {
     // The unsolved phrases starts as just a shuffle of all the phrases.
     this.game.unsolvedPhraseIds = shuffleArray(this.game.phrases.map((p) => p._id))
+    await this.game.save()
+  }
 
+  async prepNextTurn(roundNum: number, nextUserId: string) {
     // Create the turn.
     this.game.turns.unshift({
-      userId: upFirstId,
+      userId: nextUserId,
       round: roundNum,
     })
 
-    // The frontend is now waiting on the prompter to push Ready,
-    // triggering another reflow of next().
     try {
       await this.game.save()
       this.emit()
     } catch (e) {
       throw new Error(e.message)
     }
+
+    // The frontend is now waiting on the prompter to push Ready,
+    // triggering another reflow of next().
   }
 
   async beginPrompting() {
-    // A turn exists, but we need to give it a start time.
+    // Turn off the pre-roll.
+    this.game.turns[0].showCountdown = false
+
+    // Give the turn a start time.
     this.game.turns[0].startTime = Date.now()
     await this.game.save()
     this.emit()
-  }
 
-  async playerReadyToPlay() {
-    // Get the player
-    const player = this.game.players.find((p) => p.user._id.equals(this.user?._id))
-    if (player && this.config?.playerStatus !== undefined) {
-      // Mark them whatever was passed in.
-      player.ready = this.config.playerStatus
-      // Pull the old player off
-      this.game.players.pull(player._id)
-      // Push the updated one on.
-      this.game.players.push(player)
-      await this.game.save()
-      this.emit()
-    }
+    // The frontend is now showing the prompter/promptee screens and
+    // the game is being played.
   }
 
   // Broadcast an update.

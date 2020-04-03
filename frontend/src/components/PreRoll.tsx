@@ -41,7 +41,7 @@ const Container = styled('div')`
   }
 `
 
-const PreRoll = () => {
+const PreGamePreRoll = () => {
   const game = useSelector((state: AppState) => state.game)
   const users = useSelector((state: AppState) => state.users)
   const firstPlayer = users.find((u) => u.user._id === game?.preRoll.firstUserId)
@@ -68,4 +68,4 @@ const PreRoll = () => {
   )
 }
 
-export default PreRoll
+export default PreGamePreRoll

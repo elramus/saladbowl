@@ -38,25 +38,6 @@ export const fetchGame = (
   }
 }
 
-// export const joinGame = (
-//   gameId: string,
-//   cb?: (game: Game | null) => void,
-// ): ThunkAction<void, AppState, {}, AnyAction> => (
-//   dispatch: ThunkDispatch<{}, {}, AnyAction>,
-// ) => {
-//   dispatch(setLoadingStatus('games', true))
-//   api.joinGame(gameId)
-//     .then(({ data }) => {
-//       dispatch(receiveGame(data))
-//       dispatch(setLoadingStatus('games', false))
-//       if (cb) cb(data)
-//     })
-//     .catch(() => {
-//       dispatch(setLoadingStatus('games', false))
-//       if (cb) cb(null)
-//     })
-// }
-
 export const createGame = (
   userId: string,
   cb?: (newGame: Game) => void,
@@ -72,6 +53,19 @@ export const createGame = (
         if (cb) cb(data.game)
       }
     })
+}
+
+export const playerReadyStatus = ({
+  gameId,
+  status,
+}: {
+  gameId: string;
+  status: boolean;
+}) => () => {
+  api.playerReadyStatus({
+    gameId,
+    status,
+  })
 }
 
 export const createTeams = (

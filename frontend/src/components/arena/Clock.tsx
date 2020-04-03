@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
@@ -20,41 +20,23 @@ const Container = styled('div')`
 `
 
 interface Props {
-  startTime: number;
-  countdownFrom: number;
-  onFinish?: () => void;
+  time: number;
 }
 
 const Clock = ({
-  startTime,
-  countdownFrom,
-  onFinish,
+  time,
 }: Props) => {
-  const [remainingTime, setRemainingTime] = useState(countdownFrom)
-
-  useEffect(() => {
-    if (remainingTime > 0) {
-      setTimeout(() => {
-        // Round up so that we always have 1 second... if this calcs to 60,
-        // and we just set state to 60 again, it doesn't trigger a refresh.
-        const elapsed = Math.ceil((Date.now() - startTime) / 1000)
-        const remaining = countdownFrom - elapsed
-        setRemainingTime(remaining < 0 ? 0 : remaining)
-      }, 1000)
-    } else if (onFinish) onFinish()
-  }, [onFinish, remainingTime, startTime, countdownFrom])
-
-  function formatTime(time: number) {
-    if (time < 10) {
-      return `0${time}`
+  function formatTime(t: number) {
+    if (t < 10) {
+      return `0${t}`
     }
-    return time
+    return t
   }
 
   return (
-    <Container className={remainingTime <= 10 ? 'warn' : ''}>
+    <Container className={time <= 10 ? 'warn' : ''}>
       <FontAwesomeIcon icon={['fas', 'alarm-clock']} />
-      <span>0:{formatTime(remainingTime)}</span>
+      <span>0:{formatTime(time)}</span>
     </Container>
   )
 }

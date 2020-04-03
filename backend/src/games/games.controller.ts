@@ -6,12 +6,14 @@ import joinTeam from '../lib/joinTeam'
 import { createGamePhrase } from '../lib/createGamePhrase'
 import deletePhrase from '../lib/deletePhrase'
 import { joinPlayerToGame } from '../lib/joinPlayerToGame'
-import { GameManager } from '../lib/TurnRunner'
+import { TurnRunner } from '../lib/TurnRunner'
 import { User } from '../users/users.model'
 import { solvePhrase } from '../lib/solvePhrase'
 import { undoSolvePhrase } from '../lib/undoSolvePhrase'
 import { createGame } from '../lib/createGame'
 import { findGame } from '../lib/findGame'
+import { changeReadyStatus } from '../lib/changeReadyStatus'
+import { gameReadyChecklist } from '../lib/gameReadyChecklist'
 
 const gameController = {
   async fetchGame(req: Request, res: Response) {
@@ -50,6 +52,44 @@ const gameController = {
       return res.send({ game: updatedGame })
     } catch (e) {
       return res.status(500).send(e)
+    }
+  },
+
+  async playerReadyStatus(req: Request, res: Response) {
+    const { userId } = req
+    const { readyStatus } = req.body
+    const { gameId } = req.params
+    if (!userId || !gameId || !readyStatus) return res.status(400).send('Required param not found in request')
+
+    try {
+      const game = await findGame(gameId)
+      if (!game) return res.status(400).send('Invalid Game ID')
+
+      const updatedGame = await changeReadyStatus({
+        userId,
+        game,
+        status: readyStatus,
+      })
+
+      // Run the checklist for starting the game!
+      const ready = gameReadyChecklist(game)
+
+      if (ready) {
+        // TurnRunner requires the user in constructor.
+        // Maybe remove this requirement?
+        const user = await User.findById(userId)
+        if (!user) return res.status(400).send('Invalid user ID')
+
+        const tR = new TurnRunner({ game, user })
+        tR.next()
+      }
+
+
+      // Broadcast and return the update.
+      io.to(updatedGame._id).emit(SocketMessages.GameUpdate, updatedGame)
+      return res.send({ game: updatedGame })
+    } catch (e) {
+      return res.status(500).send(e.message)
     }
   },
 
@@ -144,14 +184,14 @@ const gameController = {
           const user = await User.findById(userId)
           if (!user) return res.status(400).send('Bad user ID')
 
-          const gM = new GameManager({
+          const tR = new TurnRunner({
             game,
             user,
             config: {
               timeRemaining,
             },
           })
-          gM.next()
+          tR.next()
         }
 
         // Broadcast and return the update.
@@ -191,11 +231,11 @@ const gameController = {
 
     try {
       // This function is very generic. What it does depends on where the game is currently.
-      // So, we're fire up a GameManager, give it the info, and let it take it from there.
+      // So, we're fire up a TurnRunner, give it the info, and let it take it from there.
       const game = await Game.findById(gameId)
       const user = await User.findById(userId)
       if (game && user) {
-        const gM = new GameManager({
+        const gM = new TurnRunner({
           game,
           user,
           config,

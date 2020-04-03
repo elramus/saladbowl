@@ -13,9 +13,6 @@ const Container = styled('div')`
     font-style: italic;
     line-height: 0.5;
   }
-  h1 {
-    color: ${(props) => props.theme.black};
-  }
 `
 
 const Scoreboard = () => {

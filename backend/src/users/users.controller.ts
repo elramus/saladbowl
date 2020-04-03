@@ -5,12 +5,15 @@ import { User } from './users.model'
 const usersController = {
   async getUser(req: Request, res: Response) {
     const { userId } = req
-    if (!userId) return res.send('User ID token not found')
+    if (!userId) return res.send({ user: null })
 
-    const user = await User.findById(userId)
-    if (!user) return res.send({ user: null })
-
-    return res.send({ user })
+    try {
+      const user = await User.findById(userId)
+      if (!user) return res.send({ user: null })
+      return res.send({ user })
+    } catch (e) {
+      return res.status(400).send('Invalid user ID')
+    }
   },
 
   async getOrCreateUser(req: Request, res: Response) {

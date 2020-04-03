@@ -5,6 +5,7 @@ const routes = express.Router()
 
 routes.post('/games', gameController.createGame)
 routes.get('/games/:gameId', gameController.fetchGame)
+routes.put('/games/:gameId/player-ready-status', gameController.playerReadyStatus)
 routes.post('/games/:gameId/phrases', gameController.createPhrase)
 routes.delete('/games/:gameId/phrases/:phraseId', gameController.deletePhrase)
 routes.put('/games/:gameId/create-teams', gameController.createTeams)

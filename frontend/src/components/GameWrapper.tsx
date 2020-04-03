@@ -10,7 +10,7 @@ import { AppState } from '../store'
 import TosserSetup from './TosserSetup'
 import GameSocket from './GameSocket'
 import Arena from './arena'
-import PreRoll from './PreRoll'
+import PreGamePreRoll from './PreRoll'
 
 const Container = styled('div')`
   min-height: 100vh;
@@ -49,8 +49,8 @@ const GameWrapper = () => {
           <Lobby />
         </Route>
         <Route exact path="/games/:gameId">
-          {game.preRoll.show && (
-            <PreRoll />
+          {game.preRoll.show && game.turns.length === 0 && (
+            <PreGamePreRoll />
           )}
           {game.turns[0] && game.turns[0].round > 0 && (
             <Arena />

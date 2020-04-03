@@ -7,6 +7,7 @@ import { solvePhrase, next, unsolvePhrase } from '../../store/game/actions'
 import TextButton from '../TextButton'
 import animateEntrance from '../../lib/animateEntrance'
 import Clock from './Clock'
+import { useTurnCountdown } from '../../hooks/useTurnCountdown'
 
 const Container = styled('div')`
   display: grid;
@@ -19,7 +20,7 @@ const Container = styled('div')`
     justify-content: space-between;
     button {
       position: relative;
-      top: 4px;
+      top: 3px;
       ${animateEntrance('fade', 200)}
     }
   }
@@ -70,6 +71,8 @@ const Prompter = () => {
     }
   }
 
+  const timeRemaining = useTurnCountdown({ game, onZero: handleEnd })
+
   if (!game || !phrase) return <div />
 
   return (
@@ -87,11 +90,7 @@ const Prompter = () => {
           ) : (
             <div />
           )}
-        <Clock
-          startTime={game.turns[0].startTime ?? 0}
-          countdownFrom={game.turns[0].turnLength}
-          onFinish={handleEnd}
-        />
+        <Clock time={timeRemaining} />
       </header>
       <div className="phrase">
         <h1>{phrase.text}</h1>

@@ -12,15 +12,9 @@ const api = {
 
   logInUser: (
     name: string,
-  ): AxiosPromise<{ user: User}> => {
+  ): AxiosPromise<{ user: User }> => {
     return axios.post('/login', { name })
   },
-
-  // joinGame: (
-  //   gameId: string,
-  // ): AxiosPromise<Game> => {
-  //   return axios.get(`/games/${gameId}/join`)
-  // },
 
   fetchGame: (
     shortId: string,
@@ -46,6 +40,16 @@ const api = {
     teamId: string,
   ): AxiosPromise<Game> => {
     return axios.put(`/games/${gameId}/join-team`, { teamId })
+  },
+
+  playerReadyStatus: ({
+    gameId,
+    status,
+  }: {
+    gameId: string;
+    status: boolean;
+  }): AxiosPromise<{ game: Game }> => {
+    return axios.put(`/games/${gameId}/player-ready-status`, { readyStatus: status })
   },
 
   createPhrase: (

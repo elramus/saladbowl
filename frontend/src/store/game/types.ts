@@ -19,6 +19,7 @@ export interface Turn {
   userId: string;
   round: 0 | 1 | 2 | 3;
   turnLength: number;
+  showCountdown: boolean;
   startTime: number | null;
   solvedPhraseIds: string[];
 }

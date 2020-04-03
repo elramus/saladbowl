@@ -10,6 +10,7 @@ import Scoreboard from './Scoreboard'
 import WaitingOn from './WaitingOn'
 import Promptee from './Promptee'
 import GameOver from '../GameOver'
+import TurnCountdown from '../TurnCountdown'
 
 const Container = styled('div')`
   background: ${(props) => props.theme.green};
@@ -31,30 +32,35 @@ const Arena = () => {
     return game?.turns[0].userId === authedUser?._id
   }, [authedUser, game])
 
-  if (!game) return <div />
+  function getMainContent() {
+    if (!game) return <div />
+    if (game.gameOver) return <GameOver />
+    if (game.turns[0].showCountdown) return <TurnCountdown />
+    if (yourTurn && !game.turns[0].startTime) {
+      return <GetReady />
+    }
+    if (!yourTurn && !game.turns[0].startTime) {
+      return (
+        <>
+          <RoundInfo />
+          <Scoreboard />
+          <WaitingOn />
+        </>
+      )
+    }
+    if (yourTurn && game.turns[0].startTime) {
+      return <Prompter />
+    }
+    if (!yourTurn && game.turns[0].startTime) {
+      return <Promptee />
+    }
+    return <div />
+  }
 
   return (
     <Container>
       <div className="wrapped">
-        {game.gameOver && (
-          <GameOver />
-        )}
-        {yourTurn && !game.turns[0].startTime && (
-          <GetReady />
-        )}
-        {!yourTurn && !game.turns[0].startTime && (
-          <>
-            <RoundInfo />
-            <Scoreboard />
-            <WaitingOn />
-          </>
-        )}
-        {yourTurn && game.turns[0].startTime && (
-          <Prompter />
-        )}
-        {!yourTurn && game.turns[0].startTime && (
-          <Promptee />
-        )}
+        {getMainContent()}
       </div>
     </Container>
   )
