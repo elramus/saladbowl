@@ -17,6 +17,7 @@ export class TurnRunner {
   private game: IGame
   private user: IUser
   private config: TurnRunnerConfig | undefined
+  private fromCurrentPlayer: boolean
 
   constructor({
     game,
@@ -30,6 +31,12 @@ export class TurnRunner {
     this.game = game
     this.user = user
     this.config = config
+    this.fromCurrentPlayer = false
+    if (this.game.turns.length > 0
+      && this.game.turns[0].userId.toString() === this.user._id.toString()
+    ) {
+      this.fromCurrentPlayer = true
+    }
   }
 
   async next() {
@@ -42,12 +49,17 @@ export class TurnRunner {
 
     // Fire off the pre-game pre-roll!
     if (currentRound === 0 && !this.game.preRoll.show) {
+      // No user required, this will fire for whoever the last person to
+      // be ready is.
       await this.gamePreRoll()
       return
     }
 
     // Game over man!!
-    if (currentRound === 3 && this.game.unsolvedPhraseIds.length === 0) {
+    if (this.fromCurrentPlayer
+      && currentRound === 3
+      && this.game.unsolvedPhraseIds.length === 0
+    ) {
       this.game.gameOver = true
       await this.game.save()
       this.emit()
@@ -57,7 +69,11 @@ export class TurnRunner {
 
     // If we're in a round, and preRoll hasn't happened, and the turn hasn't started,
     // then the player has just said they're ready to start prompting.
-    if (currentRound > 0 && !this.game.preRoll.show && !currentTurn.startTime) {
+    if (this.fromCurrentPlayer
+      && currentRound > 0
+      && !this.game.preRoll.show
+      && !currentTurn.startTime
+    ) {
       // Give 'em the countdown.
       this.game.turns[0].showCountdown = true
       await this.game.save()
@@ -72,7 +88,8 @@ export class TurnRunner {
       return
     }
 
-    if (currentRound > 0 // We're in a round.
+    if (this.fromCurrentPlayer
+      && currentRound > 0 // We're in a round.
       && currentTurn.startTime // The round has happened...
       && this.game.unsolvedPhraseIds.length > 0 // But there are more phrases!
     ) {
@@ -92,7 +109,8 @@ export class TurnRunner {
       }
     }
 
-    if (currentRound > 0
+    if (this.fromCurrentPlayer
+      && currentRound > 0
       && currentTurn.startTime
       && this.game.unsolvedPhraseIds.length === 0
     ) {

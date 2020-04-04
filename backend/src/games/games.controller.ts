@@ -59,7 +59,11 @@ const gameController = {
     const { userId } = req
     const { readyStatus } = req.body
     const { gameId } = req.params
-    if (!userId || !gameId || !readyStatus) return res.status(400).send('Required param not found in request')
+    if (!userId
+      || !gameId
+      || readyStatus === undefined
+      || readyStatus === null
+    ) return res.status(400).send('Required param not found in request')
 
     try {
       const game = await findGame(gameId)
@@ -75,15 +79,12 @@ const gameController = {
       const ready = gameReadyChecklist(game)
 
       if (ready) {
-        // TurnRunner requires the user in constructor.
-        // Maybe remove this requirement?
         const user = await User.findById(userId)
         if (!user) return res.status(400).send('Invalid user ID')
 
         const tR = new TurnRunner({ game, user })
         tR.next()
       }
-
 
       // Broadcast and return the update.
       io.to(updatedGame._id).emit(SocketMessages.GameUpdate, updatedGame)

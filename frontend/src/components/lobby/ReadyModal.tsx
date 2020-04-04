@@ -52,9 +52,17 @@ const ReadyModal = ({
             <p>Waiting on...</p>
             {waitingOnList.length > 0 && (
               <ul>
-                {waitingOnList.map((u) => (
-                  <li key={u._id}>{u.name}</li>
-                ))}
+                {waitingOnList.map((u, i) => {
+                  if (i <= 4) {
+                    return (
+                      <li key={u._id}>{u.name}</li>
+                    )
+                  }
+                  return false
+                })}
+                {waitingOnList.length - 4 > 0 && (
+                  <li>...and {waitingOnList.length - 4} more</li>
+                )}
               </ul>
             )}
           </>

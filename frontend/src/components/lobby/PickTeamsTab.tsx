@@ -75,7 +75,7 @@ const PickTeamsTab = () => {
     }
   }
 
-  function getPlayersList(team: Team) {
+  function getTeamPlayers(team: Team) {
     const players: string[] = []
     if (game) {
       team.userIds.forEach((pId) => {
@@ -83,7 +83,7 @@ const PickTeamsTab = () => {
         if (user) players.push(user.name)
       })
     }
-    return players.join(', ')
+    return players
   }
 
   if (!game) return <div />
@@ -101,12 +101,12 @@ const PickTeamsTab = () => {
             >
               <button type="button" onClick={() => handleTeamClick(t._id)}>
                 <span className="title">
-                  <h2>{t.name}</h2>
+                  <h2>{t.name} ({getTeamPlayers(t).length})</h2>
                   <div className="icon-container">
                     <FontAwesomeIcon icon={['fas', 'check-circle']} />
                   </div>
                 </span>
-                <p className="player-list">{getPlayersList(t)}</p>
+                <p className="player-list">{getTeamPlayers(t).join(', ')}</p>
               </button>
             </li>
           ))}
