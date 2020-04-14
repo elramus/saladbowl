@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'

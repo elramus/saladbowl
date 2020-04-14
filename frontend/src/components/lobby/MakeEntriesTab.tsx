@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
 import { HelperText } from '../styled/HelperText'
 import animateEntrance from '../../lib/animateEntrance'

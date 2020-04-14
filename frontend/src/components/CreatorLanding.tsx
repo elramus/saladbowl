@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import LogoHeader from './LogoHeader'

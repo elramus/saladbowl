@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
 import LobbyHeader from './LobbyHeader'
 import LobbyTabs from './LobbyTabs'

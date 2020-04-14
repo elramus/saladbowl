@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { HelperText } from '../styled/HelperText'
 
 const Container = styled('div')`

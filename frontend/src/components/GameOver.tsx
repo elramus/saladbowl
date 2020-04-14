@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import Scoreboard from './arena/Scoreboard'
 import useScrollToTop from '../hooks/useScrollToTop'
 

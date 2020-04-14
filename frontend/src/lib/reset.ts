@@ -1,4 +1,4 @@
-import { css } from 'styled-components/macro'
+import { css } from 'styled-components'
 
 /**
  * https://github.com/hankchizljaw/modern-css-reset

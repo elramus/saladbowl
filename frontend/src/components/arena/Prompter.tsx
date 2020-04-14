@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
 import { AppState } from '../../store'
 import BigArrow from './BigArrow'

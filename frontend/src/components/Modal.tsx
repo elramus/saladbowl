@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import zElements from '../lib/zElements'
 import animateEntrance from '../lib/animateEntrance'
 import useEscKeyListener from '../hooks/useEscKeyListener'

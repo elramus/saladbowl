@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import { AppState } from '../../store'
 import { User } from '../../store/authed-user/types'
