@@ -15,7 +15,7 @@ export const changeReadyStatus = async ({
   // Pull the old player off
   game.players.pull(player._id)
   // Make the update
-  player.ready = status
+  player.pregameFinished = status
   // Push the updated one on.
   game.players.push(player)
   // Save

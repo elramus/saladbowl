@@ -17,22 +17,36 @@ interface StyleProps {
 }
 
 const Container = styled('button')<{ styles: StyleProps }>`
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: ${(props) => props.styles.padding};
-  border: ${(props) => props.styles.border};
+  padding: ${props => props.styles.padding};
+  border: ${props => props.styles.border};
   border-radius: 5px;
-  width: ${(props) => props.styles.width};
-  color: ${(props) => props.styles.color};
+  width: ${props => props.styles.width};
+  color: ${props => props.styles.color};
   text-transform: uppercase;
-  font-weight: ${(props) => props.styles.weight};
-  background: ${(props) => props.styles.bg};
-  box-shadow: ${(props) => props.styles.boxShadow};
+  font-weight: ${props => props.styles.weight};
+  background: ${props => props.styles.bg};
+  box-shadow: ${props => props.styles.boxShadow};
   transition: opacity 100ms ease-out, background-color 100ms ease-out;
+  .loading {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255, 0.75);
+    svg {
+      font-size: ${props => props.theme.ms(2)};
+      color: ${props => props.theme.darkGreen};
+    }
+  }
   span {
     line-height: 1;
-    font-size: ${(props) => props.styles.fontSize};
+    font-size: ${props => props.styles.fontSize};
   }
   .leading-icon {
     margin-right: 0.5rem;
@@ -42,7 +56,7 @@ const Container = styled('button')<{ styles: StyleProps }>`
   }
   &:hover {
     opacity: 0.85;
-    background: ${(props) => props.styles.hoverBg};
+    background: ${props => props.styles.hoverBg};
   }
 `
 
@@ -60,6 +74,7 @@ interface Props {
   leadingIcon?: [IconPrefix, IconName];
   trailingIcon?: [IconPrefix, IconName];
   disabled?: boolean;
+  loading?: boolean;
 }
 
 const TextButton = ({
@@ -76,6 +91,7 @@ const TextButton = ({
   leadingIcon,
   trailingIcon,
   disabled,
+  loading,
 }: Props) => {
   // Put the style props into an object for modification.
   // Declare defaults here!
@@ -129,6 +145,11 @@ const TextButton = ({
       disabled={disabled}
       styles={styles}
     >
+      {loading && (
+        <div className="loading">
+          <FontAwesomeIcon icon={['fas', 'spinner-third']} spin />
+        </div>
+      )}
       {leadingIcon && (
         <FontAwesomeIcon icon={leadingIcon} className="leading-icon" />
       )}

@@ -3,10 +3,10 @@ import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import Modal from './Modal'
-import { fetchGame } from '../store/game/actions'
-import { Game } from '../store/game/types'
-import animateEntrance from '../lib/animateEntrance'
+import Modal from '../Modal'
+import { fetchGame } from '../../store/game/actions'
+import { Game } from '../../store/game/types'
+import animateEntrance from '../../lib/animateEntrance'
 
 const Container = styled('div')`
   text-align: center;
@@ -24,24 +24,24 @@ const Container = styled('div')`
       ${animateEntrance('slideRight', 200)};
     }
     .svg-inline--fa {
-      font-size: ${(props) => props.theme.ms(2)};
-      color: ${(props) => props.theme.middleGray};
+      font-size: ${props => props.theme.ms(2)};
+      color: ${props => props.theme.middleGray};
       &.fa-check-circle {
-        color: ${(props) => props.theme.darkGreen};
+        color: ${props => props.theme.darkGreen};
       }
     }
   }
   input {
-    font-size: ${(props) => props.theme.ms(4)};
+    font-size: ${props => props.theme.ms(4)};
     width:14.5rem;
     letter-spacing: 0.75rem;
     border: 0;
     border-radius: 10px;
     padding: 1rem 2rem;
-    box-shadow: 0 2px 23px ${(props) => props.theme.lightGreen};
-    color: ${(props) => props.theme.darkGreen};
+    box-shadow: 0 2px 23px ${props => props.theme.lightGreen};
+    color: ${props => props.theme.darkGreen};
     &::placeholder {
-      color: ${(props) => props.theme.middleGray};
+      color: ${props => props.theme.middleGray};
     }
     &:disabled {
       opacity: 0.5;
@@ -120,7 +120,7 @@ const JoinGameModal = ({
           type="number"
           placeholder="0000"
           value={code}
-          onChange={(e) => handleChangeCode(e.target.value)}
+          onChange={e => handleChangeCode(e.target.value)}
           disabled={isLoading}
         />
       </Container>

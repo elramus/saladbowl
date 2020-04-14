@@ -12,6 +12,10 @@ export const gameSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
+  startTime: {
+    type: Number,
+    default: null,
+  },
   players: [playerSchema],
   teams: [teamSchema],
   phrases: [phraseSchema],
@@ -20,9 +24,9 @@ export const gameSchema = new mongoose.Schema({
       type: Boolean,
       default: false,
     },
-    firstUserId: {
+    firstTeamId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: 'Team',
     },
   },
   turns: [turnSchema],
@@ -36,13 +40,14 @@ export const gameSchema = new mongoose.Schema({
 export interface IGame extends mongoose.Document {
   shortId: number;
   creatorId: string;
+  startTime: number | null;
   players: Types.Array<IPlayer>;
   teams: Types.Array<ITeam>;
   phrases: Types.Array<IPhrase>;
   preRoll: {
     show: boolean;
-    firstUserId?: string;
-  }
+    firstTeamId?: string;
+  };
   turns: Types.Array<ITurn>;
   gameOver: boolean;
   unsolvedPhraseIds: string[];

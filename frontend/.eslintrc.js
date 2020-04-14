@@ -33,6 +33,7 @@ module.exports = {
     '@typescript-eslint/no-unused-expressions': 1,
     '@typescript-eslint/semi': 0,
     'arrow-body-style': 0,
+    'arrow-parens': ['error', 'as-needed'],
     "import/extensions": [".js", ".jsx", ".json", ".ts", ".tsx"],
     'import/prefer-default-export': 0,
     "max-len": 0,

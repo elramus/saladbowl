@@ -10,11 +10,13 @@ export enum SocketMessages {
 function initSocket(server: Server) {
   const io = socketIo(server)
 
+  // Keep track of who's who here.
+  // Not currently used, but maybe it'll be useful one day.
   const playersIndex: {
     [gameId: string]: {
-      user: IUser,
-      socketId: string | null,
-    }[]
+      user: IUser;
+      socketId: string | null;
+    }[];
   } = {}
 
   io.on('connection', async (socket) => {
@@ -27,7 +29,7 @@ function initSocket(server: Server) {
       // Now update the game w/ their socket id and broadcast the update.
       try {
         const user = await User.findById(userId)
-        if (!user) throw new Error(`No user with ID ${userId}`)
+        if (!user) throw new Error('User not found')
 
         // If this is the first person in the game, instantiate the game as a property.
         if (!playersIndex[gameId]) playersIndex[gameId] = []
@@ -43,8 +45,8 @@ function initSocket(server: Server) {
         playersIndex[gameId] = updatedPlayers
 
         // Now broadcast an update of the players in the game.
-        console.log('Player joined', playersIndex) /*eslint-disable-line*/
-        io.to(gameId).emit(SocketMessages.PlayersUpdate, playersIndex[gameId])
+        console.log('Player has joined: ', user.name) /*eslint-disable-line*/
+        // io.to(gameId).emit(SocketMessages.PlayersUpdate, playersIndex[gameId])
       } catch (e) {
         throw new Error(e)
       }
@@ -56,9 +58,17 @@ function initSocket(server: Server) {
       const updatedPlayers = playersIndex[gameId].filter((p) => p.user._id.toString() !== userId)
       playersIndex[gameId] = updatedPlayers
 
-      // Now broadcast an update of the players in the game.
-      console.log('Player left', playersIndex) /*eslint-disable-line*/
-      io.to(gameId).emit(SocketMessages.PlayersUpdate, playersIndex[gameId])
+      try {
+        const user = await User.findById(userId)
+        if (!user) throw new Error('User not found')
+
+        // Now broadcast an update of the players in the game.
+        console.log('Player has left: ', user.name) /*eslint-disable-line*/
+      } catch (e) {
+        throw new Error(e.message)
+      }
+
+      // io.to(gameId).emit(SocketMessages.PlayersUpdate, playersIndex[gameId])
     })
   })
 

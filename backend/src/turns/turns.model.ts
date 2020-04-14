@@ -1,4 +1,4 @@
-import mongoose, { Types } from 'mongoose'
+import mongoose from 'mongoose'
 
 export const turnSchema = new mongoose.Schema({
   userId: {

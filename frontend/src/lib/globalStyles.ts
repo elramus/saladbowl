@@ -33,10 +33,12 @@ const GlobalStyles = createGlobalStyle`
   }
   h4 {
     font-size: ${theme.ms(0)};
+    font-weight: bold;
   }
   h5 {
     font-size: ${theme.ms(-1)};
     text-transform: uppercase;
+    font-weight: bold;
   }
   h6 {
     font-size: ${theme.ms(-1)};

@@ -17,7 +17,9 @@ import { gameReadyChecklist } from '../lib/gameReadyChecklist'
 
 const gameController = {
   async fetchGame(req: Request, res: Response) {
-    const { gameId } = req.params // Can be an actual ID or a short ID!
+    // Right now, can ONLY be a real ID.
+    // TODO - add short ID.
+    const { gameId } = req.params
     const { userId } = req
     if (!gameId) return res.status(400).send('Required param not found')
 
@@ -27,7 +29,7 @@ const gameController = {
 
       // If we have a userId, we'll go ahead and join them to it.
       if (userId) {
-        const updatedGame = await joinPlayerToGame(userId, game.shortId)
+        const updatedGame = await joinPlayerToGame(userId, game)
         return res.send({ game: updatedGame })
       }
 
@@ -39,15 +41,16 @@ const gameController = {
   },
 
   async createGame(req: Request, res: Response) {
-    const { userId } = req.body
+    const { userId } = req
     if (!userId) return res.status(400).send('User ID not found in request')
+    const { teams } = req.body
 
     try {
-      const newGame = await createGame(userId)
-      await newGame.save()
+      // Teams may be undefined, but that's okay.
+      const newGame = await createGame(userId, teams)
 
       // Before we return, attach the creator as a game player.
-      const updatedGame = await joinPlayerToGame(userId, newGame.shortId)
+      const updatedGame = await joinPlayerToGame(userId, newGame)
 
       return res.send({ game: updatedGame })
     } catch (e) {
@@ -55,6 +58,9 @@ const gameController = {
     }
   },
 
+  /**
+   * This is our entry point into starting the actual game.
+   */
   async playerReadyStatus(req: Request, res: Response) {
     const { userId } = req
     const { readyStatus } = req.body
@@ -75,19 +81,48 @@ const gameController = {
         status: readyStatus,
       })
 
-      // Run the checklist for starting the game!
-      const ready = gameReadyChecklist(game)
+      // Run the checklist for starting the game.
+      const shouldStartTheGame = gameReadyChecklist(game)
 
-      if (ready) {
+      if (shouldStartTheGame) {
+        // Fire up a Turn Runner.
+        // (It requires a user to be passed in)
         const user = await User.findById(userId)
         if (!user) return res.status(400).send('Invalid user ID')
 
         const tR = new TurnRunner({ game, user })
-        tR.next()
+        tR.nextAction()
       }
 
       // Broadcast and return the update.
       io.to(updatedGame._id).emit(SocketMessages.GameUpdate, updatedGame)
+      return res.send({ game: updatedGame })
+    } catch (e) {
+      return res.status(500).send(e.message)
+    }
+  },
+
+  async preRollFinished(req: Request, res: Response) {
+    const { gameId } = req.params
+    const { userId } = req
+    if (!gameId || !userId) return res.status(400).send()
+
+    const game = await Game.findById(gameId)
+    if (!game) return res.status(400).send('Game not found')
+    const user = await User.findById(userId)
+    if (!user) return res.status(400).send('User not found')
+
+    try {
+      // Turn off the pre-roll, then run Game Runner next action.
+      game.preRoll.show = false
+      const updatedGame = await game.save()
+
+      const tR = new TurnRunner({
+        game,
+        user,
+      })
+      tR.nextAction()
+
       return res.send({ game: updatedGame })
     } catch (e) {
       return res.status(500).send(e.message)
@@ -192,7 +227,7 @@ const gameController = {
               timeRemaining,
             },
           })
-          tR.next()
+          tR.nextAction()
         }
 
         // Broadcast and return the update.
@@ -241,7 +276,7 @@ const gameController = {
           user,
           config,
         })
-        gM.next()
+        gM.nextAction()
         return res.send()
       }
       return res.status(404).send('Could not find game or user')

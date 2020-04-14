@@ -5,6 +5,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  ipAddress: {
+    type: String,
+    default: null,
+  },
   socketId: {
     type: String,
     default: null,
@@ -13,7 +17,8 @@ const userSchema = new mongoose.Schema({
 
 interface IUser extends mongoose.Document {
   name: string;
-  socketId: string;
+  ipAddress: string | null;
+  socketId: string | null;
 }
 
 const User = mongoose.model<IUser>('User', userSchema)

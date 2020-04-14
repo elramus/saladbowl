@@ -1,16 +1,16 @@
 import React from 'react'
 import { Route } from 'react-router-dom'
-import SelectGame from './SelectGame'
 import GameWrapper from './GameWrapper'
+import GetGamePage from './get-game-page'
 
 const MainContentRouter = () => {
   return (
     <div>
       <Route exact path="/">
-        <SelectGame />
+        <GetGamePage />
       </Route>
       <Route exact path="/games">
-        <SelectGame />
+        <GetGamePage />
       </Route>
       <Route path="/games/:gameId">
         <GameWrapper />

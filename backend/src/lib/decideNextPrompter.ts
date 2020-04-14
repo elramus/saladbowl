@@ -2,7 +2,11 @@ import { IGame } from '../games/games.model'
 import { IUser } from '../users/users.model'
 import { ITeam } from '../teams/teams.model'
 
-export const getNextTurn = (
+/**
+ * Get the next player from the next team.
+ */
+
+export const decideNextPrompter = (
   game: IGame,
   user: IUser,
 ): [number, string, ITeam] => {

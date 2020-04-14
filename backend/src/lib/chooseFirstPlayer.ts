@@ -4,14 +4,13 @@ import { randomNum } from '../utils/randomNum'
 export const chooseFirstPlayer = (game: IGame) => {
   // Get a random team.
   const randomTeamIndex = randomNum(0, game.teams.length - 1)
-  const firstTeam = game.teams[randomTeamIndex]
+  const randomTeam = game.teams[randomTeamIndex]
   // Get a random player.
-  const randomPlayerIndex = randomNum(0, firstTeam.userIds.length - 1)
-  const firstUserId = firstTeam.userIds[randomPlayerIndex]
+  const randomPlayerIndex = randomNum(0, randomTeam.userIds.length - 1)
+  // const firstUserId = randomTeam.userIds[randomPlayerIndex]
 
   return {
-    firstUserId,
-    playerIndex: randomPlayerIndex,
-    firstTeam,
+    firstPlayerIndex: randomPlayerIndex,
+    firstTeam: randomTeam,
   }
 }

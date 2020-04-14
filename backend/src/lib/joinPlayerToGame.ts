@@ -1,18 +1,15 @@
-import { IGame, Game } from '../games/games.model'
+import { IGame } from '../games/games.model'
 import { User } from '../users/users.model'
 import { SocketMessages } from '../socket'
 import { io } from '../app'
 
-// TODO: This should probably take just the game ID, not the full game.
-
 export const joinPlayerToGame = async (
   userId: string,
-  shortGameId: number,
+  game: IGame,
 ): Promise<IGame> => {
   // Verify these exist.
   const user = await User.findById(userId)
-  const game = await Game.findOne({ shortId: shortGameId })
-  if (!user || !game) throw new Error('User or Game not found')
+  if (!user) throw new Error('User not found')
 
   // Make sure they're not already attached.
   if (!game.players.some((p) => p.user._id.toString() === userId)) {
