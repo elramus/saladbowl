@@ -6,6 +6,7 @@ type AnimationNames =
   | 'fadeSlideDown'
   | 'slideUp'
   | 'slideRight'
+  | 'fadeSlideRight'
   | 'slideLeft'
   | 'slideDown'
   | 'fadeExpand'
@@ -41,6 +42,12 @@ const animateEntrance = (
       animation-delay: ${delay}ms;
       transform: translateX(-100%);
     `
+    case 'fadeSlideRight': return css`
+      animation: moveToPosition ${duration}ms ${easing} forwards;
+      animation-delay: ${delay}ms;
+      opacity: 0;
+      transform: translateX(-100%);
+    `
     case 'slideUp': return css`
       animation: moveToPosition ${duration}ms ${easing} forwards;
       animation-delay: ${delay}ms;
@@ -58,7 +65,7 @@ const animateEntrance = (
     `
     case 'fadeExpand': return css`
       animation: moveToPosition ${duration}ms ${easing} forwards;
-      animation-delay: ${delay};;
+      animation-delay: ${delay};
       opacity: 0;
       transform: scale(0.5);
     `

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { HelperText } from './styled/HelperText'
 import TextInput from './TextInput'
 import TextButton from './TextButton'
-import { logInUser, getLoggedInUser } from '../store/authed-user/actions'
+import { logInUser, getLoggedInUser } from '../store/user/actions'
 import { AppState } from '../store'
 import LogoHeader from './LogoHeader'
 
@@ -22,15 +22,15 @@ const Container = styled('div')`
 const Login: React.FC = ({
   children,
 }) => {
-  const authedUser = useSelector((state: AppState) => state.authedUser)
+  const user = useSelector((state: AppState) => state.user)
   const [name, setName] = useState('')
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (!authedUser) {
+    if (!user) {
       dispatch(getLoggedInUser())
     }
-  }, [authedUser, dispatch])
+  }, [user, dispatch])
 
   function handleNameChange(e: React.ChangeEvent<HTMLInputElement>) {
     setName(e.target.value)
@@ -44,7 +44,7 @@ const Login: React.FC = ({
 
   return (
     <>
-      {!authedUser && (
+      {!user && (
         <Container>
           <LogoHeader />
           <div style={{ marginBottom: '3em' }}>
@@ -68,7 +68,7 @@ const Login: React.FC = ({
           </div>
         </Container>
       )}
-      {authedUser && children}
+      {user && children}
     </>
   )
 }

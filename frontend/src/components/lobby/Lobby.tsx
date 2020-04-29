@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
 import LobbyHeader from './LobbyHeader'
@@ -7,6 +7,8 @@ import { AppState } from '../../store'
 import ReadyModal from './ReadyModal'
 import { playerReadyStatus } from '../../store/game/actions'
 import useScrollToTop from '../../hooks/useScrollToTop'
+import CreatorWelcomeModal from '../CreatorWelcomeModal'
+import { getPlayerFromUserId } from '../../lib/getPlayerFromId'
 
 const Container = styled('div')`
   padding: 0 1em;
@@ -15,23 +17,46 @@ const Container = styled('div')`
 `
 
 const Lobby = () => {
-  const game = useSelector((state: AppState) => state.game)
-  const authedUser = useSelector((state: AppState) => state.authedUser)
-  const [isReady, setIsReady] = useState(false)
-  const [shouldAskIfReady, setAskIfReady] = useState(false)
   const dispatch = useDispatch()
+  const game = useSelector((state: AppState) => state.game)
+  const user = useSelector((state: AppState) => state.user)
 
-  useScrollToTop()
+  const [shouldAskIfReady, setAskIfReady] = useState(false)
+  const [showCreatorWelcome, setShowCreatorWelcome] = useState(() => {
+    return game?.creatorId === user?._id
+  })
+
+  const isReady = useMemo(() => {
+    if (game && user) {
+      return getPlayerFromUserId({ userId: user._id, game }).readyToPlay
+    }
+    return false
+  }, [game, user])
+
+  const isPickingTeams = useMemo(() => {
+    // If teams are present on game at this point, then we're picking our own teams.
+    return !!game && game.teams.length > 0
+  }, [game])
 
   useEffect(() => {
-    // Ready requirements: Picked a team.
-    const team = game?.teams.find((t) => t.userIds.some((p) => p === authedUser?._id))
-    if (team) setAskIfReady(true)
-  }, [authedUser, game])
+    // If you've entered a phrase and picked a team, we should ask if you're ready.
+    // We'll only do this if we're manually picking teams though. If you're not picking
+    // teams, then the "done adding phrases" button already accomplishes this.
+    if (isPickingTeams && game && user) {
+      const phraseReady = game.phrases.some(p => p.authorId === user._id)
+      const teamReady = isPickingTeams
+        ? game.teams.some(team => team.userIds.includes(user._id))
+        : true
+
+      const currentPlayer = getPlayerFromUserId({ userId: user._id, game })
+
+      if (phraseReady && teamReady && !currentPlayer.readyToPlay) {
+        setAskIfReady(true)
+      }
+    }
+  }, [game, isPickingTeams, user])
 
   function changeReadyStatus(status: boolean) {
-    // Change internal status to show/hide the READY modal.
-    setIsReady(status)
     // Tell the DB user changed status.
     if (game) {
       dispatch(playerReadyStatus({
@@ -41,10 +66,19 @@ const Lobby = () => {
     }
   }
 
+  useScrollToTop()
+
   return (
     <Container>
       <LobbyHeader shouldAskIfReady={shouldAskIfReady} changeReadyStatus={changeReadyStatus} />
-      <LobbyTabs />
+      <LobbyTabs
+        isPickingTeams={isPickingTeams}
+        changeReadyStatus={changeReadyStatus}
+        setAskIfReady={setAskIfReady}
+      />
+      {showCreatorWelcome && (
+        <CreatorWelcomeModal onClose={() => setShowCreatorWelcome(false)} />
+      )}
       {isReady && (
         <ReadyModal changeReadyStatus={changeReadyStatus} />
       )}

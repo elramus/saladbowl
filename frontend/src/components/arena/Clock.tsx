@@ -7,15 +7,17 @@ const Container = styled('div')`
     position: relative;
     top: -1px;
     margin-right: 0.5em;
-    font-size: ${(props) => props.theme.ms(1)};
+    font-size: ${props => props.theme.ms(1)};
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
   }
   span {
-    font-size: ${(props) => props.theme.ms(2)};
+    font-size: ${props => props.theme.ms(2)};
     font-style: italic;
     font-weight: 900;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   }
   &.warn svg, &.warn span {
-    color: ${(props) => props.theme.red};
+    color: ${props => props.theme.red};
   }
 `
 

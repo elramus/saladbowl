@@ -1,12 +1,12 @@
 import { ThunkAction, ThunkDispatch } from 'redux-thunk'
 import { AnyAction } from 'redux'
-import { RECEIVE_USER, AuthedUserActionTypes, User } from './types'
+import { RECEIVE_USER, UserActionTypes, User } from './types'
 import { AppState } from '..'
 import api from '../../lib/api'
 
 export const receiveUser = (
   user: User,
-): AuthedUserActionTypes => ({
+): UserActionTypes => ({
   type: RECEIVE_USER,
   user,
 })

@@ -2,7 +2,7 @@ import { GameState, GameActionTypes, RECEIVE_GAME } from './types'
 
 export const initialState: GameState = null
 
-const authedUser = (
+const game = (
   state: GameState = initialState,
   action: GameActionTypes,
 ): GameState => {
@@ -14,4 +14,4 @@ const authedUser = (
   }
 }
 
-export default authedUser
+export default game

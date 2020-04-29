@@ -7,30 +7,22 @@ import { AppState } from '../store'
 import { SocketMessages } from '../lib/socketTypes'
 import { Game } from '../store/game/types'
 import { receiveGame } from '../store/game/actions'
-import { receiveUsers } from '../store/users/actions'
-import { UsersState } from '../store/users/types'
 
 const GameSocket: React.FC = ({
   children,
 }) => {
   const { gameId } = useParams<{ gameId: string }>()
-  const authedUser = useSelector((state: AppState) => state.authedUser)
+  const user = useSelector((state: AppState) => state.user)
   const dispatch = useDispatch()
 
   useMountEffect(() => {
-    if (gameId && authedUser) {
+    if (gameId && user) {
       // Open a connection to the websocket and tell it what user is in which game.
       const socket = socketIOClient({
         query: {
           gameId,
-          userId: authedUser._id,
+          userId: user._id,
         },
-      })
-
-      // Listen for players updates.
-      socket.on(SocketMessages.PlayersUpdate, (data: UsersState) => {
-        console.log('Websocket players update received:', data) /* eslint-disable-line */
-        dispatch(receiveUsers(data))
       })
 
       // Listen for game updates.

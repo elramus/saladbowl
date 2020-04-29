@@ -75,6 +75,7 @@ const JoinGameModal = ({
     dispatch(fetchGame(inputCode, (game: Game | null) => {
       setIsLoading(false)
       if (game) {
+        // Successfully found game, send player to that game's lobby.
         setFoundGame(true)
         setTimeout(() => {
           history.push(`/games/${game._id}/lobby`)

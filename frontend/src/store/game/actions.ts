@@ -1,7 +1,7 @@
 import { ThunkAction, ThunkDispatch } from 'redux-thunk'
 import { AnyAction } from 'redux'
 import {
-  RECEIVE_GAME, GameActionTypes, Game, ManagerConfig,
+  RECEIVE_GAME, GameActionTypes, Game, ManagerConfig, PlayedPhrase,
 } from './types'
 import { AppState } from '..'
 import api from '../../lib/api'
@@ -19,32 +19,29 @@ export const fetchGame = (
   cb?: (game: Game | null) => void,
 ): ThunkAction<void, AppState, {}, AnyAction> => (
   dispatch: ThunkDispatch<{}, {}, AnyAction>,
-  getState: () => AppState,
 ) => {
-  if (!getState().game) {
-    dispatch(setLoadingStatus('games', true))
-    api.fetchGame(shortId)
-      .then(({ data }) => {
-        if (data.game) {
-          dispatch(receiveGame(data.game))
-          dispatch(setLoadingStatus('games', false))
-        }
-        if (cb) cb(data.game || null)
-      })
-      .catch(() => {
+  dispatch(setLoadingStatus('games', true))
+  api.fetchGame(shortId)
+    .then(({ data }) => {
+      if (data.game) {
+        dispatch(receiveGame(data.game))
         dispatch(setLoadingStatus('games', false))
-        if (cb) cb(null)
-      })
-  }
+      }
+      if (cb) cb(data.game || null)
+    })
+    .catch(() => {
+      dispatch(setLoadingStatus('games', false))
+      if (cb) cb(null)
+    })
 }
 
 export const createGame = (
-  userId: string,
+  teams?: [string, string],
   cb?: (newGame: Game) => void,
 ): ThunkAction<void, AppState, {}, AnyAction> => (
   dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ) => {
-  api.createGame(userId)
+  api.createGame(teams)
     .then(({ data }) => {
       // Put the new game into state
       if (data.game) {
@@ -72,25 +69,18 @@ export const createTeams = (
   gameId: string,
   teamNames: string[],
 ): ThunkAction<void, AppState, {}, AnyAction> => (
-  // dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ) => {
   api.createTeams(gameId, teamNames)
-    .then(() => {
-      // Put the new game into state
-      // Do we need to? It also comes through the socket...
-    })
 }
 
 export const joinTeam = (
   gameId: string,
   teamId: string,
-): ThunkAction<void, AppState, {}, AnyAction> => (
-  // dispatch: ThunkDispatch<{}, {}, AnyAction>,
-) => {
+  callback?: () => void,
+): ThunkAction<void, AppState, {}, AnyAction> => () => {
   api.joinTeam(gameId, teamId)
     .then(() => {
-      // Put the new game into state
-      // Do we need to? It also comes through the socket...
+      if (callback) callback()
     })
 }
 
@@ -129,17 +119,42 @@ export const solvePhrase = ({
   api.solvePhrase({ gameId, phraseId, timeRemaining })
 }
 
-export const unsolvePhrase = ({
+export const failPhrase = ({
   gameId,
   phraseId,
 }: {
   gameId: string;
   phraseId: string;
 }): ThunkAction<void, AppState, {}, AnyAction> => () => {
-  api.unsolvePhrase({ gameId, phraseId })
+  api.failPhrase({ gameId, phraseId })
 }
 
-export const next = ({
+export const undoPhrase = ({
+  gameId,
+  phraseId,
+}: {
+  gameId: string;
+  phraseId: string;
+}): ThunkAction<void, AppState, {}, AnyAction> => () => {
+  api.undoPhrase({ gameId, phraseId })
+}
+
+export const submitPlayedPhrases = ({
+  gameId,
+  playedPhrases,
+}: {
+  gameId: string;
+  playedPhrases: PlayedPhrase[];
+}, callback?: () => void): ThunkAction<void, AppState, {}, AnyAction> => (
+  // dispatch: ThunkDispatch<{}, {}, AnyAction>,
+) => {
+  api.submitPlayedPhrases({ gameId, playedPhrases })
+    .then(() => {
+      if (callback) callback()
+    })
+}
+
+export const nextAction = ({
   gameId,
   userId = undefined,
   config = {},
@@ -148,5 +163,5 @@ export const next = ({
   userId?: string;
   config?: ManagerConfig;
 }): ThunkAction<void, AppState, {}, AnyAction> => () => {
-  api.next({ gameId, userId, config })
+  api.nextAction({ gameId, userId, config })
 }

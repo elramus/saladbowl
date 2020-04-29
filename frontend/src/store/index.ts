@@ -1,14 +1,12 @@
 import { combineReducers, createStore, applyMiddleware } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import thunkMiddleware from 'redux-thunk'
-import authedUser from './authed-user/reducers'
+import user from './user/reducers'
 import game from './game/reducers'
-import users from './users/reducers'
 import loading from './loading/reducers'
 
 const rootReducer = combineReducers({
-  authedUser,
-  users,
+  user,
   game,
   loading,
 })

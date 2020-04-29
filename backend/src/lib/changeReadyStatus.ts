@@ -9,15 +9,16 @@ export const changeReadyStatus = async ({
   game: IGame;
   status: boolean;
 }) => {
-  const player = game.players.find((p) => p.user._id.equals(userId))
+  const player = game.players.find(p => p.user._id.equals(userId))
   if (!player) throw new Error('Player not found from user ID')
 
   // Pull the old player off
   game.players.pull(player._id)
   // Make the update
-  player.pregameFinished = status
+  player.readyToPlay = status
   // Push the updated one on.
   game.players.push(player)
+
   // Save
   await game.save()
 

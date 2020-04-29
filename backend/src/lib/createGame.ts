@@ -1,11 +1,10 @@
 import { randomNum } from '../utils/randomNum'
 import { Game } from '../games/games.model'
+import { Team, ITeam } from '../teams/teams.model'
 
 export const createGame = async (
   userId: string,
-  teams?: {
-    name: string;
-  }[],
+  teamNames?: string[],
 ) => {
   let shortId: number | null = null
 
@@ -20,10 +19,31 @@ export const createGame = async (
   }
   await getShortId()
 
+  function makeTeams() {
+    const teams: ITeam[] = []
+    if (teamNames) {
+      if (teamNames[0]) {
+        const team0 = new Team({
+          name: teamNames[0],
+        })
+        teams.push(team0)
+      }
+      if (teamNames[1]) {
+        const team1 = new Team({
+          name: teamNames[1],
+        })
+        teams.push(team1)
+      }
+    }
+    return teams
+  }
+
+  const teams = makeTeams()
+
   const newGame = new Game({
     shortId,
-    creator: userId,
-    teams: teams || [],
+    creatorId: userId,
+    teams,
   })
 
   try {

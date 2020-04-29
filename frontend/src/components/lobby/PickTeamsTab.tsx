@@ -16,7 +16,7 @@ const Container = styled('div')`
       button {
         width: 100%;
         padding: 1rem;
-        border: 1px solid ${(props) => props.theme.green};
+        border: 1px solid ${props => props.theme.green};
         border-radius: 10px;
         margin-bottom: 2em;
         transition: background 150ms ease-out, color 150ms ease-out;
@@ -34,7 +34,7 @@ const Container = styled('div')`
           opacity: 0;
           transition: opacity 150ms ease-out;
           svg {
-            font-size: ${(props) => props.theme.ms(2)};
+            font-size: ${props => props.theme.ms(2)};
           }
         }
       }
@@ -44,7 +44,7 @@ const Container = styled('div')`
       &.selected {
         button {
           color: white;
-          background: ${(props) => props.theme.green};
+          background: ${props => props.theme.green};
         }
         .icon-container {
           opacity: 1;
@@ -54,33 +54,42 @@ const Container = styled('div')`
   }
 `
 
-const PickTeamsTab = () => {
+interface Props {
+  onChooseTeam: () => void;
+}
+
+const PickTeamsTab = ({
+  onChooseTeam,
+}: Props) => {
   const game = useSelector((state: AppState) => state.game)
-  const authedUser = useSelector((state: AppState) => state.authedUser)
+  const user = useSelector((state: AppState) => state.user)
   const dispatch = useDispatch()
 
-  const selectedTeam = useMemo<string | null>(() => {
-    if (game && authedUser) {
-      const playerTeam = game.teams.find((team) => team.userIds.some((pId) => pId === authedUser._id))
+  const selectedTeamId = useMemo<string | null>(() => {
+    if (game && user) {
+      const playerTeam = game.teams.find(team => team.userIds.some(pId => pId === user._id))
       if (playerTeam) return playerTeam._id
     }
     return null
-  }, [game, authedUser])
+  }, [game, user])
 
   useScrollToTop()
 
   function handleTeamClick(teamId: string) {
     if (game) {
-      dispatch(joinTeam(game._id, teamId))
+      window.scrollTo(0, 0) // scroll to top of page so they can see the ready button.
+      dispatch(joinTeam(game._id, teamId, onChooseTeam))
     }
   }
 
   function getTeamPlayers(team: Team) {
     const players: string[] = []
     if (game) {
-      team.userIds.forEach((pId) => {
-        const user = game.players.find((p) => p.user._id === pId)?.user
-        if (user) players.push(user.name)
+      // The teams have an array of user Ids. We'll connect them to the game
+      // players list and return a list of names.
+      team.userIds.forEach(pId => {
+        const pUser = game.players.find(p => p.user._id === pId)?.user
+        if (pUser) players.push(pUser.name)
       })
     }
     return players
@@ -94,10 +103,10 @@ const PickTeamsTab = () => {
       <ul className="teams">
         {game.teams
           .sort((a, b) => (a.name > b.name ? 1 : -1))
-          .map((t) => (
+          .map(t => (
             <li
               key={t._id}
-              className={t._id === selectedTeam ? 'selected' : ''}
+              className={t._id === selectedTeamId ? 'selected' : ''}
             >
               <button type="button" onClick={() => handleTeamClick(t._id)}>
                 <span className="title">

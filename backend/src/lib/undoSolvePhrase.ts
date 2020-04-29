@@ -1,26 +1,20 @@
 import { IGame } from '../games/games.model'
 
-export const undoSolvePhrase = ({
+export const undoSolvePhrase = async ({
   game,
   phraseId,
-  userId,
 }: {
   game: IGame;
   phraseId: string;
-  userId: string;
 }) => {
-  // Pop the last phrase off the current turn's solved phrases
-  // to undo the solving.
-  game.turns[0].solvedPhraseIds.pop()
+  // Pop the last phrase off the current turn's played phrases.
+  const phraseToUndo = game.turns[0].playedPhrases.pop()
+  if (!phraseToUndo) throw new Error('Trying to undo nonexistent phrase, foo')
 
-  // Unshift the passed phrase ID to the unsolved phrase array.
+  // Add the phrase ID to the front of unsolved phrase array.
   game.unsolvedPhraseIds.unshift(phraseId)
 
-  // Decrement the team's score.
-  const userTeam = game.teams.find((t) => t.userIds.includes(userId))
-  if (!userTeam) throw new Error('Invalid userTeam')
-  const tI = game.teams.indexOf(userTeam)
-  game.teams[tI].set('score', userTeam.score - 1)
-
+  // Save and return
+  await game.save()
   return game
 }

@@ -1,10 +1,14 @@
 import React, { useState, useMemo } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styled from 'styled-components'
+import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import Modal from '../Modal'
 import TextButton from '../TextButton'
 import TeamNamesForm from './TeamNamesForm'
 import { enterOrSpace } from '../../utils/enterOrSpace'
+import { createGame } from '../../store/game/actions'
+import { Game } from '../../store/game/types'
 
 const Container = styled('div')`
   .auto-teams-checkbox {
@@ -36,17 +40,26 @@ interface Props {
 const CreateGameModal = ({
   onClose,
 }: Props) => {
+  const dispatch = useDispatch()
+  const history = useHistory()
   const [autoTeams, setAutoTeams] = useState(true)
   const [teamNames, setTeamNames] = useState<(string | null)[]>([null, null])
   const [loading, setLoading] = useState(false)
 
+  const formValid = useMemo(() => {
+    return autoTeams || teamNames.every(name => name && name.length >= 3)
+  }, [autoTeams, teamNames])
+
   function handleCreate() {
     setLoading(true)
+    if (formValid) {
+      // We know the teams are good to go from formValid.
+      dispatch(createGame(teamNames as [string, string], (newGame: Game) => {
+        // Head on over to the new game.
+        history.push(`/games/${newGame._id}/lobby`)
+      }))
+    }
   }
-
-  const formValid = useMemo(() => {
-    return autoTeams || teamNames.every(name => name?.length)
-  }, [autoTeams, teamNames])
 
   return (
     <Modal onClose={onClose}>

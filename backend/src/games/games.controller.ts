@@ -14,6 +14,8 @@ import { createGame } from '../lib/createGame'
 import { findGame } from '../lib/findGame'
 import { changeReadyStatus } from '../lib/changeReadyStatus'
 import { gameReadyChecklist } from '../lib/gameReadyChecklist'
+import { failPhrase } from '../lib/failPhrase'
+import { applyTurnResults } from '../lib/applyTurnResults'
 
 const gameController = {
   async fetchGame(req: Request, res: Response) {
@@ -25,12 +27,19 @@ const gameController = {
 
     try {
       const game = await findGame(gameId)
+
       if (!game) return res.send({ game: null })
 
       // If we have a userId, we'll go ahead and join them to it.
       if (userId) {
-        const updatedGame = await joinPlayerToGame(userId, game)
-        return res.send({ game: updatedGame })
+        // Don't let someone join a game that's already started.
+        if (game.startTime === null) {
+          const updatedGame = await joinPlayerToGame(userId, game)
+
+          // Broadcast the update
+          io.to(updatedGame.id).emit(SocketMessages.GameUpdate, updatedGame)
+          return res.send({ game: updatedGame })
+        }
       }
 
       // If for some reason there's no userId, just send back the game we found.
@@ -51,6 +60,9 @@ const gameController = {
 
       // Before we return, attach the creator as a game player.
       const updatedGame = await joinPlayerToGame(userId, newGame)
+
+      // Broadcast the update
+      io.to(updatedGame.id).emit(SocketMessages.GameUpdate, updatedGame)
 
       return res.send({ game: updatedGame })
     } catch (e) {
@@ -88,10 +100,12 @@ const gameController = {
         // Fire up a Turn Runner.
         // (It requires a user to be passed in)
         const user = await User.findById(userId)
+
         if (!user) return res.status(400).send('Invalid user ID')
 
         const tR = new TurnRunner({ game, user })
-        tR.nextAction()
+        const action = await tR.nextAction()
+        return res.send(action)
       }
 
       // Broadcast and return the update.
@@ -113,17 +127,13 @@ const gameController = {
     if (!user) return res.status(400).send('User not found')
 
     try {
-      // Turn off the pre-roll, then run Game Runner next action.
+      // Turn off the pre-roll, then run Turn Runner next action.
       game.preRoll.show = false
-      const updatedGame = await game.save()
+      await game.save()
 
-      const tR = new TurnRunner({
-        game,
-        user,
-      })
-      tR.nextAction()
-
-      return res.send({ game: updatedGame })
+      const tR = new TurnRunner({ game, user })
+      const action = await tR.nextAction()
+      return res.send(action)
     } catch (e) {
       return res.status(500).send(e.message)
     }
@@ -211,36 +221,57 @@ const gameController = {
 
     try {
       const game = await Game.findById(gameId)
-      if (game) {
-        const updatedGame = await solvePhrase(game, phraseId, userId)
+      if (!game) throw new Error('No game found with ID')
 
-        // We need to see if this player just used up all the phrases.
-        // If they did, fire up the ol' Game Manager and run next.
-        if (game.unsolvedPhraseIds.length === 0) {
-          const user = await User.findById(userId)
-          if (!user) return res.status(400).send('Bad user ID')
+      const updatedGame = await solvePhrase(game, phraseId)
 
-          const tR = new TurnRunner({
-            game,
-            user,
-            config: {
-              timeRemaining,
-            },
-          })
-          tR.nextAction()
-        }
+      // We need to see if this player just used up all the phrases.
+      // If they did, fire up the ol' Turn Runner and run next.
+      if (game.unsolvedPhraseIds.length === 0) {
+        // Apply the turn's array of played phrases.
+        await applyTurnResults({ game: updatedGame })
 
-        // Broadcast and return the update.
-        io.to(game._id).emit(SocketMessages.GameUpdate, updatedGame)
-        return res.send({ game: updatedGame })
+        const user = await User.findById(userId)
+        if (!user) return res.status(400).send('Bad user ID')
+
+        const tR = new TurnRunner({
+          game,
+          user,
+          config: {
+            timeRemaining,
+          },
+        })
+        const action = await tR.nextAction()
+        return res.send(action)
       }
-      return res.status(404).send('Game not found')
+
+      // But if there are more phrases, just broadcast and return the update.
+      io.to(game._id).emit(SocketMessages.GameUpdate, updatedGame)
+      return res.send({ game: updatedGame })
     } catch (e) {
-      return res.status(500).send(e)
+      return res.status(500).send(e.message)
     }
   },
 
-  async unsolvePhrase(req: Request, res: Response) {
+  async failPhrase(req: Request, res: Response) {
+    const { gameId } = req.params
+    const { phraseId } = req.body
+    if (!gameId || !phraseId) return res.status(400).send('Missing required params')
+
+    const game = await Game.findById(gameId)
+    if (!game) return res.status(400).send('Invalid game ID')
+
+    try {
+      const updatedGame = await failPhrase({ game, phraseId })
+
+      io.to(game._id).emit(SocketMessages.GameUpdate, updatedGame)
+      return res.send({ game: updatedGame })
+    } catch (e) {
+      return res.status(500).send(e.message)
+    }
+  },
+
+  async undoPhrase(req: Request, res: Response) {
     const { gameId } = req.params
     const { phraseId } = req.body
     const { userId } = req
@@ -250,8 +281,8 @@ const gameController = {
     if (!game) return res.status(400).send('Invalid game ID')
 
     try {
-      const updatedGame = undoSolvePhrase({ game, phraseId, userId })
-      await updatedGame.save()
+      const updatedGame = await undoSolvePhrase({ game, phraseId })
+
       io.to(game._id).emit(SocketMessages.GameUpdate, updatedGame)
       return res.send({ game: updatedGame })
     } catch (e) {
@@ -259,7 +290,38 @@ const gameController = {
     }
   },
 
-  async next(req: Request, res: Response) {
+  async submitTurnResults(req: Request, res: Response) {
+    const { gameId } = req.params
+    const { playedPhrases } = req.body
+    const { userId } = req
+    if (!gameId || !playedPhrases || !userId) {
+      return res.status(400).send('Missing required params')
+    }
+
+    const game = await Game.findById(gameId)
+    if (!game) return res.status(400).send('Invalid game ID')
+
+    try {
+      const updatedGame = await applyTurnResults({
+        game,
+        playedPhrases,
+      })
+
+      const user = await User.findById(userId)
+      if (!user) throw new Error('invalid user ID')
+
+      const tR = new TurnRunner({
+        game: updatedGame,
+        user,
+      })
+      const action = await tR.nextAction()
+      return res.send(action)
+    } catch (e) {
+      return res.status(500).send(e.message)
+    }
+  },
+
+  async nextAction(req: Request, res: Response) {
     const { gameId } = req.params
     const { config } = req.body
     const { userId } = req
@@ -267,21 +329,20 @@ const gameController = {
 
     try {
       // This function is very generic. What it does depends on where the game is currently.
-      // So, we're fire up a TurnRunner, give it the info, and let it take it from there.
+      // So, we fire up a TurnRunner, give it the info, and let it take it from there.
       const game = await Game.findById(gameId)
       const user = await User.findById(userId)
-      if (game && user) {
-        const gM = new TurnRunner({
-          game,
-          user,
-          config,
-        })
-        gM.nextAction()
-        return res.send()
-      }
-      return res.status(404).send('Could not find game or user')
+      if (!game || !user) return res.status(400).send('Invalid game ID or user ID')
+
+      const tR = new TurnRunner({
+        game,
+        user,
+        config,
+      })
+      const action = await tR.nextAction()
+      return res.send(action)
     } catch (e) {
-      return res.status(500).send(e)
+      return res.status(500).send(e.message)
     }
   },
 }

@@ -7,10 +7,12 @@ import { turnSchema, ITurn } from '../turns/turns.model'
 export const gameSchema = new mongoose.Schema({
   shortId: {
     type: Number,
+    required: true,
   },
-  creator: {
+  creatorId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
+    required: true,
   },
   startTime: {
     type: Number,
@@ -27,6 +29,7 @@ export const gameSchema = new mongoose.Schema({
     firstTeamId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Team',
+      default: null,
     },
   },
   turns: [turnSchema],
@@ -39,14 +42,14 @@ export const gameSchema = new mongoose.Schema({
 
 export interface IGame extends mongoose.Document {
   shortId: number;
-  creatorId: string;
+  creatorId: Types.ObjectId;
   startTime: number | null;
   players: Types.Array<IPlayer>;
   teams: Types.Array<ITeam>;
   phrases: Types.Array<IPhrase>;
   preRoll: {
     show: boolean;
-    firstTeamId?: string;
+    firstTeamId: Types.ObjectId;
   };
   turns: Types.Array<ITurn>;
   gameOver: boolean;

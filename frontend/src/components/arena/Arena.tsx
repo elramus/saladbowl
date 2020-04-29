@@ -1,58 +1,88 @@
-import React, { useMemo } from 'react'
+import React, {
+  useMemo, useState, useEffect, useRef,
+} from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import { AppState } from '../../store'
-import RoundInfo from './RoundInfo'
-import GetReady from './GetReady'
 import animateEntrance from '../../lib/animateEntrance'
 import Prompter from './Prompter'
-import Scoreboard from './Scoreboard'
-import WaitingOn from './WaitingOn'
 import Promptee from './Promptee'
 import GameOver from '../GameOver'
-import TurnCountdown from '../TurnCountdown'
+import TurnCountdown from './TurnCountdown'
+import { isFirstTurnOfRound } from '../../lib/isFirstTurnOfRound'
+import NewRoundSplash from './NewRoundSplash'
+import BetweenTurns from './BetweenTurns'
 
 const Container = styled('div')`
-  background: ${(props) => props.theme.green};
+  background: ${props => props.theme.green};
   min-height: 100vh;
-  padding: 0 2em;
-  ${animateEntrance('fade', 1000)}
+  ${animateEntrance('fade', 1000)};
   .wrapped {
-    min-height: 100vh;
     max-width: 30em;
+    height: inherit;
     margin: auto;
   }
 `
 
 const Arena = () => {
-  const authedUser = useSelector((state: AppState) => state.authedUser)
+  const user = useSelector((state: AppState) => state.user)
   const game = useSelector((state: AppState) => state.game)
 
-  const yourTurn = useMemo(() => {
-    return game?.turns[0].userId === authedUser?._id
-  }, [authedUser, game])
+  const [showNewRoundScreen, setShowNewRoundScreen] = useState(isFirstTurnOfRound(game))
+  const roundsSplashed = useRef<number[]>([])
+
+  const isYourTurn = useMemo(() => {
+    return game?.turns[0].userId === user?._id
+  }, [user, game])
+
+  const isYourTeam = useMemo(() => {
+    const promptingId = game?.turns[0].userId
+    const promptingTeam = game?.teams.find(t => t.userIds.includes(promptingId ?? ''))
+    return promptingTeam?.userIds.includes(user?._id ?? '') ?? false
+  }, [user, game])
+
+  useEffect(() => {
+    // If we haven't splashed this round yet, do it now.
+    if (game
+      && game.turns[0].round > 0
+      && roundsSplashed.current
+      && !roundsSplashed.current.includes(game.turns[0].round)
+    ) {
+      // Show splash and mark that we've shown it.
+      setShowNewRoundScreen(true)
+      roundsSplashed.current.push(game.turns[0].round)
+    }
+  }, [game])
+
+  useEffect(() => {
+    if (showNewRoundScreen) {
+      setTimeout(() => {
+        setShowNewRoundScreen(false)
+      }, 4500) // The duration of the NewRoundSplash animations are 5s.
+    }
+  }, [showNewRoundScreen])
 
   function getMainContent() {
-    if (!game) return <div />
-    if (game.gameOver) return <GameOver />
-    if (game.turns[0].showCountdown) return <TurnCountdown />
-    if (yourTurn && !game.turns[0].startTime) {
-      return <GetReady />
+    if (!game) {
+      return <div />
     }
-    if (!yourTurn && !game.turns[0].startTime) {
-      return (
-        <>
-          <RoundInfo />
-          <Scoreboard />
-          <WaitingOn />
-        </>
-      )
+    if (game.gameOver) {
+      return <GameOver />
     }
-    if (yourTurn && game.turns[0].startTime) {
+    if (showNewRoundScreen) {
+      return <NewRoundSplash roundNum={game.turns[0].round} />
+    }
+    if (game.turns[0].showCountdown) {
+      return <TurnCountdown />
+    }
+    if (!game.turns[0].startTime) {
+      return <BetweenTurns isYourTurn={isYourTurn} />
+    }
+    if (game.turns[0].startTime && isYourTurn) {
       return <Prompter />
     }
-    if (!yourTurn && game.turns[0].startTime) {
-      return <Promptee />
+    if (game.turns[0].startTime && !isYourTurn) {
+      return <Promptee isYourTeam={isYourTeam} />
     }
     return <div />
   }

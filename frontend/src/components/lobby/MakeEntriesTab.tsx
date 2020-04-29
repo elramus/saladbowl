@@ -23,17 +23,19 @@ const Container = styled('div')`
 `
 
 interface Props {
-  setCurrentTab: (tab: number) => void;
+  onFinished: () => void;
 }
 
 const MakeEntriesTab = ({
-  setCurrentTab,
+  onFinished,
 }: Props) => {
-  const [entry, setEntry] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const ref = useRef<HTMLTextAreaElement>(null)
   const dispatch = useDispatch()
   const game = useSelector((state: AppState) => state.game)
+
+  const [entry, setEntry] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const ref = useRef<HTMLTextAreaElement>(null)
 
   useScrollToTop()
 
@@ -57,10 +59,10 @@ const MakeEntriesTab = ({
   }
 
   function handleDone() {
-    setCurrentTab(1)
+    onFinished()
   }
 
-  function handlePhraseClick(phraseId: string) {
+  function handlePhraseDelete(phraseId: string) {
     if (game) {
       dispatch(deletePhrase(game._id, phraseId))
     }
@@ -68,13 +70,14 @@ const MakeEntriesTab = ({
 
   return (
     <Container>
+      <HelperText>Everyone puts a few phrases into the salad bowl. You'll take turns prompting your teammates to say these phrases.</HelperText>
       <HelperText>Ask your deepest, darkest self "What stupid things should I make my friends say?"</HelperText>
       <textarea
-        onChange={(e) => setEntry(e.target.value)}
+        onChange={e => setEntry(e.target.value)}
         ref={ref}
         placeholder="Let your freak flag fly..."
         value={entry}
-        onKeyPress={(e) => handleKeyPress(e.key)}
+        onKeyPress={e => handleKeyPress(e.key)}
       />
       <div className="controls">
         <TextButton
@@ -84,12 +87,13 @@ const MakeEntriesTab = ({
           onClick={handleAdd}
         />
         <TextButton
-          text="I'm Done"
+          text="I'm done, let's play!"
           trailingIcon={['fas', 'long-arrow-right']}
           onClick={handleDone}
+          variant="simple"
         />
       </div>
-      <MyPhrases handlePhraseClick={handlePhraseClick} />
+      <MyPhrases handlePhraseDelete={handlePhraseDelete} />
     </Container>
   )
 }

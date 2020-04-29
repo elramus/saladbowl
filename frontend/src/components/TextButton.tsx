@@ -55,7 +55,7 @@ const Container = styled('button')<{ styles: StyleProps }>`
     margin-left: 0.5rem;
   }
   &:hover {
-    opacity: 0.85;
+    opacity: 0.75;
     background: ${props => props.styles.hoverBg};
   }
 `

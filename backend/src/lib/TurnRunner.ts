@@ -46,7 +46,7 @@ export class TurnRunner {
     }
   }
 
-  async nextAction() {
+  async nextAction(): Promise<string> {
     // If any turns have been taken, get the first one to see what
     // round it is. Just don't forget to unshift new turns instead
     // of pushing :)
@@ -55,27 +55,43 @@ export class TurnRunner {
       : 0
 
     // If we haven't done pre-roll yet...
-    if (this.fromCreator && currentRound === 0 && !this.game.preRoll.show) {
-      this.prepGame()
+    if (currentRound === 0 && !this.game.preRoll.show) {
+      await this.prepGame()
 
-      return
+      this.emit()
+      return 'Fired prepGame'
     }
 
     // If pre-roll just finished...
-    if (this.fromCreator && currentRound === 0 && this.game.preRoll.show) {
+    if (this.fromCreator
+      && currentRound === 0
+      && this.game.preRoll.show
+      && this.game.startTime !== null
+    ) {
       this.game.preRoll.show = false
 
       // Shuffle the phrases
-      this.prepNewRound()
+      await this.prepNewRound()
 
       // Create the next turn.
-      const nextTeam = this.game.teams
-        .find((t) => t._id.toString() === this.game.preRoll.firstTeamId)
-      // We assigned lastPrompterIndex to the preRoll object during prepGame.
-      const nextUserId = nextTeam?.userIds[nextTeam.lastPrompterIndex]
-      if (nextUserId) this.addNewTurn({ roundNum: 1, nextUserId })
 
-      return
+      // First get the Id of the first person to go.
+      const firstTeam = this.game.teams
+        .find(t => t._id.toString() === this.game.preRoll.firstTeamId.toString())
+      if (!firstTeam) throw new Error('could not get the first team')
+
+      // We assigned lastPrompterIndex to the preRoll object during prepGame.
+      const nextUserId = firstTeam.userIds[firstTeam.lastPrompterIndex]
+      if (!nextUserId) throw new Error('could not get next prompter')
+
+      try {
+        await this.addNewTurn({ roundNum: 1, nextUserId })
+      } catch (e) {
+        throw new Error(e)
+      }
+
+      this.emit()
+      return 'Preroll just finished, added new turn.'
     }
 
     // If the game is over...
@@ -85,7 +101,9 @@ export class TurnRunner {
     ) {
       this.game.gameOver = true
       await this.game.save()
+
       this.emit()
+      return 'Game over, man!'
     }
 
     const currentTurn: ITurn = this.game.turns[0]
@@ -120,7 +138,7 @@ export class TurnRunner {
         // then trigger nextAction.
       }, 3000)
 
-      return
+      return 'Starting the 3-second countdown into a turn'
     }
 
     // If the prompting player just ran out of time...
@@ -139,15 +157,16 @@ export class TurnRunner {
         this.game.teams.push(teamUpNext)
 
         // Prep for the next turn. Same round since there are more phrases.
-        this.addNewTurn({
+        await this.addNewTurn({
           roundNum: currentRound,
           nextUserId: nextPlayerId,
         })
+
+        this.emit()
+        return 'Created next turn'
       } catch (e) {
         throw new Error(e)
       }
-
-      return
     }
 
     // If the prompting player just ran out of phrases...
@@ -158,18 +177,21 @@ export class TurnRunner {
     ) {
       if (currentRound < 3) {
         // Put the phrases back into the bowl and shuffle!
-        this.prepNewRound()
+        await this.prepNewRound()
 
         // Create the turn.
-        this.addNewTurn({
+        await this.addNewTurn({
           roundNum: currentRound + 1, // Increment the round.
           nextUserId: this.user._id, // Same player.
           turnLength: this.config?.timeRemaining ?? 60, // Their remaining time.
         })
-      } else {
-        console.log('Game over, man.') /*eslint-disable-line*/
+
+        this.emit()
+        return 'Same round, next turn'
       }
     }
+
+    return 'None of the nextAction ifs triggered...'
   }
 
   async prepGame() {
@@ -178,7 +200,7 @@ export class TurnRunner {
     await this.game.save()
 
     // If we don't have teams yet, do that now.
-    if (this.game.teams.length) {
+    if (!this.game.teams.length) {
       // Will automatically create teams and assign players to them.
       await makeTeams({ game: this.game, numberOfTeams: 2 })
     }
@@ -198,7 +220,6 @@ export class TurnRunner {
     }
 
     await this.game.save()
-    this.emit()
 
     // The frontend is now showing all the pre-roll screens.
     // After a bunch of that, the game's creator will hit pre-roll-finished endpoint.
@@ -206,7 +227,7 @@ export class TurnRunner {
 
   async prepNewRound() {
     // The unsolved phrases starts as just a shuffle of all the phrases.
-    this.game.unsolvedPhraseIds = shuffleArray(this.game.phrases.map((p) => p._id))
+    this.game.unsolvedPhraseIds = shuffleArray(this.game.phrases.map(p => p._id))
     await this.game.save()
   }
 
@@ -219,16 +240,24 @@ export class TurnRunner {
     nextUserId: string;
     turnLength?: number;
   }) {
+    // Get the team of the next player.
+    const team = this.game.teams.find(t => t.userIds.includes(nextUserId))
+    if (!team) throw new Error('Invalid user ID passed to addNewTurn')
+
     // Add turn to the beginning of the turns array.
     this.game.turns.unshift({
       userId: nextUserId,
+      teamId: team._id,
       round: roundNum,
       turnLength: turnLength ?? 60,
     })
 
+    // Shuffle the unsolved phrases.
+    const shuffled = shuffleArray(this.game.unsolvedPhraseIds)
+    this.game.unsolvedPhraseIds = shuffled
+
     try {
       await this.game.save()
-      this.emit()
     } catch (e) {
       throw new Error(e.message)
     }

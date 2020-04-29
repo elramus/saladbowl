@@ -23,6 +23,7 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 0,
     '@typescript-eslint/interface-name-prefix': 0,
     '@typescript-eslint/semi': 0,
+    'arrow-parens': ['error', 'as-needed'],
     "import/extensions": [".js", ".jsx", ".json", ".ts", ".tsx"],
     'import/prefer-default-export': 0,
     'lines-between-class-members': 0,

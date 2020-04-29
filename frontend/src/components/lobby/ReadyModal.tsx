@@ -2,20 +2,23 @@ import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import { AppState } from '../../store'
-import { User } from '../../store/authed-user/types'
+import { User } from '../../store/user/types'
 import Modal from '../Modal'
 import TextButton from '../TextButton'
 
 const Container = styled('div')`
   h3 {
     margin-bottom: 2em;
-    color: ${(props) => props.theme.darkGreen};
+    color: ${props => props.theme.darkGreen};
   }
   ul {
     margin-bottom: 4em;
     li {
       font-weight:bold;
     }
+  }
+  p {
+    margin-bottom: 2em;
   }
 `
 
@@ -31,13 +34,13 @@ const ReadyModal = ({
   const waitingOnList = useMemo(() => {
     const list: User[] = []
     if (game) {
-      game.players.forEach((player) => !player.ready && list.push(player.user))
+      game.players.forEach(player => !player.readyToPlay && list.push(player.user))
     }
     return list
   }, [game])
 
   const enoughPlayers = useMemo(() => {
-    return game?.teams.every((t) => t.userIds.length > 0)
+    return game?.teams.every(t => t.userIds.length > 0)
   }, [game])
 
   return (
@@ -54,9 +57,7 @@ const ReadyModal = ({
               <ul>
                 {waitingOnList.map((u, i) => {
                   if (i <= 4) {
-                    return (
-                      <li key={u._id}>{u.name}</li>
-                    )
+                    return <li key={u._id}>{u.name}</li>
                   }
                   return false
                 })}
@@ -71,6 +72,7 @@ const ReadyModal = ({
           text="Actually, I'm Not Ready"
           leadingIcon={['fas', 'long-arrow-left']}
           onClick={() => changeReadyStatus(false)}
+          variant="simple"
         />
       </Container>
     </Modal>

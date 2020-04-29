@@ -1,6 +1,6 @@
 import axios, { AxiosPromise } from 'axios'
-import { User } from '../store/authed-user/types'
-import { Game, ManagerConfig } from '../store/game/types'
+import { User } from '../store/user/types'
+import { Game, ManagerConfig, PlayedPhrase } from '../store/game/types'
 
 axios.defaults.withCredentials = true
 axios.defaults.baseURL = '/api/v1/'
@@ -23,9 +23,9 @@ const api = {
   },
 
   createGame: (
-    userId: string,
+    teams: [string, string] | undefined,
   ): AxiosPromise<{ game: Game }> => {
-    return axios.post('/games', { userId })
+    return axios.post('/games', { teams })
   },
 
   createTeams: (
@@ -75,20 +75,40 @@ const api = {
     phraseId: string;
     timeRemaining: number;
   }): AxiosPromise => {
-    return axios.put(`/games/${gameId}/phrase-solved`, { phraseId, timeRemaining })
+    return axios.put(`/games/${gameId}/solve-phrase`, { phraseId, timeRemaining })
   },
 
-  unsolvePhrase: ({
+  failPhrase: ({
     gameId,
     phraseId,
   }: {
     gameId: string;
     phraseId: string;
   }): AxiosPromise => {
-    return axios.put(`/games/${gameId}/unsolve-phrase`, { phraseId })
+    return axios.put(`/games/${gameId}/fail-phrase`, { phraseId })
   },
 
-  next: ({
+  undoPhrase: ({
+    gameId,
+    phraseId,
+  }: {
+    gameId: string;
+    phraseId: string;
+  }): AxiosPromise => {
+    return axios.put(`/games/${gameId}/undo-phrase`, { phraseId })
+  },
+
+  submitPlayedPhrases: ({
+    gameId,
+    playedPhrases,
+  }: {
+    gameId: string;
+    playedPhrases: PlayedPhrase[];
+  }) => {
+    return axios.post(`/games/${gameId}/submit-played-phrases`, { playedPhrases })
+  },
+
+  nextAction: ({
     gameId,
     userId,
     config,
@@ -97,7 +117,7 @@ const api = {
     userId: string | undefined;
     config: ManagerConfig;
   }): AxiosPromise => {
-    return axios.put(`/games/${gameId}/next`, { userId, config })
+    return axios.put(`/games/${gameId}/next-action`, { userId, config })
   },
 }
 

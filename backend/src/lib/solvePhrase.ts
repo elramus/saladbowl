@@ -3,23 +3,34 @@ import { IGame } from '../games/games.model'
 export const solvePhrase = async (
   game: IGame,
   phraseId: string,
-  userId: string,
 ) => {
-  const currentRound = game.turns[0].round
+  const turn = game.turns[0]
+
+  // Should we really be checking the round here?
+  const currentRound = turn.round
 
   if (currentRound === 1 || currentRound === 2 || currentRound === 3) {
-    // Add the phrase the solved phrases array.
-    game.turns[0].solvedPhraseIds.push(phraseId)
+    // Calculate the duration.
+    const now = Date.now()
+    let duration = 0
+    if (turn.playedPhrases.length > 0) {
+      // Get the timestamp of the phrase before this.
+      duration = now - turn.playedPhrases[turn.playedPhrases.length - 1].timestamp
+    } else {
+      duration = now - (turn.startTime ?? 0)
+    }
 
-    // Remove the solved phrase from the unsolved array.
-    game.set('unsolvedPhraseIds', game.unsolvedPhraseIds.filter((uPI) => uPI !== phraseId))
+    // Add to the turn's phrase array as solved.
+    turn.playedPhrases.push({
+      phraseId,
+      solved: true,
+      timestamp: now,
+      duration,
+    })
 
-    // Increment the team's score.
-    const userTeam = game.teams.find((t) => t.userIds.includes(userId))
-    if (!userTeam) throw new Error('Error finding team for user')
-    userTeam.score += 1
-    game.teams.pull(userTeam._id)
-    game.teams.push(userTeam)
+    // Remove the solved phrase from the game's unsolved array.
+    const unsolved = game.unsolvedPhraseIds.filter(uPI => uPI !== phraseId)
+    game.set('unsolvedPhraseIds', unsolved)
 
     // Save
     await game.save()

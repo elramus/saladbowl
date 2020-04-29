@@ -6,15 +6,15 @@ export const playerSchema = new mongoose.Schema({
     type: userSchema,
     required: true,
   },
-  pregameFinished: {
+  readyToPlay: {
     type: Boolean,
     default: false,
   },
-}, { _id: false })
+})
 
 export interface IPlayer extends mongoose.Document {
   user: IUser;
-  pregameFinished: boolean;
+  readyToPlay: boolean;
 }
 
 export const Player = mongoose.model<IPlayer>('Player', playerSchema)

@@ -1,4 +1,4 @@
-import { User } from '../authed-user/types'
+import { User } from '../user/types'
 
 export interface Team {
   _id: string;
@@ -14,30 +14,38 @@ export interface Phrase {
   authorId: string;
 }
 
+export interface PlayedPhrase {
+  phraseId: string;
+  solved: boolean;
+  timestamp: number;
+  duration: number;
+}
+
 export interface Turn {
   _id: string;
   userId: string;
+  teamId: string;
   round: 0 | 1 | 2 | 3;
   turnLength: number;
   showCountdown: boolean;
   startTime: number | null;
-  solvedPhraseIds: string[];
+  playedPhrases: PlayedPhrase[];
 }
 
 export interface Game {
   _id: string;
   shortId: number;
   creatorId: string;
+  startTime: number | null;
   players: {
-    _id: string;
     user: User;
-    ready: boolean;
+    readyToPlay: boolean;
   }[];
-  phrases: Phrase[];
   teams: Team[];
+  phrases: Phrase[];
   preRoll: {
     show: boolean;
-    firstUserId: string | null;
+    firstTeamId: string | null;
   };
   turns: Turn[];
   gameOver: boolean;

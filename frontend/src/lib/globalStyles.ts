@@ -114,6 +114,35 @@ const GlobalStyles = createGlobalStyle`
       opacity: 1;
     }
   }
+  @keyframes bigLeftToRight {
+    0% {
+      transform: translateX(-300%);
+      opacity: 0;
+    }
+    50% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(300%);
+      opacity: 0;
+    }
+
+  }
+  @keyframes bigRightToLeft {
+    0% {
+      transform: translateX(300%);
+      opacity: 0;
+    }
+    50% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(-300%);
+      opacity: 0;
+    }
+  }
 `
 
 export default GlobalStyles

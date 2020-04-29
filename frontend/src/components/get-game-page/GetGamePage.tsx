@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { useSelector, useDispatch } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import { AppState } from '../../store/index'
 import useScrollToTop from '../../hooks/useScrollToTop'
 import LogoHeader from '../LogoHeader'
@@ -26,20 +25,20 @@ const Container = styled('div')`
 `
 
 const GetGamePage = () => {
-  const authedUser = useSelector((state: AppState) => state.authedUser)
+  const user = useSelector((state: AppState) => state.user)
 
   const [isJoining, setIsJoining] = useState(false)
   const [isCreating, setIsCreating] = useState(false)
 
   useScrollToTop()
 
-  if (!authedUser) return <div />
+  if (!user) return <div />
 
   return (
     <Container>
       <LogoHeader />
       <div className="welcome">
-        <HelperText>Nice hat, {authedUser.name}.</HelperText>
+        <HelperText>Nice hat, {user.name}.</HelperText>
       </div>
       <div className="controls">
         <TextButton

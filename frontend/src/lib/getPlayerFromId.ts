@@ -1,9 +1,15 @@
 import { Game } from '../store/game/types'
 
-export const getPlayerFromId = (
-  playerId: string,
-  game: Game,
-) => {
-  const user = game.players.find((p) => p.user._id === playerId)?.user
-  return user
+export const getPlayerFromUserId = ({
+  userId,
+  game,
+}: {
+  userId: string;
+  game: Game;
+}) => {
+  const player = game.players.find(p => p.user._id === userId)
+
+  if (!player) throw new Error('invalid user ID')
+
+  return player
 }

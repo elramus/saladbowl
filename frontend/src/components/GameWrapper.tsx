@@ -7,21 +7,23 @@ import { useDispatch, useSelector } from 'react-redux'
 import Lobby from './lobby'
 import { fetchGame } from '../store/game/actions'
 import { AppState } from '../store'
-import TosserSetup from './TosserSetup'
 import GameSocket from './GameSocket'
 import Arena from './arena'
-import PreGamePreRoll from './PreRoll'
+import PreRoll from './PreRoll'
 
 const Container = styled('div')`
   min-height: 100vh;
 `
 
 const GameWrapper = () => {
-  const { gameId } = useParams<{ gameId: string }>()
-  const game = useSelector((state: AppState) => state.game)
-  const [inGame, setInGame] = useState(false)
   const dispatch = useDispatch()
+  const game = useSelector((state: AppState) => state.game)
+  const user = useSelector((state: AppState) => state.user)
+
   const history = useHistory()
+  const { gameId } = useParams<{ gameId: string }>()
+
+  const [inGame, setInGame] = useState(false)
 
   useEffect(() => {
     // We should have the game already from the select game process, where
@@ -37,20 +39,22 @@ const GameWrapper = () => {
     }
   }, [game, gameId, history, inGame])
 
-  if (!game) return <p>Loading...</p>
+  if (!game || !user) return <p>Loading...</p>
+
+  // If you're not in this game, then bugger off, mang.
+  if (!game.players.some(p => p.user._id === user._id)) {
+    return <div><p>This game has already started.</p></div>
+  }
 
   return (
     <GameSocket>
       <Container>
-        <Route path="/games/:gameId/setup">
-          <TosserSetup />
-        </Route>
         <Route path="/games/:gameId/lobby">
           <Lobby />
         </Route>
         <Route exact path="/games/:gameId">
           {game.preRoll.show && game.turns.length === 0 && (
-            <PreGamePreRoll />
+            <PreRoll />
           )}
           {game.turns[0] && game.turns[0].round > 0 && (
             <Arena />

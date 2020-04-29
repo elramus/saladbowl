@@ -1,10 +1,11 @@
 export type User = {
   _id: string;
   name: string;
-  socketId?: string;
+  ipAddress: string | null;
+  socketId: string | null;
 }
 
-export type AuthedUserState = User | null;
+export type UserState = User | null;
 
 export const RECEIVE_USER = 'RECEIVE_USER'
 export interface ReceiveUser {
@@ -12,5 +13,5 @@ export interface ReceiveUser {
   user: User;
 }
 
-export type AuthedUserActionTypes =
+export type UserActionTypes =
   | ReceiveUser

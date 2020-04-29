@@ -9,17 +9,29 @@ const Container = styled('div')`
   align-items: center;
   justify-content: space-between;
   padding: 1em 0;
+  line-height: 1.3;
+  .left, .right {
+    display: flex;
+    align-items: center;
+    small {
+      font-weight: bold;
+    }
+  }
+  .stacked {
+    display: flex;
+    flex-direction: column;
+  }
   .fa-salad {
-    color: ${(props) => props.theme.darkGreen};
-    font-size: ${(props) => props.theme.ms(2)};
+    color: ${props => props.theme.darkGreen};
+    font-size: ${props => props.theme.ms(3)};
     margin-right: 0.5rem;
   }
   .stats {
     display: flex;
     flex-direction: column;
     span {
-      font-size: ${(props) => props.theme.ms(-1)};
-      color: ${(props) => props.theme.darkGray};
+      font-size: ${props => props.theme.ms(-1)};
+      color: ${props => props.theme.darkGray};
     }
   }
   .ready-button {
@@ -28,7 +40,7 @@ const Container = styled('div')`
       position: relative;
       display: flex;
       align-items: center;
-      color: ${(props) => props.theme.darkGreen};
+      color: ${props => props.theme.darkGreen};
     }
     .icon-container {
       position: absolute;
@@ -52,7 +64,6 @@ const LobbyHeader = ({
   changeReadyStatus,
 }: Props) => {
   const game = useSelector((state: AppState) => state.game)
-  const users = useSelector((state: AppState) => state.users)
 
   if (!game) {
     return <p>No game found</p>
@@ -60,26 +71,35 @@ const LobbyHeader = ({
 
   return (
     <Container>
-      <FontAwesomeIcon icon={['fas', 'salad']} />
-      <div className="stats">
-        <span>Game <strong>#{game.shortId}</strong></span>
-        <span>Players <strong>{users.length ?? 0}</strong></span>
+      <div className="left">
+        <FontAwesomeIcon icon={['fas', 'salad']} />
+        <div className="stacked">
+          <span><small>Salad Bowl</small></span>
+          <span>Game <strong>#{game.shortId}</strong></span>
+        </div>
       </div>
-      {shouldAskIfReady && (
-        <button
-          type="button"
-          className="ready-button"
-          onClick={() => changeReadyStatus(true)}
-        >
-          <span className="flex-container">
-            <span className="icon-container">
-              <FontAwesomeIcon icon={['fas', 'arrow-alt-circle-right']} />
+      <div className="right" style={{ textAlign: 'right' }}>
+        {shouldAskIfReady && (
+          <button
+            type="button"
+            className="ready-button"
+            onClick={() => changeReadyStatus(true)}
+          >
+            <span className="flex-container">
+              <span className="icon-container">
+                <FontAwesomeIcon icon={['fas', 'arrow-alt-circle-right']} />
+              </span>
+              <h3>Ready?</h3>
             </span>
-            <h3>Ready?</h3>
-          </span>
-        </button>
-      )}
-      {!shouldAskIfReady && <div style={{ marginLeft: 'auto' }} />}
+          </button>
+        )}
+        {!shouldAskIfReady && (
+          <div className="stacked">
+            <span><strong>{game.players.length ?? 0}</strong> player{game.players.length === 1 ? '' : 's'}</span>
+            <span><strong>{game.phrases.length ?? 0}</strong> phrases</span>
+          </div>
+        )}
+      </div>
     </Container>
   )
 }
