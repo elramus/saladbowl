@@ -25,6 +25,7 @@ const Container = styled('div')<StyleProps>`
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
   }
   .round {
     position: relative;
