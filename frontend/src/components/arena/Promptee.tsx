@@ -57,6 +57,10 @@ const Promptee = ({
 
   if (!game || !prompter) return <div />
 
+  if (timeRemaining === 0) {
+    return <TimesUp />
+  }
+
   return (
     <Container>
       <Clock time={timeRemaining} />
@@ -74,9 +78,6 @@ const Promptee = ({
         const phrase = game.phrases.find(p => p._id === sPI)
         return <h2 key={sPI}>{phrase?.text}</h2>
       })}
-      {timeRemaining === 0 && (
-        <TimesUp />
-      )}
     </Container>
   )
 }

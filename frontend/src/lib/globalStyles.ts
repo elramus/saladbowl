@@ -143,6 +143,17 @@ const GlobalStyles = createGlobalStyle`
       opacity: 0;
     }
   }
+  @keyframes inflate {
+    0% {
+      transform: scale(1);
+    }
+    25% {
+      transform: scale(1.25);
+    }
+    35% {
+      transform: scale(1);
+    }
+  }
 `
 
 export default GlobalStyles

@@ -15,6 +15,7 @@ export const theme = {
   // Custom easing
   ease: {
     cubic: 'cubic-bezier(.23,1,.32,1)',
+    bounce: 'cubic-bezier(0.32, 1.06, 1, 1.28)',
   },
 
   // Fonts

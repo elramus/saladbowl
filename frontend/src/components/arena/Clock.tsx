@@ -16,8 +16,11 @@ const Container = styled('div')`
     font-weight: 900;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   }
-  &.warn svg, &.warn span {
-    color: ${props => props.theme.red};
+  &.warn {
+    animation: inflate 1000ms infinite ${props => props.theme.ease.cubic};
+    svg, span {
+      color: ${props => props.theme.red};
+    }
   }
 `
 

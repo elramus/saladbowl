@@ -104,6 +104,10 @@ const Prompter = () => {
 
   if (!game || !currentPhrase) return <div />
 
+  if (timeRemaining === 0) {
+    return <TimesUp isPrompter />
+  }
+
   return (
     <>
       <Container>
@@ -130,9 +134,6 @@ const Prompter = () => {
           onClose={handlePrompterMenuClose}
           game={game}
         />
-      )}
-      {timeRemaining === 0 && (
-        <TimesUp isPrompter />
       )}
     </>
   )
