@@ -7,6 +7,7 @@ import { AppState } from '../store'
 import useMountEffect from '../hooks/useMountEffect'
 import { getUserFromUserId } from '../lib/getUserFromUserId'
 import { nextAction } from '../store/game/actions'
+import { getPlayerFromUserId } from '../lib/getPlayerFromId'
 
 const Container = styled('div')`
   display: flex;
@@ -87,7 +88,10 @@ const PreRoll = () => {
   const firstPlayer = useMemo(() => {
     const firstTeam = game?.teams.find(t => t._id === game?.preRoll.firstTeamId)
     if (game && firstTeam) {
-      return game.players[firstTeam.lastPrompterIndex]
+      return getPlayerFromUserId({
+        userId: firstTeam.userIds[firstTeam.lastPrompterIndex],
+        game,
+      })
     }
     return null
   }, [game])

@@ -73,14 +73,12 @@ export class TurnRunner {
       // Shuffle the phrases
       await this.prepNewRound()
 
-      // Create the next turn.
-
-      // First get the Id of the first person to go.
+      // Get the ID of the team that's up first.
       const firstTeam = this.game.teams
         .find(t => t._id.toString() === this.game.preRoll.firstTeamId.toString())
       if (!firstTeam) throw new Error('could not get the first team')
 
-      // We assigned lastPrompterIndex to the preRoll object during prepGame.
+      // We assigned lastPrompterIndex to the first team during prepGame.
       const nextUserId = firstTeam.userIds[firstTeam.lastPrompterIndex]
       if (!nextUserId) throw new Error('could not get next prompter')
 
