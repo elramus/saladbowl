@@ -26,8 +26,9 @@ const Container = styled('div')`
     top: 1em;
     right: 1em;
     left: 1em;
-    bottom: 1em;
+    bottom: auto;
     padding: 2em;
+    max-height: calc(100vh - 3em); /* 2em of padding, 1em of bottom */
     margin: auto;
     max-width: 35em;
     background: white;
