@@ -7,9 +7,9 @@ import PlayedPhraseRow from './PlayedPhraseRow'
 import TextButton from '../../TextButton'
 import { PlayedPhrase } from '../../../store/game/types'
 
-const PhraseList = styled('ul')<{ loading: boolean }>`
+const PhraseList = styled('ul')<{ showLoading: boolean }>`
   margin-bottom: 2rem;
-  ${props => props.loading && `
+  ${props => props.showLoading && `
     opacity: 0.5;
     pointer-events: none;
   `};
@@ -56,8 +56,8 @@ const TurnReviewModal = ({
 
   return (
     <Modal onClose={onClose}>
-      <p>Which phrases did your team solve? With great power comes great responsibility.</p>
-      <PhraseList loading={loading}>
+      <p>Which phrases did your team solve? With great power comes great responsibility...</p>
+      <PhraseList showLoading={loading}>
         {playedPhrases.map(playedPhrase => (
           <PlayedPhraseRow
             key={playedPhrase.timestamp}
@@ -71,7 +71,7 @@ const TurnReviewModal = ({
         trailingIcon={['fas', 'check']}
         variant="big"
         onClick={handleSubmit}
-        loading={loading}
+        showLoading={loading}
       />
     </Modal>
   )

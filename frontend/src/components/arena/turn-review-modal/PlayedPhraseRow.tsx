@@ -14,6 +14,12 @@ const Container = styled('li')`
   border-bottom: 1px solid ${props => props.theme.lightGray};
   .text {
     margin-right: auto;
+    .duration {
+      display: block;
+      font-size: ${props => props.theme.ms(-1)};
+      font-weight: normal;
+      opacity: 0.75;
+    }
     &.failed {
       opacity: 0.25;
       text-decoration: line-through;
@@ -72,7 +78,10 @@ const PlayedPhraseRow = ({
 
   return (
     <Container>
-      <h4 className={`text ${!playedPhrase.solved ? 'failed' : ''}`}>{phrase.text}</h4>
+      <h4 className={`text ${!playedPhrase.solved ? 'failed' : ''}`}>
+        {phrase.text}
+        <span className="duration">{Math.ceil(playedPhrase.duration / 1000)} seconds</span>
+      </h4>
       <div className="controls">
         {playedPhrase.solved && (
           <>

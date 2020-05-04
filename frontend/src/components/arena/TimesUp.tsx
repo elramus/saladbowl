@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -21,9 +21,22 @@ const Container = styled('div')`
     display: flex;
     flex-direction: column;
     align-items: center;
+    h4 {
+      margin-top: 2em;
+      font-style: italic;
+    }
     svg {
       font-size: ${props => props.theme.ms(5)};
       filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+    }
+  }
+  .controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2em;
+    .text-button {
+      margin: 1em 0;
     }
   }
 `
@@ -62,7 +75,17 @@ const TimesUp = ({
     if (game) submitResults(game.turns[0].playedPhrases)
   }
 
-  if (!game) return <div />
+  const currentTeam = useMemo(() => (
+    game?.teams.find(t => t._id === game?.turns[0].teamId)
+  ), [game])
+
+  const pointsScored = useMemo(() => (
+    game?.turns[0].playedPhrases.reduce((score, phrase) => (
+      phrase.solved ? score + 1 : score
+    ), 0) ?? 0
+  ), [game])
+
+  if (!game || !currentTeam) return <div />
 
   return (
     <>
@@ -70,6 +93,7 @@ const TimesUp = ({
         <header>
           <FontAwesomeIcon icon={['fas', 'siren-on']} />
           <h1>TIME{exclamations.join('')}</h1>
+          <h4>{currentTeam.name} scored {pointsScored} point{pointsScored === 1 ? '' : 's'}</h4>
         </header>
         {isPrompter && (
           <div className="controls">
@@ -77,12 +101,14 @@ const TimesUp = ({
               text="Next Turn"
               trailingIcon={['fas', 'long-arrow-right']}
               onClick={handleNextTurn}
+              variant="simple-reverse"
             />
             <span>or</span>
             <TextButton
-              text="Change Results"
+              text="Review My Results"
               trailingIcon={['fas', 'undo']}
               onClick={() => setShowTurnReview(true)}
+              variant="simple-reverse"
             />
           </div>
         )}

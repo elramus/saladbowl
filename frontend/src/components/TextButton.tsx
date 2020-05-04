@@ -64,7 +64,7 @@ interface Props {
   text: string | React.ReactNode;
   onClick: () => void;
   type?: 'button' | 'submit';
-  variant?: 'cta' | 'big' | 'gray' | 'simple' | 'bordered';
+  variant?: 'cta' | 'big' | 'simple' | 'simple-reverse';
   color?: string;
   bg?: string;
   hoverBg?: string;
@@ -74,7 +74,7 @@ interface Props {
   leadingIcon?: [IconPrefix, IconName];
   trailingIcon?: [IconPrefix, IconName];
   disabled?: boolean;
-  loading?: boolean;
+  showLoading?: boolean;
 }
 
 const TextButton = ({
@@ -91,7 +91,7 @@ const TextButton = ({
   leadingIcon,
   trailingIcon,
   disabled,
-  loading,
+  showLoading: loading,
 }: Props) => {
   // Put the style props into an object for modification.
   // Declare defaults here!
@@ -126,15 +126,11 @@ const TextButton = ({
     styles.bg = 'none'
     styles.hoverBg = 'none'
   }
-  if (variant === 'bordered') {
+  if (variant === 'simple-reverse') {
+    styles.padding = '0'
     styles.bg = 'none'
-    styles.color = theme.green
-    styles.border = `1px solid ${theme.middleGray}`
-  }
-  if (variant === 'gray') {
-    styles.bg = 'none'
-    styles.color = theme.darkGray
-    styles.weight = 'normal'
+    styles.hoverBg = 'none'
+    styles.color = theme.black
   }
 
   return (

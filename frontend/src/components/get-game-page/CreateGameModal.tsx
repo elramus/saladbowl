@@ -85,7 +85,7 @@ const CreateGameModal = ({
           trailingIcon={['fas', 'hand-spock']}
           variant="big"
           onClick={handleCreate}
-          loading={loading}
+          showLoading={loading}
           disabled={!formValid}
         />
       </Container>
