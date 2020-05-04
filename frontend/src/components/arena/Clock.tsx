@@ -17,7 +17,7 @@ const Container = styled('div')`
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   }
   &.warn {
-    animation: inflate 1000ms infinite ${props => props.theme.ease.cubic};
+    animation: inflate 1000ms infinite ${props => props.theme.ease.bounce};
     svg, span {
       color: ${props => props.theme.red};
     }
