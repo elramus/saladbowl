@@ -78,6 +78,10 @@ const MakeEntriesTab = ({
         placeholder="Let your freak flag fly..."
         value={entry}
         onKeyPress={e => handleKeyPress(e.key)}
+        autoComplete="off"
+        autoCorrect="off"
+        autoCapitalize="off"
+        spellCheck="false"
       />
       <div className="controls">
         <TextButton
