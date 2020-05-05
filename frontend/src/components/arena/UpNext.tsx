@@ -38,7 +38,15 @@ const UpNext = () => {
       {role === 'prompting' && (
         <>
           <h3>You're up, {user.name}!</h3>
-          <p>User any words OTHER than what's in the phrase to prompt your teammates.</p>
+          {game.turns[0].round === 1 && (
+            <p>Use any words OTHER than what's in the phrase to prompt your teammates.</p>
+          )}
+          {game.turns[0].round === 2 && (
+            <p>ACT OUT and use SOUND EFFECTS to prompt your teammates, but no words!</p>
+          )}
+          {game.turns[0].round === 3 && (
+            <p>You get just ONE WORD to prompt your teammates. Nothing else!!</p>
+          )}
         </>
       )}
       {role === 'guessing' && (
