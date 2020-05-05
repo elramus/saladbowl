@@ -42,10 +42,10 @@ const UpNext = () => {
             <p>Use any words OTHER than what's in the phrase to prompt your teammates.</p>
           )}
           {game.turns[0].round === 2 && (
-            <p>ACT OUT and use SOUND EFFECTS to prompt your teammates, but no words!</p>
+            <p>Use ACTING and SOUND EFFECTS to prompt your teammates, but no words!</p>
           )}
           {game.turns[0].round === 3 && (
-            <p>You get just ONE WORD to prompt your teammates. Nothing else!!</p>
+            <p>Use just ONE WORD to prompt your teammates. Nothing else!!</p>
           )}
         </>
       )}

@@ -18,7 +18,7 @@ const Container = styled('div')`
     }
   }
   p {
-    margin-bottom: 2em;
+    margin-bottom: 0.5em;
   }
 `
 

@@ -13,9 +13,8 @@ const Container = styled('div')`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   min-height: 100vh;
-  padding: 0 2em;
+  padding: 10em 2em 0 2em;
   color: ${props => props.theme.darkGreen};
   font-weight: 900;
   font-style: italic;
