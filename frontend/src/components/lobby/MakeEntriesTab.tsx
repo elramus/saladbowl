@@ -91,7 +91,7 @@ const MakeEntriesTab = ({
           onClick={handleAdd}
         />
         <TextButton
-          text="I'm done, let's play!"
+          text="I'm ready, let's play!"
           trailingIcon={['fas', 'long-arrow-right']}
           onClick={handleDone}
           variant="simple"

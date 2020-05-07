@@ -75,7 +75,7 @@ const CreateGameModal = ({
         >
           {autoTeams && <FontAwesomeIcon icon={['fas', 'check-square']} />}
           {!autoTeams && <FontAwesomeIcon icon={['far', 'square']} />}
-          <p>Randomly divide players into teams automatically (recommended)</p>
+          <p>Randomly divide players into teams automatically</p>
         </div>
         {!autoTeams && (
           <TeamNamesForm setTeamNames={setTeamNames} />
