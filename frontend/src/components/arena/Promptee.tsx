@@ -63,7 +63,10 @@ const Promptee = ({
 
   return (
     <Container>
-      <Clock time={timeRemaining} />
+      <div style={{ overflow: 'hidden' }}>
+        {/* Keeps the inflating clock from causing scrollbars */}
+        <Clock seconds={timeRemaining} />
+      </div>
       {isYourTeam && (
         <h1>{prompter.name} is prompting for your team...</h1>
       )}

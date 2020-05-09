@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const Container = styled('div')`
+  position: relative;
   svg {
     position: relative;
     top: -1px;
@@ -25,11 +26,11 @@ const Container = styled('div')`
 `
 
 interface Props {
-  time: number;
+  seconds: number;
 }
 
 const Clock = ({
-  time,
+  seconds,
 }: Props) => {
   function formatTime(t: number) {
     if (t < 10) {
@@ -39,9 +40,9 @@ const Clock = ({
   }
 
   return (
-    <Container className={time <= 10 ? 'warn' : ''}>
+    <Container className={seconds <= 55 ? 'warn' : ''}>
       <FontAwesomeIcon icon={['fas', 'alarm-clock']} />
-      <span>0:{formatTime(time)}</span>
+      <span>0:{formatTime(seconds)}</span>
     </Container>
   )
 }

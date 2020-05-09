@@ -25,6 +25,7 @@ const Container = styled('div')<StyleProps>`
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-end;
     text-align: center;
   }
   .round {
@@ -101,7 +102,7 @@ const Scoreboard = ({
       </div>
       <div className="round">
         {!final && (
-          <p>Round <br />{game.turns[0].round}</p>
+          <p>Round {game.turns[0].round}</p>
         )}
         {final && (
           <p>FINAL</p>

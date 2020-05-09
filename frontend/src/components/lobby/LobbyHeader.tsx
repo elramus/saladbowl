@@ -96,7 +96,7 @@ const LobbyHeader = ({
         {!shouldAskIfReady && (
           <div className="stacked">
             <span><strong>{game.players.length ?? 0}</strong> player{game.players.length === 1 ? '' : 's'}</span>
-            <span><strong>{game.phrases.length ?? 0}</strong> phrases</span>
+            <span><strong>{game.phrases.length ?? 0}</strong> phrase{game.phrases.length === 1 ? '' : 's'}</span>
           </div>
         )}
       </div>

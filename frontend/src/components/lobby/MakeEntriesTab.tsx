@@ -70,8 +70,8 @@ const MakeEntriesTab = ({
 
   return (
     <Container>
-      <HelperText>Everyone puts a few phrases into the salad bowl. You'll take turns prompting your teammates to say these phrases.</HelperText>
       <HelperText>Ask your deepest, darkest self "What stupid things should I make my friends say?"</HelperText>
+      <HelperText>Everyone puts a few phrases into the salad bowl. You'll take turns prompting your teammates to say these phrases.</HelperText>
       <textarea
         onChange={e => setEntry(e.target.value)}
         ref={ref}

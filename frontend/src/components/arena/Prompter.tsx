@@ -15,7 +15,6 @@ const Container = styled('div')`
   display: grid;
   grid-template-rows: auto minmax(15em, auto) auto;
   color: white;
-  /* min-height: 100vh; */
   padding: 1em 2em;
   header {
     display: flex;
@@ -88,7 +87,7 @@ const Prompter = () => {
     // Add the phrase the player ran out on as a failed phrase.
 
     // Note that if the player refreshes here, they will keep sending
-    // more phrases as failed. TODO: Fix that!
+    // more phrases as "failed". TODO: Fix that.
     if (game && currentPhrase) {
       dispatch(failPhrase({
         gameId: game._id,
@@ -120,7 +119,7 @@ const Prompter = () => {
               <FontAwesomeIcon icon={['fas', 'caret-down']} />
             </span>
           </button>
-          <Clock time={timeRemaining} />
+          <Clock seconds={timeRemaining} />
         </header>
         <div className="phrase">
           <h1>{currentPhrase.text}</h1>

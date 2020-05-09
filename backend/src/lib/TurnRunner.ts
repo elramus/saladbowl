@@ -167,7 +167,7 @@ export class TurnRunner {
       }
     }
 
-    // If the prompting player just ran out of phrases...
+    // If we're out of phrases...
     if (this.fromCurrentPlayer
       && currentRound > 0
       && currentTurn.startTime
@@ -177,15 +177,40 @@ export class TurnRunner {
         // Put the phrases back into the bowl and shuffle!
         await this.prepNewRound()
 
-        // Create the turn.
+        // If timeRemaining was passed in, then we know we're here because
+        // someone ran out of phrases in middle of turn (usually the case).
+        // But if it's not here, then that means someone solved the last
+        // phrases at the turn review modal, in which case we need move
+        // to the next player and the next round.
+        if (this.config?.timeRemaining) {
+          await this.addNewTurn({
+            roundNum: currentRound + 1, // Increment the round.
+            nextUserId: this.user._id, // Same player.
+            turnLength: this.config.timeRemaining, // Their remaining time.
+          })
+
+          this.emit()
+          return 'Next round, same player'
+        }
+
+        const [
+          nextPlayerIndex,
+          nextPlayerId,
+          teamUpNext,
+        ] = decideNextPrompter(this.game, this.user)
+
+        this.game.teams.pull(teamUpNext._id)
+        teamUpNext.lastPrompterIndex = nextPlayerIndex
+        this.game.teams.push(teamUpNext)
+
+        // New player, next round.
         await this.addNewTurn({
-          roundNum: currentRound + 1, // Increment the round.
-          nextUserId: this.user._id, // Same player.
-          turnLength: this.config?.timeRemaining ?? 60, // Their remaining time.
+          roundNum: currentRound + 1,
+          nextUserId: nextPlayerId,
         })
 
         this.emit()
-        return 'Same round, next turn'
+        return 'Next round, next player'
       }
     }
 

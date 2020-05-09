@@ -10,7 +10,7 @@ export const decideNextPrompter = (
   game: IGame,
   user: IUser,
 ): [number, string, ITeam] => {
-  const teamWent = game.teams.find((t) => (
+  const teamWent = game.teams.find(t => (
     t.userIds.includes(user._id)))
 
   if (!teamWent) throw new Error('invalid team or player')
