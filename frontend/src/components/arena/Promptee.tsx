@@ -12,11 +12,11 @@ const Container = styled('div')`
   color: white;
   padding: 1rem;
   border-top: 1px solid ${props => props.theme.darkGreen};
-  h1 {
+  h3 {
     margin-top: 1rem;
     line-height: 1.25;
     text-align: left;
-    font-size: ${props => props.theme.ms(2)};
+    font-size: ${props => props.theme.ms(0)};
   }
   .results {
     display: flex;
@@ -68,10 +68,10 @@ const Promptee = ({
         <Clock seconds={timeRemaining} />
       </div>
       {isYourTeam && (
-        <h1>{prompter.name} is prompting for your team...</h1>
+        <h3>{prompter.name} is prompting for your team...</h3>
       )}
       {!isYourTeam && (
-        <h1>{prompter.name} is prompting for the other team...</h1>
+        <h3>{prompter.name} is prompting for the other team...</h3>
       )}
       <div className="results">
         <FontAwesomeIcon icon={['fas', 'salad']} />
