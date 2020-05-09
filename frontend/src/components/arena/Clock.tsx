@@ -40,7 +40,7 @@ const Clock = ({
   }
 
   return (
-    <Container className={seconds <= 55 ? 'warn' : ''}>
+    <Container className={seconds <= 10 ? 'warn' : ''}>
       <FontAwesomeIcon icon={['fas', 'alarm-clock']} />
       <span>0:{formatTime(seconds)}</span>
     </Container>
