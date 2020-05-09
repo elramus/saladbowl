@@ -1,4 +1,4 @@
-# Salad Bowl
+# 🥗 Salad Bowl
 
 Salad Bowl is a lively social party game that combines Taboo, Charades, and Password. I've also heard it called Fish Bowl, Celebrity, Moniker, etc. This app is a online adaptation so you can play with people remotely while in a video chat together. Thanks quarantine! 🙄 It's built with [React](https://github.com/facebook/react), [Socket.io](https://github.com/socketio/socket.io), [TypeScript](https://github.com/microsoft/TypeScript), [MongoDB](https://github.com/mongodb/mongo), and [Express](https://github.com/expressjs/express). 
 
