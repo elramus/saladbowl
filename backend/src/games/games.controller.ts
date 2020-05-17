@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { Game } from './games.model'
+import { Game, IGame } from './games.model'
 import { io } from '../app'
 import { SocketMessages } from '../socket'
 import joinTeam from '../lib/joinTeam'
@@ -16,11 +16,10 @@ import { changeReadyStatus } from '../lib/changeReadyStatus'
 import { gameReadyChecklist } from '../lib/gameReadyChecklist'
 import { failPhrase } from '../lib/failPhrase'
 import { applyTurnResults } from '../lib/applyTurnResults'
+import { randomNum } from '../utils/randomNum'
 
 const gameController = {
   async fetchGame(req: Request, res: Response) {
-    // Right now, can ONLY be a real ID.
-    // TODO - add short ID.
     const { gameId } = req.params
     const { userId } = req
     if (!gameId) return res.status(400).send('Required param not found')
@@ -32,14 +31,33 @@ const gameController = {
 
       // If we have a userId, we'll go ahead and join them to it.
       if (userId) {
-        // Don't let someone join a game that's already started.
-        if (game.startTime === null) {
-          const updatedGame = await joinPlayerToGame(userId, game)
+        // Join them to the game.
+        const updatedGame = await joinPlayerToGame(userId, game)
 
-          // Broadcast the update
-          io.to(updatedGame.id).emit(SocketMessages.GameUpdate, updatedGame)
-          return res.send({ game: updatedGame })
+        // If the game has already started, then join them to a team.
+        if (game.startTime !== null) {
+          // What team should they be joined to?
+          let gameWithNewPlayer: IGame | null = null
+          // If one team has fewer players than the other, use that.
+          // (If we start supporting more than two teams, this will need to be smarter).
+          if (game.teams[0].userIds.length < game.teams[1].userIds.length) {
+            gameWithNewPlayer = await joinTeam(game, game.teams[0]._id.toString(), userId)
+          } else if (game.teams[1].userIds.length < game.teams[0].userIds.length) {
+            gameWithNewPlayer = await joinTeam(game, game.teams[1]._id.toString(), userId)
+          } else {
+            // Neither team has fewer players, pick a random one.
+            const teamIndex = randomNum(0, game.teams.length - 1)
+            gameWithNewPlayer = await joinTeam(game, game.teams[teamIndex]._id.toString(), userId)
+          }
+
+          // Broadcast the update with the new player on the team.
+          io.to(gameWithNewPlayer.id).emit(SocketMessages.GameUpdate, gameWithNewPlayer)
+          return res.send({ game: gameWithNewPlayer })
         }
+
+        // Broadcast the update with just the new player.
+        io.to(updatedGame.id).emit(SocketMessages.GameUpdate, updatedGame)
+        return res.send({ game: updatedGame })
       }
 
       // If for some reason there's no userId, just send back the game we found.

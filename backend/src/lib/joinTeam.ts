@@ -5,10 +5,9 @@ const joinTeam = async (
   teamId: string,
   userId: string,
 ): Promise<IGame> => {
-  // First scrub the player from any teams they're already on.
-  for (let i = 0; i < game.teams.length; i += 1) {
-    const sansUser = game.teams[i].userIds.filter(p => p.toString() !== userId)
-    game.teams[i].set('userIds', sansUser)
+  // Check if the user is already on any team. If they are, just ignore this.
+  if (game.teams.find(t => t.userIds.includes(userId))) {
+    return game
   }
 
   // Get the team they're joining.
