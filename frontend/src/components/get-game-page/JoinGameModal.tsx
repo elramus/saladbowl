@@ -44,7 +44,7 @@ const Container = styled('div')`
       color: ${props => props.theme.middleGray};
     }
     &:disabled {
-      opacity: 0.5;
+      opacity: 0.75;
     }
   }
 `
@@ -65,9 +65,7 @@ const JoinGameModal = ({
   const ref = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    if (ref.current) {
-      ref.current.focus()
-    }
+    if (ref.current) ref.current.focus()
   })
 
   function attemptFind(inputCode: string) {
@@ -75,10 +73,15 @@ const JoinGameModal = ({
     dispatch(fetchGame(inputCode, (game: Game | null) => {
       setIsLoading(false)
       if (game) {
-        // Successfully found game, send player to that game's lobby.
+        // Successfully found game.
         setFoundGame(true)
         setTimeout(() => {
-          history.push(`/games/${game._id}/lobby`)
+          // If the game hasn't started yet, send to lobby.
+          if (game.startTime === null) {
+            history.push(`/games/${game._id}/lobby`)
+          } else {
+            history.push(`/games/${game._id}`)
+          }
         }, 500) // Wait for a second to show a nice, green check mark.
       } else {
         setBadAttempt(inputCode)
@@ -101,7 +104,7 @@ const JoinGameModal = ({
       <Container>
         <div className="top">
           {!isLoading && !badAttempt && !foundGame && (
-            <p>Ask the salad tosser for the game's four digit code:</p>
+            <p>Ask the game's creator for the four digit code:</p>
           )}
           {badAttempt && !foundGame && !isLoading && (
             <p>Nothing found with "{badAttempt}". Try again:</p>
