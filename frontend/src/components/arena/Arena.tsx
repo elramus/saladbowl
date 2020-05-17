@@ -12,6 +12,7 @@ import TurnCountdown from './TurnCountdown'
 import { isFirstTurnOfRound } from '../../lib/isFirstTurnOfRound'
 import NewRoundSplash from './NewRoundSplash'
 import BetweenTurns from './BetweenTurns'
+import useGaPageview from '../../hooks/useGaPageview'
 
 const Container = styled('div')`
   background: ${props => props.theme.green};
@@ -25,6 +26,8 @@ const Container = styled('div')`
 `
 
 const Arena = () => {
+  useGaPageview()
+
   const user = useSelector((state: AppState) => state.user)
   const game = useSelector((state: AppState) => state.game)
 

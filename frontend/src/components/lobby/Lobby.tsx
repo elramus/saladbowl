@@ -9,6 +9,7 @@ import { playerReadyStatus } from '../../store/game/actions'
 import useScrollToTop from '../../hooks/useScrollToTop'
 import CreatorWelcomeModal from '../CreatorWelcomeModal'
 import { getPlayerFromUserId } from '../../lib/getPlayerFromId'
+import useGaPageview from '../../hooks/useGaPageview'
 
 const Container = styled('div')`
   padding: 0 1em;
@@ -17,6 +18,8 @@ const Container = styled('div')`
 `
 
 const Lobby = () => {
+  useGaPageview()
+
   const dispatch = useDispatch()
   const game = useSelector((state: AppState) => state.game)
   const user = useSelector((state: AppState) => state.user)

@@ -8,6 +8,7 @@ import TextButton from '../TextButton'
 import CreateGameModal from './CreateGameModal'
 import JoinGameModal from './JoinGameModal'
 import { HelperText } from '../styled/HelperText'
+import useGaPageview from '../../hooks/useGaPageview'
 
 const Container = styled('div')`
   padding: 0 1em;
@@ -25,6 +26,8 @@ const Container = styled('div')`
 `
 
 const GetGamePage = () => {
+  useGaPageview()
+
   const user = useSelector((state: AppState) => state.user)
 
   const [isJoining, setIsJoining] = useState(false)
