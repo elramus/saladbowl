@@ -27,6 +27,7 @@ module.exports = {
     "import/extensions": [".js", ".jsx", ".json", ".ts", ".tsx"],
     'import/prefer-default-export': 0,
     'lines-between-class-members': 0,
+    'no-param-reassign': ['error', { props: false }],
     'no-undef': 0,
     'no-underscore-dangle': 0,
     'no-unused-vars': 0,

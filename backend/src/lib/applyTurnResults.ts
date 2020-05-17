@@ -29,18 +29,20 @@ export const applyTurnResults = async ({
     const updatedScore = team.score + pointsEarned
     team.score = updatedScore
 
-    // Filter out any solved phrases from the unsolved phrases array.
-    // (There might be some if the player did any corrections in turn review.)
-    const updatedPhrases = game.unsolvedPhraseIds.filter(pId => (
-      turn.playedPhrases.every(played => played.phraseId !== pId || !played.solved)
-    ))
+    // We need to update the unsolvedPhrases array to reflect changes from
+    // turn review modal.
+    turn.playedPhrases.forEach(pp => {
+      if (pp.solved && game.unsolvedPhraseIds.includes(pp.phraseId)) {
+        game.unsolvedPhraseIds = game.unsolvedPhraseIds.filter(pId => pId !== pp.phraseId)
+      }
+      if (!pp.solved && !game.unsolvedPhraseIds.includes(pp.phraseId)) {
+        game.unsolvedPhraseIds.push(pp.phraseId)
+      }
+    })
 
-    const updatedGame = game
-    updatedGame.unsolvedPhraseIds = updatedPhrases
+    await game.save()
 
-    await updatedGame.save()
-
-    return updatedGame
+    return game
   } catch (e) {
     throw new Error(e.message)
   }
