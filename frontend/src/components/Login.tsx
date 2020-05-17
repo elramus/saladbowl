@@ -10,7 +10,7 @@ import LogoHeader from './LogoHeader'
 
 const Container = styled('div')`
   text-align: center;
-  max-width: 20em;
+  max-width: 24em;
   padding: 0 1em;
   margin: 0 auto 0 auto;
   .go-container {
@@ -22,14 +22,13 @@ const Container = styled('div')`
 const Login: React.FC = ({
   children,
 }) => {
-  const user = useSelector((state: AppState) => state.user)
-  const [name, setName] = useState('')
   const dispatch = useDispatch()
+  const user = useSelector((state: AppState) => state.user)
+
+  const [name, setName] = useState('')
 
   useEffect(() => {
-    if (!user) {
-      dispatch(getLoggedInUser())
-    }
+    if (!user) dispatch(getLoggedInUser())
   }, [user, dispatch])
 
   function handleNameChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -48,10 +47,10 @@ const Login: React.FC = ({
         <Container>
           <LogoHeader />
           <div style={{ marginBottom: '3em' }}>
-            <HelperText>Speak friend, and enter.</HelperText>
+            <HelperText>Welcome. What do you want to be called?</HelperText>
           </div>
           <TextInput
-            placeholder="Enter your name..."
+            placeholder="Enter your name, or something else..."
             value={name}
             onChange={handleNameChange}
             onReturn={handleNameSubmit}
