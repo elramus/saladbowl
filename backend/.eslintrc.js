@@ -25,6 +25,7 @@ module.exports = {
     '@typescript-eslint/semi': 0,
     'arrow-parens': ['error', 'as-needed'],
     "import/extensions": [".js", ".jsx", ".json", ".ts", ".tsx"],
+    'import/no-extraneous-dependencies': 0,
     'import/prefer-default-export': 0,
     'lines-between-class-members': 0,
     'no-param-reassign': ['error', { props: false }],

@@ -56,7 +56,7 @@ const TurnReviewModal = ({
 
   return (
     <Modal onClose={onClose}>
-      <p>Which phrases did your team solve? With great power comes great responsibility...</p>
+      <p>Which phrases did your team solve? Be honest. With great power comes great responsibility...</p>
       <PhraseList showLoading={loading}>
         {playedPhrases.map(playedPhrase => (
           <PlayedPhraseRow

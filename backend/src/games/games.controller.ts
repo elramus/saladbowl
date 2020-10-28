@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { Game, IGame } from './games.model'
-import { io } from '../app'
+import { io } from '../server'
 import { SocketMessages } from '../socket'
 import joinTeam from '../lib/joinTeam'
 import { createGamePhrase } from '../lib/createGamePhrase'
@@ -165,6 +165,7 @@ const gameController = {
 
     try {
       const updatedGame = await createGamePhrase(userId, gameId, text)
+
       return res.send(updatedGame)
     } catch (e) {
       return res.status(500).json(e)
@@ -343,7 +344,8 @@ const gameController = {
     const { gameId } = req.params
     const { config } = req.body
     const { userId } = req
-    if (!gameId || !config || !userId) return res.status(500).send('Required request item not found.')
+    // Making config not required
+    if (!gameId || !userId) return res.status(500).send('Required request item not found.')
 
     try {
       // This function is very generic. What it does depends on where the game is currently.

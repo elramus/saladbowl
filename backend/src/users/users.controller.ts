@@ -19,6 +19,8 @@ const usersController = {
   async getOrCreateUser(req: Request, res: Response) {
     const { name } = req.body
 
+    if (!name) return res.status(400).send('Missing name param in request')
+
     try {
       let user = await User.findOne({ name })
 

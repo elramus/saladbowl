@@ -8,7 +8,6 @@ export const chooseFirstPlayer = (game: IGame) => {
 
   // Get a random player.
   const randomPlayerIndex = randomNum(0, randomTeam.userIds.length - 1)
-  // const firstUserId = randomTeam.userIds[randomPlayerIndex]
 
   return {
     firstPlayerIndex: randomPlayerIndex,

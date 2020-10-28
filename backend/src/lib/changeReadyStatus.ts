@@ -10,7 +10,9 @@ export const changeReadyStatus = async ({
   status: boolean;
 }) => {
   const player = game.players.find(p => p.user._id.equals(userId))
-  if (!player) throw new Error('Player not found from user ID')
+  if (!player) {
+    throw new Error('Player not found from user ID')
+  }
 
   // Pull the old player off
   game.players.pull(player._id)

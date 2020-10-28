@@ -1,5 +1,5 @@
 import { IGame } from '../games/games.model'
-import { io } from '../app'
+import { io } from '../server'
 import { SocketMessages } from '../socket'
 import { shuffleArray } from '../utils/shuffleArray'
 import { IUser } from '../users/users.model'
@@ -7,6 +7,7 @@ import { decideNextPrompter } from './decideNextPrompter'
 import { ITurn } from '../turns/turns.model'
 import { chooseFirstPlayer } from './chooseFirstPlayer'
 import { makeTeams } from './makeTeams'
+import { NextActions } from './constants'
 
 interface TurnRunnerConfig {
   playerStatus?: boolean;
@@ -55,11 +56,12 @@ export class TurnRunner {
       : 0
 
     // If we haven't done pre-roll yet...
+    // Note: this condition is triggered from Player Ready Status.
     if (currentRound === 0 && !this.game.preRoll.show) {
       await this.prepGame()
 
       this.emit()
-      return 'Fired prepGame'
+      return NextActions.FIRED_PREPGAME
     }
 
     // If pre-roll just finished...
@@ -89,7 +91,7 @@ export class TurnRunner {
       }
 
       this.emit()
-      return 'Preroll just finished, added new turn.'
+      return NextActions.FINISH_PREROLL_ADD_TURN
     }
 
     // If the game is over...
@@ -101,7 +103,7 @@ export class TurnRunner {
       await this.game.save()
 
       this.emit()
-      return 'Game over, man!'
+      return NextActions.GAME_OVER
     }
 
     const currentTurn: ITurn = this.game.turns[0]
@@ -136,7 +138,7 @@ export class TurnRunner {
         // then trigger nextAction.
       }, 3000)
 
-      return 'Starting the 3-second countdown into a turn'
+      return NextActions.STARTING_COUNTDOWN
     }
 
     // If the prompting player just ran out of time...
@@ -161,7 +163,7 @@ export class TurnRunner {
         })
 
         this.emit()
-        return 'Created next turn'
+        return NextActions.SAME_ROUND_NEXT_PLAYER
       } catch (e) {
         throw new Error(e)
       }
@@ -190,7 +192,7 @@ export class TurnRunner {
           })
 
           this.emit()
-          return 'Next round, same player'
+          return NextActions.NEXT_ROUND_SAME_PLAYER
         }
 
         const [
@@ -210,11 +212,12 @@ export class TurnRunner {
         })
 
         this.emit()
-        return 'Next round, next player'
+        console.log('next round next player? i do not really think this should happen...') // eslint-disable-line
+        return NextActions.NEXT_ROUND_NEXT_PLAYER
       }
     }
 
-    return 'None of the nextAction ifs triggered...'
+    return NextActions.NO_ACTION
   }
 
   async prepGame() {

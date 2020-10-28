@@ -1,5 +1,8 @@
 import { Game } from '../games/games.model'
 
+
+// Removes a phrase from a game.
+
 const deletePhrase = async (
   gameId: string,
   phraseId: string,
@@ -12,6 +15,8 @@ const deletePhrase = async (
 
     await game.save()
     return game
+
+    // TODO: Should this also look through unplayed phrases? played phrases?
   } catch (e) {
     throw new Error(e)
   }

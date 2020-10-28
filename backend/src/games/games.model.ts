@@ -44,14 +44,14 @@ export interface IGame extends mongoose.Document {
   shortId: number;
   creatorId: Types.ObjectId;
   startTime: number | null;
-  players: Types.Array<IPlayer>;
-  teams: Types.Array<ITeam>;
-  phrases: Types.Array<IPhrase>;
+  players: Types.DocumentArray<IPlayer>;
+  teams: Types.DocumentArray<ITeam>;
+  phrases: Types.DocumentArray<IPhrase>;
   preRoll: {
     show: boolean;
     firstTeamId: Types.ObjectId;
   };
-  turns: Types.Array<ITurn>;
+  turns: Types.DocumentArray<ITurn>;
   gameOver: boolean;
   unsolvedPhraseIds: string[];
 }

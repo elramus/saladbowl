@@ -8,10 +8,10 @@ import { ITeam } from '../teams/teams.model'
 
 export const decideNextPrompter = (
   game: IGame,
-  user: IUser,
+  justWentUser: IUser,
 ): [number, string, ITeam] => {
   const teamWent = game.teams.find(t => (
-    t.userIds.includes(user._id)))
+    t.userIds.includes(justWentUser._id)))
 
   if (!teamWent) throw new Error('invalid team or player')
 

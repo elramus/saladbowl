@@ -13,7 +13,7 @@ const dbConnect = () => {
   mongoose.connection.on('open', () => {
       console.log('Connected to Mongo') /* eslint-disable-line */
   })
-  mongoose.connection.on('error', (e) => {
+  mongoose.connection.on('error', e => {
       console.error(e) /* eslint-disable-line */
   })
 }

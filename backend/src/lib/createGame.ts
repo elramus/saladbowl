@@ -37,7 +37,6 @@ export const createGame = async (
     }
     return teams
   }
-
   const teams = makeTeams()
 
   const newGame = new Game({
