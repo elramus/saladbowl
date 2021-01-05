@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
-import { hot } from 'react-hot-loader'
+// import { hot } from 'react-hot-loader'
 import ReactGA from 'react-ga'
 import MainContentRouter from './MainContentRouter'
 import Login from './Login'
 import useGaPageview from '../hooks/useGaPageview'
 
-const App = () => {
+const App: React.FC = () => {
   useEffect(() => {
     ReactGA.initialize('UA-49704731-8')
   }, [])
@@ -21,4 +21,5 @@ const App = () => {
   )
 }
 
-export default hot(module)(App)
+// export default hot(module)(App)
+export default App

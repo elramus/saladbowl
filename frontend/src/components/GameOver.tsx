@@ -20,7 +20,7 @@ const Container = styled('div')`
   }
 `
 
-const GameOver = () => {
+const GameOver: React.FC = () => {
   useScrollToTop()
 
   return (

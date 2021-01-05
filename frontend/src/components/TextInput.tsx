@@ -17,7 +17,7 @@ interface Props {
   focusOnMount?: boolean;
 }
 
-const TextInput = ({
+const TextInput: React.FC<Props> = ({
   placeholder,
   value,
   onChange,
@@ -45,7 +45,7 @@ const TextInput = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        onKeyDown={(e) => handleKeyDown(e.key)}
+        onKeyDown={e => handleKeyDown(e.key)}
       />
     </Container>
   )

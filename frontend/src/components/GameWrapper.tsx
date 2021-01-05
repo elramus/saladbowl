@@ -4,9 +4,9 @@ import {
   useParams, Route, useHistory,
 } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import Lobby from './lobby'
 import { fetchGame } from '../store/game/actions'
 import { AppState } from '../store'
+import Lobby from './lobby'
 import GameSocket from './GameSocket'
 import Arena from './arena'
 import PreRoll from './PreRoll'
@@ -15,7 +15,7 @@ const Container = styled('div')`
   min-height: 100vh;
 `
 
-const GameWrapper = () => {
+const GameWrapper: React.FC = () => {
   const dispatch = useDispatch()
   const game = useSelector((state: AppState) => state.game)
   const user = useSelector((state: AppState) => state.user)

@@ -5,15 +5,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import theme from '../lib/theme'
 
 interface StyleProps {
-  fontSize: string;
-  color: string;
-  bg: string;
-  hoverBg: string;
-  padding: string;
-  border: string;
-  boxShadow: string;
-  weight: string;
-  width: string;
+  fontSize: string
+  color: string
+  bg: string
+  hoverBg: string
+  padding: string
+  border: string
+  boxShadow: string
+  weight: string
+  width: string
 }
 
 const Container = styled('button')<{ styles: StyleProps }>`
@@ -38,7 +38,7 @@ const Container = styled('button')<{ styles: StyleProps }>`
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255,255,255, 0.75);
+    background: rgba(255, 255, 255, 0.75);
     svg {
       font-size: ${props => props.theme.ms(2)};
       color: ${props => props.theme.darkGreen};
@@ -61,23 +61,23 @@ const Container = styled('button')<{ styles: StyleProps }>`
 `
 
 interface Props {
-  text: string | React.ReactNode;
-  onClick: () => void;
-  type?: 'button' | 'submit';
-  variant?: 'cta' | 'big' | 'simple' | 'simple-reverse';
-  color?: string;
-  bg?: string;
-  hoverBg?: string;
-  border?: string;
-  weight?: string;
-  width?: string;
-  leadingIcon?: [IconPrefix, IconName];
-  trailingIcon?: [IconPrefix, IconName];
-  disabled?: boolean;
-  showLoading?: boolean;
+  text: string | React.ReactNode
+  onClick: () => void
+  type?: 'button' | 'submit'
+  variant?: 'cta' | 'big' | 'simple' | 'simple-reverse'
+  color?: string
+  bg?: string
+  hoverBg?: string
+  border?: string
+  weight?: string
+  width?: string
+  leadingIcon?: [IconPrefix, IconName]
+  trailingIcon?: [IconPrefix, IconName]
+  disabled?: boolean
+  showLoading?: boolean
 }
 
-const TextButton = ({
+const TextButton: React.FC<Props> = ({
   text,
   onClick,
   type = 'button',
@@ -92,7 +92,7 @@ const TextButton = ({
   trailingIcon,
   disabled,
   showLoading: loading,
-}: Props) => {
+}) => {
   // Put the style props into an object for modification.
   // Declare defaults here!
   const styles: StyleProps = {
@@ -149,9 +149,7 @@ const TextButton = ({
       {leadingIcon && (
         <FontAwesomeIcon icon={leadingIcon} className="leading-icon" />
       )}
-      <span>
-        {text}
-      </span>
+      <span>{text}</span>
       {trailingIcon && (
         <FontAwesomeIcon icon={trailingIcon} className="trailing-icon" />
       )}

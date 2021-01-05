@@ -17,12 +17,13 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react"
+    "jsx": "react-jsx",
+    "noFallthroughCasesInSwitch": true
   },
   "plugins": [
     {
       "transform": "typescript-plugin-styled-components",
-      "type": "config",
+      "type": "config"
     }
   ],
   "include": [

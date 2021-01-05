@@ -7,7 +7,7 @@ module.exports = {
     'airbnb',
     'airbnb/hooks',
     'plugin:react/recommended',
-    "plugin:@typescript-eslint/recommended",
+    'plugin:@typescript-eslint/recommended',
   ],
   globals: {
     Atomics: 'readonly',
@@ -21,36 +21,38 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
-  plugins: [
-    'react',
-    '@typescript-eslint',
-  ],
+  plugins: ['react', '@typescript-eslint'],
   rules: {
+    '@typescript-eslint/ban-types': 0,
     '@typescript-eslint/explicit-function-return-type': 0,
+    '@typescript-eslint/explicit-module-boundary-types': 0,
     '@typescript-eslint/indent': ['error', 2],
     '@typescript-eslint/interface-name-prefix': 0,
     '@typescript-eslint/no-empty-interface': 0,
     '@typescript-eslint/no-unused-expressions': 1,
-    '@typescript-eslint/semi': 0,
+    '@typescript-eslint/no-use-before-define': ['error'],
     'arrow-body-style': 0,
     'arrow-parens': ['error', 'as-needed'],
-    "import/extensions": [".js", ".jsx", ".json", ".ts", ".tsx"],
+    'import/extensions': 'off',
     'import/prefer-default-export': 0,
-    "max-len": 0,
+    'max-len': 0,
+    'no-shadow': 0,
     'no-underscore-dangle': 0,
     'no-unused-expressions': 0,
-    "react/jsx-filename-extension": [1, { "extensions": [".tsx", ".jsx"] }],
+    'no-use-before-define': 'off',
+    'react/jsx-filename-extension': [1, { extensions: ['.tsx', '.jsx'] }],
     'react/jsx-one-expression-per-line': 'off',
     'react/no-unescaped-entities': 'off',
     'react/prefer-stateless-function': 0,
     'react/prop-types': 0,
-    'semi': [1, "never"],
+    'react/require-default-props': 0,
+    semi: [1, 'never'],
   },
-  'settings': {
+  settings: {
     'import/resolver': {
-      'node': {
-        'extensions': ['.js', '.jsx', '.ts', '.tsx']
-      }
-    }
+      node: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      },
+    },
   },
-};
+}

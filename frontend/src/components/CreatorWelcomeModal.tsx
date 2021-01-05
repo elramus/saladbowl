@@ -16,9 +16,9 @@ interface Props {
   onClose: () => void;
 }
 
-const CreatorWelcomeModal = ({
+const CreatorWelcomeModal: React.FC<Props> = ({
   onClose,
-}: Props) => {
+}) => {
   const game = useSelector((state: AppState) => state.game)
 
   return (
