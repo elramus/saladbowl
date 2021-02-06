@@ -5,7 +5,7 @@ import { initSocket } from './socket'
 
 /* Server */
 export const server = http.createServer(app)
-const PORT = 8080
+const PORT = 7777
 server.listen(PORT)
 server.on('listening', async () => {
   console.log(`Listening on port ${PORT}`) /* eslint-disable-line */
