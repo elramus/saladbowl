@@ -4,42 +4,39 @@ module.exports = {
     node: true,
   },
   extends: [
-    'airbnb-base',
-    'plugin:@typescript-eslint/recommended',
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
   ],
   globals: {
-    Atomics: 'readonly',
-    SharedArrayBuffer: 'readonly',
+    Atomics: "readonly",
+    SharedArrayBuffer: "readonly",
   },
-  parser: '@typescript-eslint/parser',
+  parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: 2018,
-    sourceType: 'module',
+    sourceType: "module",
   },
-  plugins: [
-    '@typescript-eslint',
-  ],
+  plugins: ["@typescript-eslint"],
   rules: {
-    '@typescript-eslint/explicit-function-return-type': 0,
-    '@typescript-eslint/interface-name-prefix': 0,
-    '@typescript-eslint/semi': 0,
-    'arrow-parens': ['error', 'as-needed'],
-    "import/extensions": [".js", ".jsx", ".json", ".ts", ".tsx"],
-    'import/no-extraneous-dependencies': 0,
-    'import/prefer-default-export': 0,
-    'lines-between-class-members': 0,
-    'no-param-reassign': ['error', { props: false }],
-    'no-undef': 0,
-    'no-underscore-dangle': 0,
-    'no-unused-vars': 0,
-    'radix': 0,
-    'semi': [1, "never"],
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "@typescript-eslint/interface-name-prefix": 0,
+    "@typescript-eslint/semi": 0,
+    "import/no-extraneous-dependencies": 0,
+    "import/prefer-default-export": 0,
+    "lines-between-class-members": 0,
+    "no-param-reassign": ["error", { props: false }],
+    "no-undef": 0,
+    "no-underscore-dangle": 0,
+    "no-unused-vars": 0,
+    radix: 0,
+    semi: [1, "never"],
   },
-  'settings': {
-    'import/resolver': {
-      'node': {
-        'extensions': ['.js', '.jsx', '.ts', '.tsx']
-      }
-    }
+  settings: {
+    "import/resolver": {
+      node: {
+        extensions: [".js", ".jsx", ".ts", ".tsx"],
+      },
+    },
   },
-};
+}

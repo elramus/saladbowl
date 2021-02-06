@@ -23,7 +23,7 @@ const Container = styled('div')`
     align-items: center;
     margin-top: 1rem;
     padding-top: 1rem;
-    border-top :1px solid ${props => props.theme.darkGreen};
+    border-top: 1px solid ${props => props.theme.darkGreen};
     svg {
       margin-right: 0.5em;
     }
@@ -37,22 +37,23 @@ const Container = styled('div')`
 `
 
 interface Props {
-  isYourTeam: boolean;
+  isYourTeam: boolean
 }
 
-const Promptee = ({
-  isYourTeam,
-}: Props) => {
+const Promptee = ({ isYourTeam }: Props) => {
   const game = useSelector((state: AppState) => state.game)
-  const prompter = game?.players.find(p => p.user._id === game?.turns[0].userId)?.user
+  const prompter = game?.players.find(p => p.user._id === game?.turns[0].userId)
+    ?.user
 
   const timeRemaining = useTurnCountdown({ game })
 
   const solvedPhraseIds = useMemo(() => {
-    return game?.turns[0].playedPhrases
-      .filter(phrase => phrase.solved)
-      .map(phrase => phrase.phraseId)
-      .reverse() ?? []
+    return (
+      game?.turns[0].playedPhrases
+        .filter(phrase => phrase.solved)
+        .map(phrase => phrase.phraseId)
+        .reverse() ?? []
+    )
   }, [game])
 
   if (!game || !prompter) return <div />
@@ -67,20 +68,19 @@ const Promptee = ({
         {/* Keeps the inflating clock from causing scrollbars */}
         <Clock seconds={timeRemaining} />
       </div>
-      {isYourTeam && (
-        <h3>{prompter.name} is prompting for your team...</h3>
-      )}
+
+      {isYourTeam && <h3>{prompter.name} is prompting for your team...</h3>}
       {!isYourTeam && (
         <h3>{prompter.name} is prompting for the other team...</h3>
       )}
+
       <div className="results">
         <FontAwesomeIcon icon={['fas', 'salad']} />
-        <h4>{solvedPhraseIds.length} phrase{solvedPhraseIds.length === 1 ? '' : 's'} solved this turn.</h4>
+        <h4>
+          {solvedPhraseIds.length} phrase
+          {solvedPhraseIds.length === 1 ? '' : 's'} solved this turn.
+        </h4>
       </div>
-      {solvedPhraseIds.map(sPI => {
-        const phrase = game.phrases.find(p => p._id === sPI)
-        return <h2 key={sPI}>{phrase?.text}</h2>
-      })}
     </Container>
   )
 }
