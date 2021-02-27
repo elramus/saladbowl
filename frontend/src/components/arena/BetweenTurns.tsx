@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import SkipTurnModal from './skip-turn-modal'
 import { useCurrentTurn } from '../../hooks/useCurrentTurn'
 import { usePrevious } from '../../hooks/usePrevious'
+import { useAuth } from '../../hooks/useAuth'
 import api from '../../lib/api'
 import { useGame } from '../../hooks/useGame'
 import Scoreboard from './Scoreboard'
@@ -22,11 +23,11 @@ interface Props {
 
 const BetweenTurns = ({ isYourTurn }: Props) => {
   const game = useGame()
+  const user = useAuth()
   const turn = useCurrentTurn()
   const [showSkipPrompt, setShowSkipPrompt] = useState(false)
   const [showVotingModal, setShowVotingModal] = useState(false)
   const [timer, setTimer] = useState(0)
-  const [hasVoted, setHasVoted] = useState(false)
 
   useEffect(() => {
     if (timer === TIME_BEFORE_PROMPTING) {
@@ -39,6 +40,10 @@ const BetweenTurns = ({ isYourTurn }: Props) => {
     }
   }, [timer])
 
+  const hasVoted = useMemo(() => {
+    return !!user && turn.votesToSkip.includes(user._id)
+  }, [user, turn.votesToSkip])
+
   const onClose = () => {
     setShowVotingModal(false)
   }
@@ -48,14 +53,12 @@ const BetweenTurns = ({ isYourTurn }: Props) => {
   }
 
   const onVote = () => {
-    setHasVoted(true)
     api.voteToSkip(game._id)
   }
 
   const reset = () => {
     setShowVotingModal(false)
     setShowSkipPrompt(false)
-    setHasVoted(false)
     setTimer(0)
   }
 
