@@ -27,6 +27,10 @@ export const turnSchema = new mongoose.Schema({
     type: Number,
     default: null,
   },
+  votesToSkip: {
+    type: [String],
+    default: [],
+  },
   playedPhrases: [new mongoose.Schema({
     phraseId: {
       type: String,
@@ -61,6 +65,7 @@ export interface ITurn extends mongoose.Document {
   turnLength: number;
   showCountdown: boolean;
   startTime: number | null;
+  votesToSkip: string[];
   playedPhrases: PlayedPhrase[];
 }
 
