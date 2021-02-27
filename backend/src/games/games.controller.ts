@@ -1,8 +1,8 @@
-import { NextActions } from "./../lib/constants"
 import { Request, Response } from 'express'
 import { Game, IGame } from './games.model'
 import { io } from '../server'
 import { SocketMessages } from '../socket'
+import { NextActions } from "../lib/constants"
 import joinTeam from '../lib/joinTeam'
 import { createGamePhrase } from '../lib/createGamePhrase'
 import deletePhrase from '../lib/deletePhrase'
@@ -17,8 +17,8 @@ import { changeReadyStatus } from '../lib/changeReadyStatus'
 import { gameReadyChecklist } from '../lib/gameReadyChecklist'
 import { failPhrase } from '../lib/failPhrase'
 import { applyTurnResults } from '../lib/applyTurnResults'
-import { randomNum } from '../utils/randomNum'
 import { voteToSkip } from '../lib/voteToSkip'
+import { randomNum } from '../utils/randomNum'
 
 const gameController = {
   async fetchGame(req: Request, res: Response) {
