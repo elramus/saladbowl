@@ -2,7 +2,7 @@ import { IGame } from '../games/games.model'
 import { io } from '../server'
 import { SocketMessages } from '../socket'
 import { shuffleArray } from '../utils/shuffleArray'
-import { IUser } from '../users/users.model'
+import { IUser, User } from '../users/users.model'
 import { decideNextPrompter } from './decideNextPrompter'
 import { ITurn } from '../turns/turns.model'
 import { chooseFirstPlayer } from './chooseFirstPlayer'
@@ -12,6 +12,7 @@ import { NextActions } from './constants'
 interface TurnRunnerConfig {
   playerStatus?: boolean;
   timeRemaining?: number;
+  nextAction?: NextActions
 }
 
 export class TurnRunner {
@@ -139,6 +140,35 @@ export class TurnRunner {
       }, 3000)
 
       return NextActions.STARTING_COUNTDOWN
+    }
+
+    // If a player was skipped because they left the room...
+    if (this.config?.nextAction === NextActions.SAME_ROUND_NEXT_PLAYER_SAME_TEAM) {
+      // Basically the same as a normal turn ending, except we need to pick someone from the same team.
+
+      // Stay in this round, but make a new turn for the next person.
+      try {
+        const userBeingSkipped =  await User.findById(this.game.turns[0].userId)
+        if (!userBeingSkipped) throw new Error('trying to skip user that does not exist')
+
+        const [nextPlayerIndex, nextPlayerId, teamUpNext] = decideNextPrompter(this.game, userBeingSkipped, true)
+
+        // Update the last prompter on the team.
+        this.game.teams.pull(teamUpNext._id)
+        teamUpNext.lastPrompterIndex = nextPlayerIndex
+        this.game.teams.push(teamUpNext)
+
+        // Prep for the next turn. Same round since there are more phrases.
+        await this.addNewTurn({
+          roundNum: currentRound,
+          nextUserId: nextPlayerId,
+        })
+
+        this.emit()
+        return NextActions.SAME_ROUND_NEXT_PLAYER_SAME_TEAM
+      } catch (e) {
+        throw new Error(e)
+      }
     }
 
     // If the prompting player just ran out of time...

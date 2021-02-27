@@ -9,6 +9,7 @@ import { ITeam } from '../teams/teams.model'
 export const decideNextPrompter = (
   game: IGame,
   justWentUser: IUser,
+  sameTeam?: boolean
 ): [number, string, ITeam] => {
   const teamWent = game.teams.find(t => (
     t.userIds.includes(justWentUser._id)))
@@ -17,7 +18,7 @@ export const decideNextPrompter = (
 
   // We need to get the other team.
   const teamWentIndex = game.teams.indexOf(teamWent)
-  const teamUpNext = teamWentIndex + 1 > game.teams.length - 1
+  const teamUpNext = sameTeam ? teamWent : teamWentIndex + 1 > game.teams.length - 1
     ? game.teams[0]
     : game.teams[teamWentIndex + 1]
 

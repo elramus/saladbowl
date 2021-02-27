@@ -1,9 +1,9 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import styled from 'styled-components'
-import { useSelector } from 'react-redux'
-import { AppState } from '../../store'
-import { getUserFromUserId } from '../../lib/getUserFromUserId'
 import animateEntrance from '../../lib/animateEntrance'
+import { usePlayerRole } from '../../hooks/usePlayerRole'
+import { useCurrentTurn } from '../../hooks/useCurrentTurn'
+import { useCurrentPrompter } from '../../hooks/useCurrentPrompter'
 
 const Container = styled('div')`
   border-left: 6px solid ${props => props.theme.black};
@@ -20,44 +20,48 @@ const Container = styled('div')`
 `
 
 const UpNext = () => {
-  const game = useSelector((state: AppState) => state.game)
-  const user = useSelector((state: AppState) => state.user)
-
-  if (!game || !user) throw new Error('game or user not found in UpNext')
-
-  const role: 'prompting' | 'guessing' | 'nothing' = useMemo(() => {
-    if (game.turns[0].userId === user._id) return 'prompting'
-    const promptersTeam = game.teams.find(t => t.userIds.includes(game.turns[0].userId))
-    if (promptersTeam?.userIds.includes(user._id)) return 'guessing'
-    return 'nothing'
-  }, [game.teams, game.turns, user._id])
+  const currentPrompter = useCurrentPrompter()
+  const role = usePlayerRole()
+  const turn = useCurrentTurn()
 
   return (
     <Container>
       <h5>Up Next...</h5>
       {role === 'prompting' && (
         <>
-          <h3>You're up, {user.name}!</h3>
-          {game.turns[0].round === 1 && (
-            <p>Use any words OTHER than what's in the phrase to prompt your teammates.</p>
+          <h3>{turn.turnLength === 60 ? `You're up, ${currentPrompter.name}!` : `You're finishing your turn, ${currentPrompter.name}!`}</h3>
+          {turn.round === 1 && (
+            <p>
+              Use any words OTHER than what's in the phrase to prompt your
+              teammates.
+            </p>
           )}
-          {game.turns[0].round === 2 && (
-            <p>Use ACTING and SOUND EFFECTS to prompt your teammates, but no words!</p>
+          {turn.round === 2 && (
+            <p>
+              Use ACTING and SOUND EFFECTS to prompt your teammates, but no
+              words!
+            </p>
           )}
-          {game.turns[0].round === 3 && (
+          {turn.round === 3 && (
             <p>Use just ONE WORD to prompt your teammates. Nothing else!!</p>
           )}
         </>
       )}
       {role === 'guessing' && (
         <>
-          <h3>{getUserFromUserId({ userId: game.turns[0].userId, game }).name} will be prompting for your team.</h3>
-          <p>Put on your thinking fedora and ready to guess!</p>
+          <h3>
+            {currentPrompter.name}{' '}
+            {turn.turnLength === 60 ? 'will be prompting' : 'will finish their turn'} for your team.
+          </h3>
+          <p>Get ready to guess!!</p>
         </>
       )}
       {role === 'nothing' && (
         <>
-          <h3>{getUserFromUserId({ userId: game.turns[0].userId, game }).name} will be prompting for the other team.</h3>
+          <h3>
+            {currentPrompter.name}{' '}
+            {turn.turnLength === 60 ? 'will be prompting' : 'will finish their turn'} for the other team.
+          </h3>
           <p>Relax, refresh your drink.</p>
         </>
       )}

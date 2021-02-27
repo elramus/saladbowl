@@ -13,10 +13,10 @@ type AnimationNames =
   | 'spin';
 
 const animateEntrance = (
-  name: AnimationNames,
+  name: AnimationNames = 'fadeSlideUp',
   duration = 1000,
   delay = 0,
-  easing = 'ease-in-out',
+  easing = 'cubic-bezier(0, 0, 0.25, 1.01)',
 ) => {
   switch (name) {
     case 'fade': return css`

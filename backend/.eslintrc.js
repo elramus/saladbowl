@@ -20,11 +20,13 @@ module.exports = {
   plugins: ["@typescript-eslint"],
   rules: {
     "@typescript-eslint/explicit-function-return-type": 0,
+    "@typescript-eslint/explicit-module-boundary-types": 0,
     "@typescript-eslint/interface-name-prefix": 0,
     "@typescript-eslint/semi": 0,
     "import/no-extraneous-dependencies": 0,
     "import/prefer-default-export": 0,
     "lines-between-class-members": 0,
+    "no-console": 1,
     "no-param-reassign": ["error", { props: false }],
     "no-undef": 0,
     "no-underscore-dangle": 0,

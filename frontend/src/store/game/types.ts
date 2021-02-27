@@ -30,6 +30,7 @@ export interface Turn {
   showCountdown: boolean;
   startTime: number | null;
   playedPhrases: PlayedPhrase[];
+  votesToSkip: string[];
 }
 
 export interface Game {
