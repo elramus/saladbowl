@@ -2,10 +2,7 @@ import { randomNum } from '../utils/randomNum'
 import { Game } from '../games/games.model'
 import { Team, ITeam } from '../teams/teams.model'
 
-export const createGame = async (
-  userId: string,
-  teamNames?: string[],
-) => {
+export const createGame = async (userId: string, teamNames?: string[]) => {
   let shortId: number | null = null
 
   async function getShortId() {
@@ -40,7 +37,7 @@ export const createGame = async (
   const teams = makeTeams()
 
   // Alphabetize the teams.
-  teams.sort((t1, t2) => t1.name > t2.name ? 1 : -1)
+  teams.sort((t1, t2) => (t1.name > t2.name ? 1 : -1))
 
   const newGame = new Game({
     shortId,

@@ -10,11 +10,11 @@ const Container = styled('div')`
 `
 
 interface Props {
-  placeholder: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onReturn?: () => void;
-  focusOnMount?: boolean;
+  placeholder: string
+  value: string
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onReturn?: () => void
+  focusOnMount?: boolean
 }
 
 const TextInput: React.FC<Props> = ({

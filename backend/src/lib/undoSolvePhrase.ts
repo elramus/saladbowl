@@ -4,8 +4,8 @@ export const undoSolvePhrase = async ({
   game,
   phraseId,
 }: {
-  game: IGame;
-  phraseId: string;
+  game: IGame
+  phraseId: string
 }) => {
   // Pop the last phrase off the current turn's played phrases.
   const phraseToUndo = game.turns[0].playedPhrases.pop()

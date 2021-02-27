@@ -7,8 +7,8 @@ import { ifEnterOrSpace } from '../../lib/ifEnterOrSpace'
 import PlayerList from './PlayerList'
 
 interface StyleProps {
-  expanded: boolean;
-  expandable: boolean;
+  expanded: boolean
+  expandable: boolean
 }
 
 const Container = styled('div')<StyleProps>`
@@ -41,9 +41,9 @@ const Container = styled('div')<StyleProps>`
       left: 0;
       right: 0;
       margin: auto;
-      bottom: .25rem;
+      bottom: 0.25rem;
       transition: transform 100ms ease-out;
-      transform: rotate(${props => (props.expanded ? '180deg' : '0deg')})
+      transform: rotate(${props => (props.expanded ? '180deg' : '0deg')});
     }
   }
   h5 {
@@ -55,7 +55,9 @@ const Container = styled('div')<StyleProps>`
     line-height: 1;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   }
-  ${props => props.expandable && `
+  ${props =>
+    props.expandable &&
+    `
     &:hover {
       cursor: pointer;
       background: rgba(0, 0, 0, 0.18);
@@ -64,14 +66,11 @@ const Container = styled('div')<StyleProps>`
 `
 
 interface Props {
-  expandable?: boolean;
-  final?: boolean;
+  expandable?: boolean
+  final?: boolean
 }
 
-const Scoreboard = ({
-  expandable = true,
-  final,
-}: Props) => {
+const Scoreboard = ({ expandable = true, final }: Props) => {
   const game = useSelector((state: AppState) => state.game)
   const [expanded, setExpanded] = useState(!expandable)
 
@@ -96,27 +95,17 @@ const Scoreboard = ({
       <div className="team">
         <h5>{game.teams[0].name}</h5>
         <h1>{game.teams[0].score}</h1>
-        {(expanded || !expandable) && (
-          <PlayerList team={game.teams[0]} />
-        )}
+        {(expanded || !expandable) && <PlayerList team={game.teams[0]} />}
       </div>
       <div className="round">
-        {!final && (
-          <p>Round {game.turns[0].round}</p>
-        )}
-        {final && (
-          <p>FINAL</p>
-        )}
-        {expandable && (
-          <FontAwesomeIcon icon={['fas', 'angle-down']} />
-        )}
+        {!final && <p>Round {game.turns[0].round}</p>}
+        {final && <p>FINAL</p>}
+        {expandable && <FontAwesomeIcon icon={['fas', 'angle-down']} />}
       </div>
       <div className="team">
         <h5>{game.teams[1].name}</h5>
         <h1>{game.teams[1].score}</h1>
-        {(expanded || !expandable) && (
-          <PlayerList team={game.teams[1]} />
-        )}
+        {(expanded || !expandable) && <PlayerList team={game.teams[1]} />}
       </div>
     </Container>
   )

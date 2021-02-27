@@ -9,21 +9,20 @@ import { PlayedPhrase } from '../../../store/game/types'
 
 const PhraseList = styled('ul')<{ showLoading: boolean }>`
   margin-bottom: 2rem;
-  ${props => props.showLoading && `
+  ${props =>
+    props.showLoading &&
+    `
     opacity: 0.5;
     pointer-events: none;
   `};
 `
 
 interface Props {
-  onClose: () => void;
-  onSubmit: (playedPhrases: PlayedPhrase[]) => void;
+  onClose: () => void
+  onSubmit: (playedPhrases: PlayedPhrase[]) => void
 }
 
-const TurnReviewModal = ({
-  onClose,
-  onSubmit,
-}: Props) => {
+const TurnReviewModal = ({ onClose, onSubmit }: Props) => {
   const game = useSelector((state: AppState) => state.game)
 
   const [loading, setLoading] = useState(false)
@@ -36,12 +35,14 @@ const TurnReviewModal = ({
     // We're using timestamp instead of ID because you can have the same phrase
     // on this array multiple times, if it was skipped and then encountered
     // again. Timestamp will always be unique.
-    setPlayedPhrases(playedPhrases.map(p => {
-      if (p.timestamp === phraseTimestamp) {
-        return { ...p, solved: status }
-      }
-      return p
-    }))
+    setPlayedPhrases(
+      playedPhrases.map(p => {
+        if (p.timestamp === phraseTimestamp) {
+          return { ...p, solved: status }
+        }
+        return p
+      }),
+    )
   }
 
   function handleSubmit() {
@@ -56,7 +57,10 @@ const TurnReviewModal = ({
 
   return (
     <Modal onClose={onClose}>
-      <p>Which phrases did your team solve? Be honest. With great power comes great responsibility...</p>
+      <p>
+        Which phrases did your team solve? Be honest. With great power comes
+        great responsibility...
+      </p>
       <PhraseList showLoading={loading}>
         {playedPhrases.map(playedPhrase => (
           <PlayedPhraseRow

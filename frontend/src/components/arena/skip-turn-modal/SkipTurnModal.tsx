@@ -34,15 +34,26 @@ const SkipTurnModal: React.FC<SkipTurnModalProps> = ({
   const currentPrompter = useCurrentPrompter()
 
   return (
-    <Modal
-      onClose={onClose}
-    >
-      <strong>If three players agree, we'll skip {currentPrompter.name} and the next player on their team will go instead.</strong>
+    <Modal onClose={onClose}>
+      <strong>
+        If three players agree, we'll skip {currentPrompter.name} and the next
+        player on their team will go instead.
+      </strong>
       <hr style={{ opacity: 0.25 }} />
-      <strong>{turn.votesToSkip.length} vote{turn.votesToSkip.length === 1 ? '' : 's'}.</strong>
+      <strong>
+        {turn.votesToSkip.length} vote{turn.votesToSkip.length === 1 ? '' : 's'}
+        .
+      </strong>
 
       <VoteControlContainer>
-        {hasVoted ? <p><FontAwesomeIcon icon={['fas', 'check']} />Voted</p> : <TextButton text="Skip?" onClick={onVote} variant="big" />}
+        {hasVoted ? (
+          <p>
+            <FontAwesomeIcon icon={['fas', 'check']} />
+            Voted
+          </p>
+        ) : (
+          <TextButton text="Skip?" onClick={onVote} variant="big" />
+        )}
       </VoteControlContainer>
     </Modal>
   )

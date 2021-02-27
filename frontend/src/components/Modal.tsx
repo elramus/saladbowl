@@ -40,15 +40,11 @@ const Container = styled('div')`
 `
 
 interface Props {
-  onClose: () => void;
-  style?: CSSProperties;
+  onClose: () => void
+  style?: CSSProperties
 }
 
-const Modal: React.FC<Props> = ({
-  onClose,
-  style,
-  children,
-}) => {
+const Modal: React.FC<Props> = ({ onClose, style, children }) => {
   useEscKeyListener(onClose)
 
   return (

@@ -55,12 +55,8 @@ const GetGamePage = () => {
           variant="big"
         />
       </div>
-      {isJoining && (
-        <JoinGameModal onClose={() => setIsJoining(false)} />
-      )}
-      {isCreating && (
-        <CreateGameModal onClose={() => setIsCreating(false)} />
-      )}
+      {isJoining && <JoinGameModal onClose={() => setIsJoining(false)} />}
+      {isCreating && <CreateGameModal onClose={() => setIsCreating(false)} />}
     </Container>
   )
 }

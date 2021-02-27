@@ -13,8 +13,8 @@ export const playerSchema = new mongoose.Schema({
 })
 
 export interface IPlayer extends mongoose.Document {
-  user: IUser;
-  readyToPlay: boolean;
+  user: IUser
+  readyToPlay: boolean
 }
 
 export const Player = mongoose.model<IPlayer>('Player', playerSchema)

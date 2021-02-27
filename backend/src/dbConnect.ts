@@ -11,10 +11,10 @@ const dbConnect = () => {
     useFindAndModify: false,
   })
   mongoose.connection.on('open', () => {
-      console.log('Connected to Mongo') /* eslint-disable-line */
+    console.log('Connected to Mongo') /* eslint-disable-line */
   })
   mongoose.connection.on('error', e => {
-      console.error(e) /* eslint-disable-line */
+    console.error(e) /* eslint-disable-line */
   })
 }
 

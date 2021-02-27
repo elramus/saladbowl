@@ -11,24 +11,22 @@ import useScrollToTop from '../../hooks/useScrollToTop'
 
 const Container = styled('div')`
   ${animateEntrance('fadeSlideUp', 500)};
-  >textarea {
+  > textarea {
     width: 100%;
     height: 3.25em;
     margin: 0.75em 0 1em 0;
   }
-  >.controls {
+  > .controls {
     display: flex;
     justify-content: space-between;
   }
 `
 
 interface Props {
-  onFinished: () => void;
+  onFinished: () => void
 }
 
-const MakeEntriesTab = ({
-  onFinished,
-}: Props) => {
+const MakeEntriesTab = ({ onFinished }: Props) => {
   const dispatch = useDispatch()
   const game = useSelector((state: AppState) => state.game)
 
@@ -42,13 +40,15 @@ const MakeEntriesTab = ({
   function handleAdd() {
     if (entry.length > 1 && game) {
       setIsSubmitting(true)
-      dispatch(createPhrase(entry, game._id, () => {
-        setIsSubmitting(false)
-        setEntry('')
-        // We're gonna blur the input field so user sees them
-        // populate beneath the form.
-        if (ref.current) ref.current.blur()
-      }))
+      dispatch(
+        createPhrase(entry, game._id, () => {
+          setIsSubmitting(false)
+          setEntry('')
+          // We're gonna blur the input field so user sees them
+          // populate beneath the form.
+          if (ref.current) ref.current.blur()
+        }),
+      )
     }
   }
 
@@ -70,7 +70,10 @@ const MakeEntriesTab = ({
 
   return (
     <Container>
-      <HelperText>Ask your deepest, darkest self "What stupid things should I make my friends say?"</HelperText>
+      <HelperText>
+        Ask your deepest, darkest self "What stupid things should I make my
+        friends say?"
+      </HelperText>
       <textarea
         onChange={e => setEntry(e.target.value)}
         ref={ref}

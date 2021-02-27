@@ -4,8 +4,8 @@ export const getPlayerFromUserId = ({
   userId,
   game,
 }: {
-  userId: string;
-  game: Game;
+  userId: string
+  game: Game
 }) => {
   const player = game.players.find(p => p.user._id === userId)
 

@@ -5,8 +5,8 @@ export const applyTurnResults = async ({
   game,
   playedPhrases,
 }: {
-  game: IGame;
-  playedPhrases?: PlayedPhrase[];
+  game: IGame
+  playedPhrases?: PlayedPhrase[]
 }) => {
   try {
     const turn = game.turns[0]
@@ -23,7 +23,9 @@ export const applyTurnResults = async ({
       if (playedPhrase.solved) pointsEarned += 1
     })
 
-    const team = game.teams.find(t => t._id.toString() === turn.teamId.toString())
+    const team = game.teams.find(
+      t => t._id.toString() === turn.teamId.toString(),
+    )
     if (!team) throw new Error('invalid team ID')
 
     const updatedScore = team.score + pointsEarned
@@ -33,7 +35,9 @@ export const applyTurnResults = async ({
     // turn review modal.
     turn.playedPhrases.forEach(pp => {
       if (pp.solved && game.unsolvedPhraseIds.includes(pp.phraseId)) {
-        game.unsolvedPhraseIds = game.unsolvedPhraseIds.filter(pId => pId !== pp.phraseId)
+        game.unsolvedPhraseIds = game.unsolvedPhraseIds.filter(
+          pId => pId !== pp.phraseId,
+        )
       }
       if (!pp.solved && !game.unsolvedPhraseIds.includes(pp.phraseId)) {
         game.unsolvedPhraseIds.push(pp.phraseId)

@@ -10,15 +10,11 @@ const api = {
     return axios.get('/login')
   },
 
-  logInUser: (
-    name: string,
-  ): AxiosPromise<{ user: User }> => {
+  logInUser: (name: string): AxiosPromise<{ user: User }> => {
     return axios.post('/login', { name })
   },
 
-  fetchGame: (
-    shortId: string,
-  ): AxiosPromise<{ game: Game | null }> => {
+  fetchGame: (shortId: string): AxiosPromise<{ game: Game | null }> => {
     return axios.get(`/games/${shortId}`)
   },
 
@@ -35,10 +31,7 @@ const api = {
     return axios.put(`/games/${gameId}/create-teams`, { teamNames })
   },
 
-  joinTeam: (
-    gameId: string,
-    teamId: string,
-  ): AxiosPromise<Game> => {
+  joinTeam: (gameId: string, teamId: string): AxiosPromise<Game> => {
     return axios.put(`/games/${gameId}/join-team`, { teamId })
   },
 
@@ -46,23 +39,25 @@ const api = {
     gameId,
     status,
   }: {
-    gameId: string;
-    status: boolean;
+    gameId: string
+    status: boolean
   }): AxiosPromise<{ game: Game }> => {
-    return axios.put(`/games/${gameId}/player-ready-status`, { readyStatus: status })
+    return axios.put(`/games/${gameId}/player-ready-status`, {
+      readyStatus: status,
+    })
   },
 
-  createPhrase: (
-    text: string,
-    gameId: string,
-  ): AxiosPromise => {
+  createPhrase: (text: string, gameId: string): AxiosPromise => {
     return axios.post(`/games/${gameId}/phrases`, { text })
   },
 
   deletePhrase: ({
     phraseId,
     gameId,
-  }: { phraseId: string; gameId: string }): AxiosPromise => {
+  }: {
+    phraseId: string
+    gameId: string
+  }): AxiosPromise => {
     return axios.delete(`/games/${gameId}/phrases/${phraseId}`)
   },
 
@@ -71,19 +66,22 @@ const api = {
     phraseId,
     timeRemaining,
   }: {
-    gameId: string;
-    phraseId: string;
-    timeRemaining: number;
+    gameId: string
+    phraseId: string
+    timeRemaining: number
   }): AxiosPromise => {
-    return axios.put(`/games/${gameId}/solve-phrase`, { phraseId, timeRemaining })
+    return axios.put(`/games/${gameId}/solve-phrase`, {
+      phraseId,
+      timeRemaining,
+    })
   },
 
   failPhrase: ({
     gameId,
     phraseId,
   }: {
-    gameId: string;
-    phraseId: string;
+    gameId: string
+    phraseId: string
   }): AxiosPromise => {
     return axios.put(`/games/${gameId}/fail-phrase`, { phraseId })
   },
@@ -92,8 +90,8 @@ const api = {
     gameId,
     phraseId,
   }: {
-    gameId: string;
-    phraseId: string;
+    gameId: string
+    phraseId: string
   }): AxiosPromise => {
     return axios.put(`/games/${gameId}/undo-phrase`, { phraseId })
   },
@@ -102,15 +100,15 @@ const api = {
     gameId,
     playedPhrases,
   }: {
-    gameId: string;
-    playedPhrases: PlayedPhrase[];
+    gameId: string
+    playedPhrases: PlayedPhrase[]
   }) => {
-    return axios.post(`/games/${gameId}/submit-played-phrases`, { playedPhrases })
+    return axios.post(`/games/${gameId}/submit-played-phrases`, {
+      playedPhrases,
+    })
   },
 
-  voteToSkip: (
-    gameId: string,
-  ): AxiosPromise<string> => {
+  voteToSkip: (gameId: string): AxiosPromise<string> => {
     return axios.get(`/games/${gameId}/vote-to-skip-turn`)
   },
 
@@ -119,9 +117,9 @@ const api = {
     userId,
     config,
   }: {
-    gameId: string;
-    userId: string | undefined;
-    config: ManagerConfig;
+    gameId: string
+    userId: string | undefined
+    config: ManagerConfig
   }): AxiosPromise => {
     return axios.put(`/games/${gameId}/next-action`, { userId, config })
   },

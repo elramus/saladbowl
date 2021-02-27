@@ -10,8 +10,8 @@ import { makeTeams } from './makeTeams'
 import { NextActions } from './constants'
 
 interface TurnRunnerConfig {
-  playerStatus?: boolean;
-  timeRemaining?: number;
+  playerStatus?: boolean
+  timeRemaining?: number
   nextAction?: NextActions
 }
 
@@ -19,7 +19,7 @@ export class TurnRunner {
   private game: IGame
   private user: IUser
   private config: TurnRunnerConfig | undefined
-  private fromCreator: boolean;
+  private fromCreator: boolean
   private fromCurrentPlayer: boolean
 
   constructor({
@@ -27,9 +27,9 @@ export class TurnRunner {
     user,
     config,
   }: {
-    game: IGame;
-    user: IUser;
-    config?: TurnRunnerConfig;
+    game: IGame
+    user: IUser
+    config?: TurnRunnerConfig
   }) {
     this.game = game
     this.user = user
@@ -41,8 +41,9 @@ export class TurnRunner {
       this.fromCreator = true
     }
 
-    if (this.game.turns.length > 0
-      && this.game.turns[0].userId.toString() === this.user._id.toString()
+    if (
+      this.game.turns.length > 0 &&
+      this.game.turns[0].userId.toString() === this.user._id.toString()
     ) {
       this.fromCurrentPlayer = true
     }
@@ -52,9 +53,7 @@ export class TurnRunner {
     // If any turns have been taken, get the first one to see what
     // round it is. Just don't forget to unshift new turns instead
     // of pushing :)
-    const currentRound = this.game.turns.length
-      ? this.game.turns[0].round
-      : 0
+    const currentRound = this.game.turns.length ? this.game.turns[0].round : 0
 
     // If we haven't done pre-roll yet...
     // Note: this condition is triggered from Player Ready Status.
@@ -66,10 +65,11 @@ export class TurnRunner {
     }
 
     // If pre-roll just finished...
-    if (this.fromCreator
-      && currentRound === 0
-      && this.game.preRoll.show
-      && this.game.startTime !== null
+    if (
+      this.fromCreator &&
+      currentRound === 0 &&
+      this.game.preRoll.show &&
+      this.game.startTime !== null
     ) {
       this.game.preRoll.show = false
 
@@ -77,8 +77,9 @@ export class TurnRunner {
       await this.prepNewRound()
 
       // Get the ID of the team that's up first.
-      const firstTeam = this.game.teams
-        .find(t => t._id.toString() === this.game.preRoll.firstTeamId.toString())
+      const firstTeam = this.game.teams.find(
+        t => t._id.toString() === this.game.preRoll.firstTeamId.toString(),
+      )
       if (!firstTeam) throw new Error('could not get the first team')
 
       // We assigned lastPrompterIndex to the first team during prepGame.
@@ -96,9 +97,10 @@ export class TurnRunner {
     }
 
     // If the game is over...
-    if (this.fromCurrentPlayer
-      && currentRound === 3
-      && this.game.unsolvedPhraseIds.length === 0
+    if (
+      this.fromCurrentPlayer &&
+      currentRound === 3 &&
+      this.game.unsolvedPhraseIds.length === 0
     ) {
       this.game.gameOver = true
       await this.game.save()
@@ -110,10 +112,11 @@ export class TurnRunner {
     const currentTurn: ITurn = this.game.turns[0]
 
     // If we're waiting for the current player to say they're ready to prompt...
-    if (this.fromCurrentPlayer
-      && currentRound > 0
-      && !this.game.preRoll.show
-      && !currentTurn.startTime
+    if (
+      this.fromCurrentPlayer &&
+      currentRound > 0 &&
+      !this.game.preRoll.show &&
+      !currentTurn.startTime
     ) {
       // Give 'em the countdown.
       this.game.turns[0].showCountdown = true
@@ -143,15 +146,22 @@ export class TurnRunner {
     }
 
     // If a player was skipped because they left the room...
-    if (this.config?.nextAction === NextActions.SAME_ROUND_NEXT_PLAYER_SAME_TEAM) {
+    if (
+      this.config?.nextAction === NextActions.SAME_ROUND_NEXT_PLAYER_SAME_TEAM
+    ) {
       // Basically the same as a normal turn ending, except we need to pick someone from the same team.
 
       // Stay in this round, but make a new turn for the next person.
       try {
-        const userBeingSkipped =  await User.findById(this.game.turns[0].userId)
-        if (!userBeingSkipped) throw new Error('trying to skip user that does not exist')
+        const userBeingSkipped = await User.findById(this.game.turns[0].userId)
+        if (!userBeingSkipped)
+          throw new Error('trying to skip user that does not exist')
 
-        const [nextPlayerIndex, nextPlayerId, teamUpNext] = decideNextPrompter(this.game, userBeingSkipped, true)
+        const [nextPlayerIndex, nextPlayerId, teamUpNext] = decideNextPrompter(
+          this.game,
+          userBeingSkipped,
+          true,
+        )
 
         // Update the last prompter on the team.
         this.game.teams.pull(teamUpNext._id)
@@ -172,14 +182,18 @@ export class TurnRunner {
     }
 
     // If the prompting player just ran out of time...
-    if (this.fromCurrentPlayer
-      && currentRound > 0
-      && currentTurn.startTime
-      && this.game.unsolvedPhraseIds.length > 0
+    if (
+      this.fromCurrentPlayer &&
+      currentRound > 0 &&
+      currentTurn.startTime &&
+      this.game.unsolvedPhraseIds.length > 0
     ) {
       // Stay in this round, but make a new turn for the next person.
       try {
-        const [nextPlayerIndex, nextPlayerId, teamUpNext] = decideNextPrompter(this.game, this.user)
+        const [nextPlayerIndex, nextPlayerId, teamUpNext] = decideNextPrompter(
+          this.game,
+          this.user,
+        )
 
         // Update the last prompter on the team.
         this.game.teams.pull(teamUpNext._id)
@@ -200,10 +214,11 @@ export class TurnRunner {
     }
 
     // If we're out of phrases...
-    if (this.fromCurrentPlayer
-      && currentRound > 0
-      && currentTurn.startTime
-      && this.game.unsolvedPhraseIds.length === 0
+    if (
+      this.fromCurrentPlayer &&
+      currentRound > 0 &&
+      currentTurn.startTime &&
+      this.game.unsolvedPhraseIds.length === 0
     ) {
       if (currentRound < 3) {
         // Put the phrases back into the bowl and shuffle!
@@ -225,11 +240,10 @@ export class TurnRunner {
           return NextActions.NEXT_ROUND_SAME_PLAYER
         }
 
-        const [
-          nextPlayerIndex,
-          nextPlayerId,
-          teamUpNext,
-        ] = decideNextPrompter(this.game, this.user)
+        const [nextPlayerIndex, nextPlayerId, teamUpNext] = decideNextPrompter(
+          this.game,
+          this.user,
+        )
 
         this.game.teams.pull(teamUpNext._id)
         teamUpNext.lastPrompterIndex = nextPlayerIndex
@@ -242,7 +256,9 @@ export class TurnRunner {
         })
 
         this.emit()
-        console.log('next round next player? i do not really think this should happen...') // eslint-disable-line
+        console.log(
+          'next round next player? i do not really think this should happen...',
+        ) // eslint-disable-line
         return NextActions.NEXT_ROUND_NEXT_PLAYER
       }
     }
@@ -262,7 +278,9 @@ export class TurnRunner {
 
       // Sort the teams alphabetically. This should just make sure "Team 1"
       // is before "Team 2".
-      this.game.teams = this.game.teams.sort((t1, t2) => t1.name > t2.name ? 1 : -1)
+      this.game.teams = this.game.teams.sort((t1, t2) =>
+        t1.name > t2.name ? 1 : -1,
+      )
       await this.game.save()
     }
 
@@ -288,7 +306,9 @@ export class TurnRunner {
 
   async prepNewRound() {
     // The unsolved phrases starts as just a shuffle of all the phrases.
-    this.game.unsolvedPhraseIds = shuffleArray(this.game.phrases.map(p => p._id))
+    this.game.unsolvedPhraseIds = shuffleArray(
+      this.game.phrases.map(p => p._id),
+    )
     await this.game.save()
   }
 
@@ -297,9 +317,9 @@ export class TurnRunner {
     nextUserId,
     turnLength,
   }: {
-    roundNum: number;
-    nextUserId: string;
-    turnLength?: number;
+    roundNum: number
+    nextUserId: string
+    turnLength?: number
   }) {
     // Get the team of the next player.
     const team = this.game.teams.find(t => t.userIds.includes(nextUserId))

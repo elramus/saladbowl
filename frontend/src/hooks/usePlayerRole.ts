@@ -13,7 +13,9 @@ export const usePlayerRole = (): PlayerRole => {
 
   const role = useMemo(() => {
     if (game.turns[0].userId === user._id) return 'prompting'
-    const promptersTeam = game.teams.find(t => t.userIds.includes(game.turns[0].userId))
+    const promptersTeam = game.teams.find(t =>
+      t.userIds.includes(game.turns[0].userId),
+    )
     if (promptersTeam?.userIds.includes(user._id)) return 'guessing'
     return 'nothing'
   }, [game.teams, game.turns, user._id])

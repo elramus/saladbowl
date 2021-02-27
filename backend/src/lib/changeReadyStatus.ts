@@ -5,9 +5,9 @@ export const changeReadyStatus = async ({
   game,
   status,
 }: {
-  userId: string;
-  game: IGame;
-  status: boolean;
+  userId: string
+  game: IGame
+  status: boolean
 }) => {
   const player = game.players.find(p => p.user._id.equals(userId))
   if (!player) {

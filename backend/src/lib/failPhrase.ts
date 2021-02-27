@@ -4,8 +4,8 @@ export const failPhrase = async ({
   game,
   phraseId,
 }: {
-  game: IGame;
-  phraseId: string;
+  game: IGame
+  phraseId: string
 }) => {
   // If there's more than 1 phrase in the bowl, move this failed phrase
   // to the end.

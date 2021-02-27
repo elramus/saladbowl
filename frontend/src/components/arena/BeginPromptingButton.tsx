@@ -28,10 +28,12 @@ const BeginPromptingButton = () => {
 
   function handleStart() {
     if (game && user) {
-      dispatch(nextAction({
-        gameId: game._id,
-        userId: user._id,
-      }))
+      dispatch(
+        nextAction({
+          gameId: game._id,
+          userId: user._id,
+        }),
+      )
     }
   }
 

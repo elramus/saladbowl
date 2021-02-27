@@ -23,18 +23,11 @@ export const gameFactory = async (
   // Also add any additional users.
   const team1 = await teamFactory({
     name: 'Team A',
-    userIds: [
-      user1._id,
-      user2._id,
-      ...additionalUsers.map(user => user._id),
-    ],
+    userIds: [user1._id, user2._id, ...additionalUsers.map(user => user._id)],
   })
   const team2 = await teamFactory({
     name: 'Team B',
-    userIds: [
-      user3._id,
-      user4._id,
-    ],
+    userIds: [user3._id, user4._id],
   })
 
   const player1 = await playerFactory({ user: user1 })
@@ -60,12 +53,9 @@ export const gameFactory = async (
       player2,
       player3,
       player4,
-      ...await createAdditionalPlayers(),
+      ...(await createAdditionalPlayers()),
     ],
-    teams: params?.teams ?? [
-      team1,
-      team2,
-    ],
+    teams: params?.teams ?? [team1, team2],
     phrases: params?.phrases ?? [
       await phraseFactory({ authorId: user1._id }),
       await phraseFactory({ authorId: user1._id }),
@@ -85,11 +75,6 @@ export const gameFactory = async (
 
   return {
     game,
-    users: [
-      user1,
-      user2,
-      user3,
-      user4,
-    ],
+    users: [user1, user2, user3, user4],
   }
 }

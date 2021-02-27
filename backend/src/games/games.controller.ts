@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { Game, IGame } from './games.model'
 import { io } from '../server'
 import { SocketMessages } from '../socket'
-import { NextActions } from "../lib/constants"
+import { NextActions } from '../lib/constants'
 import joinTeam from '../lib/joinTeam'
 import { createGamePhrase } from '../lib/createGamePhrase'
 import deletePhrase from '../lib/deletePhrase'
@@ -43,17 +43,34 @@ const gameController = {
           // If one team has fewer players than the other, use that.
           // (If we start supporting more than two teams, this will need to be smarter).
           if (game.teams[0].userIds.length < game.teams[1].userIds.length) {
-            gameWithNewPlayer = await joinTeam(game, game.teams[0]._id.toString(), userId)
-          } else if (game.teams[1].userIds.length < game.teams[0].userIds.length) {
-            gameWithNewPlayer = await joinTeam(game, game.teams[1]._id.toString(), userId)
+            gameWithNewPlayer = await joinTeam(
+              game,
+              game.teams[0]._id.toString(),
+              userId,
+            )
+          } else if (
+            game.teams[1].userIds.length < game.teams[0].userIds.length
+          ) {
+            gameWithNewPlayer = await joinTeam(
+              game,
+              game.teams[1]._id.toString(),
+              userId,
+            )
           } else {
             // Neither team has fewer players, pick a random one.
             const teamIndex = randomNum(0, game.teams.length - 1)
-            gameWithNewPlayer = await joinTeam(game, game.teams[teamIndex]._id.toString(), userId)
+            gameWithNewPlayer = await joinTeam(
+              game,
+              game.teams[teamIndex]._id.toString(),
+              userId,
+            )
           }
 
           // Broadcast the update with the new player on the team.
-          io.to(gameWithNewPlayer.id).emit(SocketMessages.GameUpdate, gameWithNewPlayer)
+          io.to(gameWithNewPlayer.id).emit(
+            SocketMessages.GameUpdate,
+            gameWithNewPlayer,
+          )
           return res.send({ game: gameWithNewPlayer })
         }
 
@@ -97,11 +114,8 @@ const gameController = {
     const { userId } = req
     const { readyStatus } = req.body
     const { gameId } = req.params
-    if (!userId
-      || !gameId
-      || readyStatus === undefined
-      || readyStatus === null
-    ) return res.status(400).send('Required param not found in request')
+    if (!userId || !gameId || readyStatus === undefined || readyStatus === null)
+      return res.status(400).send('Required param not found in request')
 
     try {
       const game = await findGame(gameId)
@@ -215,7 +229,8 @@ const gameController = {
     const { gameId } = req.params
     const { teamId } = req.body
     const { userId } = req
-    if (!gameId || !teamId || !userId) return res.status(400).send('Missing required request params')
+    if (!gameId || !teamId || !userId)
+      return res.status(400).send('Missing required request params')
 
     try {
       const game = await Game.findById(gameId)
@@ -277,7 +292,8 @@ const gameController = {
   async failPhrase(req: Request, res: Response) {
     const { gameId } = req.params
     const { phraseId } = req.body
-    if (!gameId || !phraseId) return res.status(400).send('Missing required params')
+    if (!gameId || !phraseId)
+      return res.status(400).send('Missing required params')
 
     const game = await Game.findById(gameId)
     if (!game) return res.status(400).send('Invalid game ID')
@@ -296,7 +312,8 @@ const gameController = {
     const { gameId } = req.params
     const { phraseId } = req.body
     const { userId } = req
-    if (!gameId || !phraseId || !userId) return res.status(400).send('Missing required params')
+    if (!gameId || !phraseId || !userId)
+      return res.status(400).send('Missing required params')
 
     const game = await Game.findById(gameId)
     if (!game) return res.status(400).send('Invalid game ID')
@@ -370,8 +387,8 @@ const gameController = {
             game: updatedGame,
             user,
             config: {
-              nextAction: NextActions.SAME_ROUND_NEXT_PLAYER_SAME_TEAM
-            }
+              nextAction: NextActions.SAME_ROUND_NEXT_PLAYER_SAME_TEAM,
+            },
           })
           const action = await tR.nextAction()
 
@@ -388,14 +405,16 @@ const gameController = {
     const { config } = req.body
     const { userId } = req
     // Making config not required
-    if (!gameId || !userId) return res.status(500).send('Required request item not found.')
+    if (!gameId || !userId)
+      return res.status(500).send('Required request item not found.')
 
     try {
       // This function is very generic. What it does depends on where the game is currently.
       // So, we fire up a TurnRunner, give it the info, and let it take it from there.
       const game = await Game.findById(gameId)
       const user = await User.findById(userId)
-      if (!game || !user) return res.status(400).send('Invalid game ID or user ID')
+      if (!game || !user)
+        return res.status(400).send('Invalid game ID or user ID')
 
       const tR = new TurnRunner({
         game,

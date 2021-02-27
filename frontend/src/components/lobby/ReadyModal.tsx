@@ -14,7 +14,7 @@ const Container = styled('div')`
   ul {
     margin-bottom: 4em;
     li {
-      font-weight:bold;
+      font-weight: bold;
     }
   }
   p {
@@ -23,18 +23,18 @@ const Container = styled('div')`
 `
 
 interface Props {
-  changeReadyStatus: (status: boolean) => void;
+  changeReadyStatus: (status: boolean) => void
 }
 
-const ReadyModal = ({
-  changeReadyStatus,
-}: Props) => {
+const ReadyModal = ({ changeReadyStatus }: Props) => {
   const game = useSelector((state: AppState) => state.game)
 
   const waitingOnList = useMemo(() => {
     const list: User[] = []
     if (game) {
-      game.players.forEach(player => !player.readyToPlay && list.push(player.user))
+      game.players.forEach(
+        player => !player.readyToPlay && list.push(player.user),
+      )
     }
     return list
   }, [game])
@@ -48,7 +48,10 @@ const ReadyModal = ({
       <Container>
         <h3>You're so ready!</h3>
         {!enoughPlayers && (
-          <p>Hmm, there needs to be at least one player on each team to start the game.</p>
+          <p>
+            Hmm, there needs to be at least one player on each team to start the
+            game.
+          </p>
         )}
         {enoughPlayers && (
           <>

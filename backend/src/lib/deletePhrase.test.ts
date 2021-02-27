@@ -24,7 +24,10 @@ describe('deletePhrase', () => {
     // Starts with four phrases.
     expect(game.phrases).toHaveLength(4)
 
-    const updatedGame = await deletePhrase(game._id.toString(), game.phrases[0]._id.toString())
+    const updatedGame = await deletePhrase(
+      game._id.toString(),
+      game.phrases[0]._id.toString(),
+    )
 
     // TODO: remove it from anywhere else in the game.
 

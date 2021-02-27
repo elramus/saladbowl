@@ -16,9 +16,9 @@ const userSchema = new mongoose.Schema({
 })
 
 interface IUser extends mongoose.Document {
-  name: string;
-  ipAddress: string | null;
-  socketId: string | null;
+  name: string
+  ipAddress: string | null
+  socketId: string | null
 }
 
 const User = mongoose.model<IUser>('User', userSchema)

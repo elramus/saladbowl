@@ -10,7 +10,8 @@ const Container = styled('div')`
   justify-content: space-between;
   padding: 1em 0;
   line-height: 1.3;
-  .left, .right {
+  .left,
+  .right {
     display: flex;
     align-items: center;
     small {
@@ -55,14 +56,11 @@ const Container = styled('div')`
 `
 
 interface Props {
-  shouldAskIfReady: boolean;
-  changeReadyStatus: (status: boolean) => void;
+  shouldAskIfReady: boolean
+  changeReadyStatus: (status: boolean) => void
 }
 
-const LobbyHeader = ({
-  shouldAskIfReady,
-  changeReadyStatus,
-}: Props) => {
+const LobbyHeader = ({ shouldAskIfReady, changeReadyStatus }: Props) => {
   const game = useSelector((state: AppState) => state.game)
 
   if (!game) {
@@ -74,8 +72,12 @@ const LobbyHeader = ({
       <div className="left">
         <FontAwesomeIcon icon={['fas', 'salad']} />
         <div className="stacked">
-          <span><small>Salad Bowl</small></span>
-          <span>Game <strong>#{game.shortId}</strong></span>
+          <span>
+            <small>Salad Bowl</small>
+          </span>
+          <span>
+            Game <strong>#{game.shortId}</strong>
+          </span>
         </div>
       </div>
       <div className="right" style={{ textAlign: 'right' }}>
@@ -95,8 +97,14 @@ const LobbyHeader = ({
         )}
         {!shouldAskIfReady && (
           <div className="stacked">
-            <span><strong>{game.players.length ?? 0}</strong> player{game.players.length === 1 ? '' : 's'}</span>
-            <span><strong>{game.phrases.length ?? 0}</strong> phrase{game.phrases.length === 1 ? '' : 's'}</span>
+            <span>
+              <strong>{game.players.length ?? 0}</strong> player
+              {game.players.length === 1 ? '' : 's'}
+            </span>
+            <span>
+              <strong>{game.phrases.length ?? 0}</strong> phrase
+              {game.phrases.length === 1 ? '' : 's'}
+            </span>
           </div>
         )}
       </div>

@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import {
-  useParams, Route, useHistory,
-} from 'react-router-dom'
+import { useParams, Route, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchGame } from '../store/game/actions'
 import { AppState } from '../store'
@@ -43,7 +41,11 @@ const GameWrapper: React.FC = () => {
 
   // If you're not in this game, then bugger off, mang.
   if (!game.players.some(p => p.user._id === user._id)) {
-    return <div><p>This game has already started.</p></div>
+    return (
+      <div>
+        <p>This game has already started.</p>
+      </div>
+    )
   }
 
   return (
@@ -53,12 +55,8 @@ const GameWrapper: React.FC = () => {
           <Lobby />
         </Route>
         <Route exact path="/games/:gameId">
-          {game.preRoll.show && game.turns.length === 0 && (
-            <PreRoll />
-          )}
-          {game.turns[0] && game.turns[0].round > 0 && (
-            <Arena />
-          )}
+          {game.preRoll.show && game.turns.length === 0 && <PreRoll />}
+          {game.turns[0] && game.turns[0].round > 0 && <Arena />}
         </Route>
       </Container>
     </GameSocket>

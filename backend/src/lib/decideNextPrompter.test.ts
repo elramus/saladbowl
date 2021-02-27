@@ -31,21 +31,25 @@ describe('decideNextPrompter', () => {
     await tR.prepGame()
 
     const justWentTeam = await Team.findById(game.preRoll.firstTeamId)
-    const justWentUser = await User.findById(justWentTeam?.userIds[justWentTeam.lastPrompterIndex])
+    const justWentUser = await User.findById(
+      justWentTeam?.userIds[justWentTeam.lastPrompterIndex],
+    )
 
-    if (!justWentUser || !justWentTeam) throw new Error('could not find justWentUser')
+    if (!justWentUser || !justWentTeam)
+      throw new Error('could not find justWentUser')
 
-    const [
-      nextPlayerIndex,
-      nextUserId,
-      nextTeam,
-    ] = decideNextPrompter(game, justWentUser)
+    const [nextPlayerIndex, nextUserId, nextTeam] = decideNextPrompter(
+      game,
+      justWentUser,
+    )
 
     // The next player index should be one more than the last prompter index,
     // unless that'd bump us up too high.
-    expect(nextPlayerIndex).toBe(nextTeam.lastPrompterIndex + 1 !== nextTeam.userIds.length
-      ? nextTeam.lastPrompterIndex + 1
-      : 0)
+    expect(nextPlayerIndex).toBe(
+      nextTeam.lastPrompterIndex + 1 !== nextTeam.userIds.length
+        ? nextTeam.lastPrompterIndex + 1
+        : 0,
+    )
     // They should not be on our first team.
     expect(justWentTeam.userIds).not.toContain(nextUserId)
     // They should not be the same user.

@@ -19,9 +19,7 @@ const Container = styled('div')`
   }
 `
 
-const Login: React.FC = ({
-  children,
-}) => {
+const Login: React.FC = ({ children }) => {
   const dispatch = useDispatch()
   const user = useSelector((state: AppState) => state.user)
 

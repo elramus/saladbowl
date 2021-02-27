@@ -14,9 +14,9 @@ function initSocket(server: Server) {
   // Not currently used, but maybe it'll be useful one day.
   const playersIndex: {
     [gameId: string]: {
-      user: IUser;
-      socketId: string | null;
-    }[];
+      user: IUser
+      socketId: string | null
+    }[]
   } = {}
 
   io.on('connection', async socket => {
@@ -35,7 +35,9 @@ function initSocket(server: Server) {
         if (!playersIndex[gameId]) playersIndex[gameId] = []
 
         // The player might already be on there, so clear them out first so we don't duplicate.
-        const updatedPlayers = playersIndex[gameId].filter(p => p.user._id.toString() !== userId)
+        const updatedPlayers = playersIndex[gameId].filter(
+          p => p.user._id.toString() !== userId,
+        )
 
         // Update the index.
         updatedPlayers.push({
@@ -55,7 +57,9 @@ function initSocket(server: Server) {
     socket.on('disconnect', async () => {
       // Remove that person from the players index and broadcast an update.
 
-      const updatedPlayers = playersIndex[gameId].filter(p => p.user._id.toString() !== userId)
+      const updatedPlayers = playersIndex[gameId].filter(
+        p => p.user._id.toString() !== userId,
+      )
       playersIndex[gameId] = updatedPlayers
 
       try {

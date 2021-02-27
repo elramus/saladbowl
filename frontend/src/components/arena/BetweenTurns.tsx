@@ -17,12 +17,10 @@ const Container = styled('div')`
 export const TIME_BEFORE_PROMPTING = 15
 
 interface Props {
-  isYourTurn: boolean;
+  isYourTurn: boolean
 }
 
-const BetweenTurns = ({
-  isYourTurn,
-}: Props) => {
+const BetweenTurns = ({ isYourTurn }: Props) => {
   const game = useGame()
   const turn = useCurrentTurn()
   const [showSkipPrompt, setShowSkipPrompt] = useState(false)
@@ -75,7 +73,9 @@ const BetweenTurns = ({
       <UpNext />
       {isYourTurn && <BeginPromptingButton />}
       {showSkipPrompt && <SkipPrompt onOpen={onOpen} />}
-      {showVotingModal && <SkipTurnModal onClose={onClose} onVote={onVote} hasVoted={hasVoted} />}
+      {showVotingModal && (
+        <SkipTurnModal onClose={onClose} onVote={onVote} hasVoted={hasVoted} />
+      )}
     </Container>
   )
 }

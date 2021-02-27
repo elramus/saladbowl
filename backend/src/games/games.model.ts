@@ -41,19 +41,19 @@ export const gameSchema = new mongoose.Schema({
 })
 
 export interface IGame extends mongoose.Document {
-  shortId: number;
-  creatorId: Types.ObjectId;
-  startTime: number | null;
-  players: Types.DocumentArray<IPlayer>;
-  teams: Types.DocumentArray<ITeam>;
-  phrases: Types.DocumentArray<IPhrase>;
+  shortId: number
+  creatorId: Types.ObjectId
+  startTime: number | null
+  players: Types.DocumentArray<IPlayer>
+  teams: Types.DocumentArray<ITeam>
+  phrases: Types.DocumentArray<IPhrase>
   preRoll: {
-    show: boolean;
-    firstTeamId: Types.ObjectId;
-  };
-  turns: Types.DocumentArray<ITurn>;
-  gameOver: boolean;
-  unsolvedPhraseIds: string[];
+    show: boolean
+    firstTeamId: Types.ObjectId
+  }
+  turns: Types.DocumentArray<ITurn>
+  gameOver: boolean
+  unsolvedPhraseIds: string[]
 }
 
 export const Game = mongoose.model<IGame>('Game', gameSchema)

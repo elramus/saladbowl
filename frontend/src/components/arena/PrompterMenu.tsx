@@ -23,14 +23,11 @@ const List = styled('ul')`
 `
 
 interface Props {
-  onClose: () => void;
-  game: Game;
+  onClose: () => void
+  game: Game
 }
 
-const PrompterMenu = ({
-  onClose,
-  game,
-}: Props) => {
+const PrompterMenu = ({ onClose, game }: Props) => {
   const dispatch = useDispatch()
 
   function handleUndo() {
@@ -38,10 +35,12 @@ const PrompterMenu = ({
 
     // We want to undo the last thing on the played phrases array.
     if (turn.playedPhrases.length >= 1) {
-      dispatch(undoPhrase({
-        gameId: game._id,
-        phraseId: turn.playedPhrases[turn.playedPhrases.length - 1].phraseId,
-      }))
+      dispatch(
+        undoPhrase({
+          gameId: game._id,
+          phraseId: turn.playedPhrases[turn.playedPhrases.length - 1].phraseId,
+        }),
+      )
     }
     onClose()
   }
@@ -49,10 +48,12 @@ const PrompterMenu = ({
   function handleSkip() {
     // The prompter is looking at the first phrase in the unsolved array, so
     // that's what we are skipping.
-    dispatch(failPhrase({
-      gameId: game._id,
-      phraseId: game.unsolvedPhraseIds[0],
-    }))
+    dispatch(
+      failPhrase({
+        gameId: game._id,
+        phraseId: game.unsolvedPhraseIds[0],
+      }),
+    )
     onClose()
   }
 

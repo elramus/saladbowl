@@ -31,11 +31,13 @@ describe('getUser', () => {
     const req = { userId: user._id.toString() }
     const response = mockResponse()
     await usersController.getUser(req as Request, response as Response)
-    expect(response.send).toHaveBeenCalledWith(expect.objectContaining({
-      user: expect.objectContaining({
-        name: 'test test',
+    expect(response.send).toHaveBeenCalledWith(
+      expect.objectContaining({
+        user: expect.objectContaining({
+          name: 'test test',
+        }),
       }),
-    }))
+    )
   })
 
   it('should return null user if not found', async () => {
@@ -80,13 +82,19 @@ describe('getOrCreateUser', () => {
     }
     const res = mockResponse()
     await usersController.getOrCreateUser(req as Request, res as Response)
-    expect(res.send).toHaveBeenCalledWith(expect.objectContaining({
-      user: expect.objectContaining({
-        _id: expect.anything(),
-        name: 'New User',
+    expect(res.send).toHaveBeenCalledWith(
+      expect.objectContaining({
+        user: expect.objectContaining({
+          _id: expect.anything(),
+          name: 'New User',
+        }),
       }),
-    }))
-    expect(res.cookie).toHaveBeenCalledWith('token', expect.anything(), expect.anything())
+    )
+    expect(res.cookie).toHaveBeenCalledWith(
+      'token',
+      expect.anything(),
+      expect.anything(),
+    )
   })
 
   it('should return existing user and log them in', async () => {
@@ -99,12 +107,18 @@ describe('getOrCreateUser', () => {
     }
     const res = mockResponse()
     await usersController.getOrCreateUser(req as Request, res as Response)
-    expect(res.send).toHaveBeenCalledWith(expect.objectContaining({
-      user: expect.objectContaining({
-        _id: user._id,
-        name: 'Existing User',
+    expect(res.send).toHaveBeenCalledWith(
+      expect.objectContaining({
+        user: expect.objectContaining({
+          _id: user._id,
+          name: 'Existing User',
+        }),
       }),
-    }))
-    expect(res.cookie).toHaveBeenCalledWith('token', expect.anything(), expect.anything())
+    )
+    expect(res.cookie).toHaveBeenCalledWith(
+      'token',
+      expect.anything(),
+      expect.anything(),
+    )
   })
 })

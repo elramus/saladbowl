@@ -13,12 +13,10 @@ const BigNumbers = styled('h1')`
 `
 
 interface Props {
-  onClose: () => void;
+  onClose: () => void
 }
 
-const CreatorWelcomeModal: React.FC<Props> = ({
-  onClose,
-}) => {
+const CreatorWelcomeModal: React.FC<Props> = ({ onClose }) => {
   const game = useSelector((state: AppState) => state.game)
 
   return (

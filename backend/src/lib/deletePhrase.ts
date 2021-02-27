@@ -1,12 +1,8 @@
 import { Game } from '../games/games.model'
 
-
 // Removes a phrase from a game.
 
-const deletePhrase = async (
-  gameId: string,
-  phraseId: string,
-) => {
+const deletePhrase = async (gameId: string, phraseId: string) => {
   try {
     const game = await Game.findById(gameId)
     if (!game) throw new Error('Invalid game ID')

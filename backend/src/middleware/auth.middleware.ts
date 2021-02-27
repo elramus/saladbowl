@@ -1,7 +1,11 @@
 import { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 
-export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const authMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const { token } = req.cookies
   if (token && process.env.APP_SECRET) {
     const decoded: any = jwt.verify(token, process.env.APP_SECRET)

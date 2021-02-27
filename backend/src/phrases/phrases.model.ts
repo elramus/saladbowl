@@ -13,8 +13,8 @@ export const phraseSchema = new mongoose.Schema({
 })
 
 export interface IPhrase extends mongoose.Document {
-  text: string;
-  authorId: string;
+  text: string
+  authorId: string
 }
 
 export const Phrase = mongoose.model<IPhrase>('Phrase', phraseSchema)

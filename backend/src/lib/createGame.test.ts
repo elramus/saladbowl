@@ -32,13 +32,10 @@ describe('changeReadyStatus', () => {
   it('creates a new game with passed teams', async () => {
     const user = await userFactory()
 
-    const newGame = await createGame(
-      user._id.toString(),
-      [
-        'The First Team',
-        'The Second Team',
-      ],
-    )
+    const newGame = await createGame(user._id.toString(), [
+      'The First Team',
+      'The Second Team',
+    ])
 
     // Has a valid short ID.
     expect(newGame.shortId).toBeGreaterThanOrEqual(1000)

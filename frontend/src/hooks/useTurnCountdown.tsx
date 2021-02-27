@@ -6,12 +6,14 @@ export const useTurnCountdown = ({
   game,
   onZero,
 }: {
-  game: Game | null;
-  onZero?: () => void;
+  game: Game | null
+  onZero?: () => void
 }) => {
   const dispatch = useDispatch()
 
-  const [remainingTime, setRemainingTime] = useState((game?.turns[0].turnLength ?? 60))
+  const [remainingTime, setRemainingTime] = useState(
+    game?.turns[0].turnLength ?? 60,
+  )
   const [onZeroHasFired, setOnZeroHasFired] = useState(false)
 
   useEffect(() => {
@@ -30,7 +32,9 @@ export const useTurnCountdown = ({
           // and we just set state to 60 again, it doesn't trigger a refresh.
           const now = new Date()
           const gameStart = new Date(game.turns[0].startTime)
-          const elapsedSeconds = Math.ceil((now.getTime() - gameStart.getTime()) / 1000)
+          const elapsedSeconds = Math.ceil(
+            (now.getTime() - gameStart.getTime()) / 1000,
+          )
           const remaining = (game?.turns[0].turnLength ?? 60) - elapsedSeconds
           setRemainingTime(remaining < 0 ? 0 : remaining)
         }

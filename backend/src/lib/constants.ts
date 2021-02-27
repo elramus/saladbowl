@@ -7,5 +7,5 @@ export enum NextActions {
   SAME_ROUND_NEXT_PLAYER_SAME_TEAM = 'Same round, next player, same team',
   NEXT_ROUND_SAME_PLAYER = 'Next round, same player',
   NEXT_ROUND_NEXT_PLAYER = 'Next round, next player',
-  NO_ACTION = 'None of the nextAction ifs triggered...'
+  NO_ACTION = 'None of the nextAction ifs triggered...',
 }

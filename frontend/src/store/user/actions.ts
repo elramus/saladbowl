@@ -4,22 +4,22 @@ import { RECEIVE_USER, UserActionTypes, User } from './types'
 import { AppState } from '..'
 import api from '../../lib/api'
 
-export const receiveUser = (
-  user: User,
-): UserActionTypes => ({
+export const receiveUser = (user: User): UserActionTypes => ({
   type: RECEIVE_USER,
   user,
 })
 
-export const getLoggedInUser = (): ThunkAction<void, AppState, {}, AnyAction> => (
-  dispatch: ThunkDispatch<{}, {}, AnyAction>,
-) => {
-  api.getLoggedInUser()
-    .then(({ data }) => {
-      if (data.user) {
-        dispatch(receiveUser(data.user))
-      }
-    })
+export const getLoggedInUser = (): ThunkAction<
+  void,
+  AppState,
+  {},
+  AnyAction
+> => (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
+  api.getLoggedInUser().then(({ data }) => {
+    if (data.user) {
+      dispatch(receiveUser(data.user))
+    }
+  })
 }
 
 export const logInUser = (
@@ -27,10 +27,9 @@ export const logInUser = (
 ): ThunkAction<void, AppState, {}, AnyAction> => (
   dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ) => {
-  api.logInUser(name)
-    .then(({ data }) => {
-      if (data.user) {
-        dispatch(receiveUser(data.user))
-      }
-    })
+  api.logInUser(name).then(({ data }) => {
+    if (data.user) {
+      dispatch(receiveUser(data.user))
+    }
+  })
 }

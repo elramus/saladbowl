@@ -34,12 +34,10 @@ const Container = styled('div')`
 `
 
 interface Props {
-  onClose: () => void;
+  onClose: () => void
 }
 
-const CreateGameModal = ({
-  onClose,
-}: Props) => {
+const CreateGameModal = ({ onClose }: Props) => {
   const dispatch = useDispatch()
   const history = useHistory()
   const [autoTeams, setAutoTeams] = useState(true)
@@ -54,10 +52,12 @@ const CreateGameModal = ({
     setLoading(true)
     if (formValid) {
       // We know the teams are good to go from formValid.
-      dispatch(createGame(teamNames as [string, string], (newGame: Game) => {
-        // Head on over to the new game.
-        history.push(`/games/${newGame._id}/lobby`)
-      }))
+      dispatch(
+        createGame(teamNames as [string, string], (newGame: Game) => {
+          // Head on over to the new game.
+          history.push(`/games/${newGame._id}/lobby`)
+        }),
+      )
     }
   }
 
@@ -77,9 +77,7 @@ const CreateGameModal = ({
           {!autoTeams && <FontAwesomeIcon icon={['far', 'square']} />}
           <p>Randomly divide players into teams automatically</p>
         </div>
-        {!autoTeams && (
-          <TeamNamesForm setTeamNames={setTeamNames} />
-        )}
+        {!autoTeams && <TeamNamesForm setTeamNames={setTeamNames} />}
         <TextButton
           text="Make It So"
           trailingIcon={['fas', 'hand-spock']}

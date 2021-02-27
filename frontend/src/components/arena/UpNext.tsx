@@ -29,7 +29,11 @@ const UpNext = () => {
       <h5>Up Next...</h5>
       {role === 'prompting' && (
         <>
-          <h3>{turn.turnLength === 60 ? `You're up, ${currentPrompter.name}!` : `You're finishing your turn, ${currentPrompter.name}!`}</h3>
+          <h3>
+            {turn.turnLength === 60
+              ? `You're up, ${currentPrompter.name}!`
+              : `You're finishing your turn, ${currentPrompter.name}!`}
+          </h3>
           {turn.round === 1 && (
             <p>
               Use any words OTHER than what's in the phrase to prompt your
@@ -51,7 +55,10 @@ const UpNext = () => {
         <>
           <h3>
             {currentPrompter.name}{' '}
-            {turn.turnLength === 60 ? 'will be prompting' : 'will finish their turn'} for your team.
+            {turn.turnLength === 60
+              ? 'will be prompting'
+              : 'will finish their turn'}{' '}
+            for your team.
           </h3>
           <p>Get ready to guess!!</p>
         </>
@@ -60,7 +67,10 @@ const UpNext = () => {
         <>
           <h3>
             {currentPrompter.name}{' '}
-            {turn.turnLength === 60 ? 'will be prompting' : 'will finish their turn'} for the other team.
+            {turn.turnLength === 60
+              ? 'will be prompting'
+              : 'will finish their turn'}{' '}
+            for the other team.
           </h3>
           <p>Relax, refresh your drink.</p>
         </>

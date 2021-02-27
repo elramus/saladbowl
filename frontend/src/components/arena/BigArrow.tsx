@@ -26,12 +26,10 @@ const Container = styled('button')`
 `
 
 interface Props {
-  onClick: () => void;
+  onClick: () => void
 }
 
-const BigArrow = ({
-  onClick,
-}: Props) => {
+const BigArrow = ({ onClick }: Props) => {
   useSpaceKeyListener(onClick)
 
   return (

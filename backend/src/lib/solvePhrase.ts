@@ -1,9 +1,6 @@
 import { IGame } from '../games/games.model'
 
-export const solvePhrase = async (
-  game: IGame,
-  phraseId: string,
-) => {
+export const solvePhrase = async (game: IGame, phraseId: string) => {
   const turn = game.turns[0]
 
   // Should we really be checking the round here?
@@ -15,7 +12,8 @@ export const solvePhrase = async (
     let duration = 0
     if (turn.playedPhrases.length > 0) {
       // Get the timestamp of the phrase before this.
-      duration = now - turn.playedPhrases[turn.playedPhrases.length - 1].timestamp
+      duration =
+        now - turn.playedPhrases[turn.playedPhrases.length - 1].timestamp
     } else {
       duration = now - (turn.startTime ?? 0)
     }

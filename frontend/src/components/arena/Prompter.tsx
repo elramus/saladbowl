@@ -65,11 +65,13 @@ const Prompter = () => {
       const elapsed = Math.floor((Date.now() - game.turns[0].startTime) / 1000)
       const timeRemaining = game.turns[0].turnLength - elapsed
 
-      dispatch(solvePhrase({
-        gameId: game._id,
-        phraseId: currentPhrase._id,
-        timeRemaining,
-      }))
+      dispatch(
+        solvePhrase({
+          gameId: game._id,
+          phraseId: currentPhrase._id,
+          timeRemaining,
+        }),
+      )
     }
     // Set ready to false, and then back again in a second to
     // prevent accidental spamming.
@@ -89,10 +91,12 @@ const Prompter = () => {
     // Note that if the player refreshes here, they will keep sending
     // more phrases as "failed". TODO: Fix that.
     if (game && currentPhrase) {
-      dispatch(failPhrase({
-        gameId: game._id,
-        phraseId: currentPhrase._id,
-      }))
+      dispatch(
+        failPhrase({
+          gameId: game._id,
+          phraseId: currentPhrase._id,
+        }),
+      )
     }
   }
 
@@ -129,10 +133,7 @@ const Prompter = () => {
         </div>
       </Container>
       {showPrompterMenu && (
-        <PrompterMenu
-          onClose={handlePrompterMenuClose}
-          game={game}
-        />
+        <PrompterMenu onClose={handlePrompterMenuClose} game={game} />
       )}
     </>
   )

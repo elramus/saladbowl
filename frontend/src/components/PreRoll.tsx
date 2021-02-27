@@ -76,10 +76,12 @@ const PreRoll = () => {
     setTimeout(() => {
       // After 12 seconds, send a next-action to the server.
       if (user && game && user._id === game.creatorId) {
-        dispatch(nextAction({
-          userId: user._id,
-          gameId: game._id,
-        }))
+        dispatch(
+          nextAction({
+            userId: user._id,
+            gameId: game._id,
+          }),
+        )
       }
     }, 12000)
   })
@@ -133,7 +135,9 @@ const PreRoll = () => {
       )}
       {currentScreen === 5 && (
         <div className="message">
-          <h4>{firstPlayer?.user.name} has been randomly chosen to go first!</h4>
+          <h4>
+            {firstPlayer?.user.name} has been randomly chosen to go first!
+          </h4>
         </div>
       )}
     </Container>

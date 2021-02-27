@@ -31,7 +31,7 @@ export const theme = {
    * base font size, and you can go up and down from there.
    * https://www.modularscale.com.
    */
-  ms: (modifier: number) => `${(18 * (1.33 ** modifier)).toFixed(2)}px`,
+  ms: (modifier: number) => `${(18 * 1.33 ** modifier).toFixed(2)}px`,
 }
 
 export default theme

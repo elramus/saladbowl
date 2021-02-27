@@ -24,12 +24,10 @@ const Container = styled('div')`
 `
 
 interface Props {
-  setTeamNames: (names: (string | null)[]) => void;
+  setTeamNames: (names: (string | null)[]) => void
 }
 
-const TeamNamesForm = ({
-  setTeamNames,
-}: Props) => {
+const TeamNamesForm = ({ setTeamNames }: Props) => {
   const [team1, setTeam1] = useState('')
   const [team2, setTeam2] = useState('')
 
@@ -47,9 +45,7 @@ const TeamNamesForm = ({
           placeholder="Team Dumb..."
           focusOnMount
         />
-        {team1.length > 2 && (
-          <FontAwesomeIcon icon={['fas', 'check-circle']} />
-        )}
+        {team1.length > 2 && <FontAwesomeIcon icon={['fas', 'check-circle']} />}
       </div>
       <div className="team-row">
         <TextInput
@@ -57,9 +53,7 @@ const TeamNamesForm = ({
           onChange={e => setTeam2(e.target.value)}
           placeholder="Team Smart..."
         />
-        {team2.length > 2 && (
-          <FontAwesomeIcon icon={['fas', 'check-circle']} />
-        )}
+        {team2.length > 2 && <FontAwesomeIcon icon={['fas', 'check-circle']} />}
       </div>
     </Container>
   )

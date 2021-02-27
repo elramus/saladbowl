@@ -42,12 +42,10 @@ const Container = styled('div')`
 `
 
 interface Props {
-  isPrompter?: boolean;
+  isPrompter?: boolean
 }
 
-const TimesUp = ({
-  isPrompter = false,
-}: Props) => {
+const TimesUp = ({ isPrompter = false }: Props) => {
   const dispatch = useDispatch()
   const game = useSelector((state: AppState) => state.game)
 
@@ -64,10 +62,12 @@ const TimesUp = ({
 
   function submitResults(playedPhrases: PlayedPhrase[]) {
     if (game) {
-      dispatch(submitPlayedPhrases({
-        gameId: game._id,
-        playedPhrases,
-      }))
+      dispatch(
+        submitPlayedPhrases({
+          gameId: game._id,
+          playedPhrases,
+        }),
+      )
     }
   }
 
@@ -75,15 +75,19 @@ const TimesUp = ({
     if (game) submitResults(game.turns[0].playedPhrases)
   }
 
-  const currentTeam = useMemo(() => (
-    game?.teams.find(t => t._id === game?.turns[0].teamId)
-  ), [game])
+  const currentTeam = useMemo(
+    () => game?.teams.find(t => t._id === game?.turns[0].teamId),
+    [game],
+  )
 
-  const pointsScored = useMemo(() => (
-    game?.turns[0].playedPhrases.reduce((score, phrase) => (
-      phrase.solved ? score + 1 : score
-    ), 0) ?? 0
-  ), [game])
+  const pointsScored = useMemo(
+    () =>
+      game?.turns[0].playedPhrases.reduce(
+        (score, phrase) => (phrase.solved ? score + 1 : score),
+        0,
+      ) ?? 0,
+    [game],
+  )
 
   if (!game || !currentTeam) return <div />
 
@@ -93,7 +97,10 @@ const TimesUp = ({
         <header>
           <FontAwesomeIcon icon={['fas', 'siren-on']} />
           <h1>TIME{exclamations.join('')}</h1>
-          <h4>{currentTeam.name} scored {pointsScored} point{pointsScored === 1 ? '' : 's'}</h4>
+          <h4>
+            {currentTeam.name} scored {pointsScored} point
+            {pointsScored === 1 ? '' : 's'}
+          </h4>
         </header>
         {isPrompter && (
           <div className="controls">

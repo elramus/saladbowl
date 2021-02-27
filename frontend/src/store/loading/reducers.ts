@@ -1,8 +1,4 @@
-import {
-  LoadingState,
-  LoadingActionTypes,
-  SET_LOADING_STATUS,
-} from './types'
+import { LoadingState, LoadingActionTypes, SET_LOADING_STATUS } from './types'
 
 export const initialState: LoadingState = {
   users: false,

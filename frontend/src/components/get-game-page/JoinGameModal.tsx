@@ -33,7 +33,7 @@ const Container = styled('div')`
   }
   input {
     font-size: ${props => props.theme.ms(4)};
-    width:14.5rem;
+    width: 14.5rem;
     letter-spacing: 0.75rem;
     border: 0;
     border-radius: 10px;
@@ -50,12 +50,10 @@ const Container = styled('div')`
 `
 
 interface Props {
-  onClose: () => void;
+  onClose: () => void
 }
 
-const JoinGameModal = ({
-  onClose,
-}: Props) => {
+const JoinGameModal = ({ onClose }: Props) => {
   const [code, setCode] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [foundGame, setFoundGame] = useState(false)
@@ -70,24 +68,26 @@ const JoinGameModal = ({
 
   function attemptFind(inputCode: string) {
     setIsLoading(true)
-    dispatch(fetchGame(inputCode, (game: Game | null) => {
-      setIsLoading(false)
-      if (game) {
-        // Successfully found game.
-        setFoundGame(true)
-        setTimeout(() => {
-          // If the game hasn't started yet, send to lobby.
-          if (game.startTime === null) {
-            history.push(`/games/${game._id}/lobby`)
-          } else {
-            history.push(`/games/${game._id}`)
-          }
-        }, 500) // Wait for a second to show a nice, green check mark.
-      } else {
-        setBadAttempt(inputCode)
-        setCode('')
-      }
-    }))
+    dispatch(
+      fetchGame(inputCode, (game: Game | null) => {
+        setIsLoading(false)
+        if (game) {
+          // Successfully found game.
+          setFoundGame(true)
+          setTimeout(() => {
+            // If the game hasn't started yet, send to lobby.
+            if (game.startTime === null) {
+              history.push(`/games/${game._id}/lobby`)
+            } else {
+              history.push(`/games/${game._id}`)
+            }
+          }, 500) // Wait for a second to show a nice, green check mark.
+        } else {
+          setBadAttempt(inputCode)
+          setCode('')
+        }
+      }),
+    )
   }
 
   function handleChangeCode(inputCode: string) {
@@ -110,9 +110,7 @@ const JoinGameModal = ({
             <p>Nothing found with "{badAttempt}". Try again:</p>
           )}
           <div className="icon-container">
-            {foundGame && (
-              <FontAwesomeIcon icon={['fas', 'check-circle']} />
-            )}
+            {foundGame && <FontAwesomeIcon icon={['fas', 'check-circle']} />}
             {isLoading && (
               <FontAwesomeIcon icon={['fas', 'spinner-third']} spin />
             )}

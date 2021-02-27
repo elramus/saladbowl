@@ -14,7 +14,8 @@ const Container = styled('div')`
   color: white;
   font-style: italic;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-  h1, h2 {
+  h1,
+  h2 {
     position: absolute;
     left: 0;
     right: 0;
@@ -40,12 +41,10 @@ const Container = styled('div')`
 `
 
 interface Props {
-  roundNum: number;
+  roundNum: number
 }
 
-const NewRoundSplash = ({
-  roundNum,
-}: Props) => {
+const NewRoundSplash = ({ roundNum }: Props) => {
   return (
     <Container>
       <h2>Round</h2>

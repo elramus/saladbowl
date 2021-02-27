@@ -9,25 +9,27 @@ import { ITeam } from '../teams/teams.model'
 export const decideNextPrompter = (
   game: IGame,
   justWentUser: IUser,
-  sameTeam?: boolean
+  sameTeam?: boolean,
 ): [number, string, ITeam] => {
-  const teamWent = game.teams.find(t => (
-    t.userIds.includes(justWentUser._id)))
+  const teamWent = game.teams.find(t => t.userIds.includes(justWentUser._id))
 
   if (!teamWent) throw new Error('invalid team or player')
 
   // We need to get the other team.
   const teamWentIndex = game.teams.indexOf(teamWent)
-  const teamUpNext = sameTeam ? teamWent : teamWentIndex + 1 > game.teams.length - 1
+  const teamUpNext = sameTeam
+    ? teamWent
+    : teamWentIndex + 1 > game.teams.length - 1
     ? game.teams[0]
     : game.teams[teamWentIndex + 1]
 
   if (!teamUpNext) throw new Error('Found bad team')
 
   // Now get the next player.
-  const nextPlayerIndex = teamUpNext.lastPrompterIndex + 1 > teamUpNext.userIds.length - 1
-    ? 0
-    : teamUpNext.lastPrompterIndex + 1
+  const nextPlayerIndex =
+    teamUpNext.lastPrompterIndex + 1 > teamUpNext.userIds.length - 1
+      ? 0
+      : teamUpNext.lastPrompterIndex + 1
 
   return [nextPlayerIndex, teamUpNext.userIds[nextPlayerIndex], teamUpNext]
 }

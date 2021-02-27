@@ -21,10 +21,7 @@ describe('chooseFirstPlayer', () => {
   it('randomly chooses a player', async () => {
     const { game } = await gameFactory()
 
-    const {
-      firstPlayerIndex,
-      firstTeam,
-    } = chooseFirstPlayer(game)
+    const { firstPlayerIndex, firstTeam } = chooseFirstPlayer(game)
 
     // We'll look for the actual player now.
     const userId = firstTeam.userIds[firstPlayerIndex]

@@ -36,12 +36,10 @@ const Container = styled('div')`
 `
 
 interface Props {
-  handlePhraseDelete: (phraseId: string) => void;
+  handlePhraseDelete: (phraseId: string) => void
 }
 
-const MyPhrases = ({
-  handlePhraseDelete,
-}: Props) => {
+const MyPhrases = ({ handlePhraseDelete }: Props) => {
   const user = useSelector((state: AppState) => state.user)
   const game = useSelector((state: AppState) => state.game)
 
@@ -57,10 +55,7 @@ const MyPhrases = ({
             .map(p => (
               <li key={p._id}>
                 <span>{p.text}</span>
-                <button
-                  type="button"
-                  onClick={() => handlePhraseDelete(p._id)}
-                >
+                <button type="button" onClick={() => handlePhraseDelete(p._id)}>
                   &times;
                 </button>
               </li>

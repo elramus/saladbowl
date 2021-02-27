@@ -19,19 +19,18 @@ const Container = styled('div')`
   }
   &.warn {
     animation: inflate 1000ms infinite ${props => props.theme.ease.bounce};
-    svg, span {
+    svg,
+    span {
       color: ${props => props.theme.red};
     }
   }
 `
 
 interface Props {
-  seconds: number;
+  seconds: number
 }
 
-const Clock = ({
-  seconds,
-}: Props) => {
+const Clock = ({ seconds }: Props) => {
   function formatTime(t: number) {
     if (t < 10) {
       return `0${t}`

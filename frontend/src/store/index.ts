@@ -10,18 +10,14 @@ const rootReducer = combineReducers({
   game,
   loading,
 })
-export type AppState = ReturnType<typeof rootReducer>;
+export type AppState = ReturnType<typeof rootReducer>
 
 const composeEnhancers = composeWithDevTools({
   trace: false,
 })
 const store = createStore(
   rootReducer,
-  composeEnhancers(
-    applyMiddleware(
-      thunkMiddleware,
-    ),
-  ),
+  composeEnhancers(applyMiddleware(thunkMiddleware)),
 )
 
 export default store

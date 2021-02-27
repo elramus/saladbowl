@@ -31,42 +31,47 @@ export const turnSchema = new mongoose.Schema({
     type: [String],
     default: [],
   },
-  playedPhrases: [new mongoose.Schema({
-    phraseId: {
-      type: String,
-      required: true,
-    },
-    solved: {
-      type: Boolean,
-      required: true,
-    },
-    timestamp: {
-      type: Number,
-      default: true,
-    },
-    duration: {
-      type: Number,
-      required: true,
-    },
-  }, { _id: false })],
+  playedPhrases: [
+    new mongoose.Schema(
+      {
+        phraseId: {
+          type: String,
+          required: true,
+        },
+        solved: {
+          type: Boolean,
+          required: true,
+        },
+        timestamp: {
+          type: Number,
+          default: true,
+        },
+        duration: {
+          type: Number,
+          required: true,
+        },
+      },
+      { _id: false },
+    ),
+  ],
 })
 
 export interface PlayedPhrase {
-  phraseId: string;
-  solved: boolean;
-  timestamp: number;
-  duration: number;
+  phraseId: string
+  solved: boolean
+  timestamp: number
+  duration: number
 }
 
 export interface ITurn extends mongoose.Document {
-  userId: mongoose.Types.ObjectId;
-  teamId: mongoose.Types.ObjectId;
-  round: 0 | 1 | 2 | 3;
-  turnLength: number;
-  showCountdown: boolean;
-  startTime: number | null;
-  votesToSkip: string[];
-  playedPhrases: PlayedPhrase[];
+  userId: mongoose.Types.ObjectId
+  teamId: mongoose.Types.ObjectId
+  round: 0 | 1 | 2 | 3
+  turnLength: number
+  showCountdown: boolean
+  startTime: number | null
+  votesToSkip: string[]
+  playedPhrases: PlayedPhrase[]
 }
 
 export const Turn = mongoose.model<ITurn>('Turn', turnSchema)

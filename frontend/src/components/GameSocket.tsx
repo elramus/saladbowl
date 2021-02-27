@@ -8,9 +8,7 @@ import { SocketMessages } from '../lib/socketTypes'
 import { Game } from '../store/game/types'
 import { receiveGame } from '../store/game/actions'
 
-const GameSocket: React.FC = ({
-  children,
-}) => {
+const GameSocket: React.FC = ({ children }) => {
   const { gameId } = useParams<{ gameId: string }>()
   const user = useSelector((state: AppState) => state.user)
   const dispatch = useDispatch()
@@ -27,7 +25,8 @@ const GameSocket: React.FC = ({
 
       // Listen for game updates.
       socket.on(SocketMessages.GameUpdate, (data: Game) => {
-        console.log('Websocket game update received:', data) /* eslint-disable-line */
+        // eslint-disable-next-line
+        console.log('Websocket game update received:', data)
         dispatch(receiveGame(data))
       })
     }

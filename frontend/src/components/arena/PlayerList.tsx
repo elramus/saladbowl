@@ -17,12 +17,10 @@ const List = styled('ul')`
 `
 
 interface Props {
-  team: Team;
+  team: Team
 }
 
-const PlayerList = ({
-  team,
-}: Props) => {
+const PlayerList = ({ team }: Props) => {
   const game = useSelector((state: AppState) => state.game)
 
   if (!game) return <div />

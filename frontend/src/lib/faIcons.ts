@@ -1,6 +1,4 @@
-import {
-  faSquare,
-} from '@fortawesome/pro-regular-svg-icons'
+import { faSquare } from '@fortawesome/pro-regular-svg-icons'
 import {
   faAlarmClock,
   faAngleDown,

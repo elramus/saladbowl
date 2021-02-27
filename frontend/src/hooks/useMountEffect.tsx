@@ -6,9 +6,9 @@ import { useEffect } from 'react'
 const useMountEffect = (callback: () => void, onReturn?: () => void) => {
   useEffect(() => {
     callback()
-    return (() => {
+    return () => {
       if (onReturn) onReturn()
-    })
+    }
   }, []) // eslint-disable-line
 }
 

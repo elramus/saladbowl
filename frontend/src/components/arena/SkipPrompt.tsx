@@ -24,9 +24,7 @@ interface SkipPromptProps {
   onOpen(): void
 }
 
-const SkipPrompt: React.FC<SkipPromptProps> = ({
-  onOpen,
-}) => {
+const SkipPrompt: React.FC<SkipPromptProps> = ({ onOpen }) => {
   const currentPrompter = useCurrentPrompter()
 
   const onClick = () => {

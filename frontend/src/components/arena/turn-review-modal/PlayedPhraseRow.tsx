@@ -51,14 +51,11 @@ const Container = styled('li')`
 `
 
 interface Props {
-  playedPhrase: PlayedPhrase;
-  onToggle: (phraseTimestamp: number, status: boolean) => void;
+  playedPhrase: PlayedPhrase
+  onToggle: (phraseTimestamp: number, status: boolean) => void
 }
 
-const PlayedPhraseRow = ({
-  playedPhrase,
-  onToggle,
-}: Props) => {
+const PlayedPhraseRow = ({ playedPhrase, onToggle }: Props) => {
   const game = useSelector((state: AppState) => state.game)
   const phrase = game?.phrases.find(p => p._id === playedPhrase.phraseId)
 
@@ -80,12 +77,18 @@ const PlayedPhraseRow = ({
     <Container>
       <h4 className={`text ${!playedPhrase.solved ? 'failed' : ''}`}>
         {phrase.text}
-        <span className="duration">{Math.ceil(playedPhrase.duration / 1000)} seconds</span>
+        <span className="duration">
+          {Math.ceil(playedPhrase.duration / 1000)} seconds
+        </span>
       </h4>
       <div className="controls">
         {playedPhrase.solved && (
           <>
-            <button type="button" className="solved active" onClick={handleSolve}>
+            <button
+              type="button"
+              className="solved active"
+              onClick={handleSolve}
+            >
               +1
             </button>
             <button type="button" className="failed" onClick={handleFail}>
@@ -98,7 +101,11 @@ const PlayedPhraseRow = ({
             <button type="button" className="solved" onClick={handleSolve}>
               +0
             </button>
-            <button type="button" className="failed active" onClick={handleFail}>
+            <button
+              type="button"
+              className="failed active"
+              onClick={handleFail}
+            >
               <FontAwesomeIcon icon={['fas', 'ban']} />
             </button>
           </>

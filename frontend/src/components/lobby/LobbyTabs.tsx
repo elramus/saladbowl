@@ -4,15 +4,18 @@ import MakeEntriesTab from './MakeEntriesTab'
 import PickTeamsTab from './PickTeamsTab'
 
 interface StyleProps {
-  isPickingTeams: boolean;
+  isPickingTeams: boolean
 }
 
 const Container = styled('div')<StyleProps>`
-  >.tab-controls {
+  > .tab-controls {
     display: grid;
-    grid-template-columns: ${props => (props.isPickingTeams ? '1fr 1fr' : 'auto')};
+    grid-template-columns: ${props =>
+      props.isPickingTeams ? '1fr 1fr' : 'auto'};
     margin: 1em 0 2em 0;
-    ${props => props.isPickingTeams && `
+    ${props =>
+      props.isPickingTeams &&
+      `
       border-bottom: 1px solid ${props.theme.lightGray};
     `}
     h5 {
@@ -37,9 +40,9 @@ const Container = styled('div')<StyleProps>`
 `
 
 interface Props {
-  isPickingTeams: boolean;
-  setAskIfReady: (status: boolean) => void;
-  changeReadyStatus: (status: boolean) => void;
+  isPickingTeams: boolean
+  setAskIfReady: (status: boolean) => void
+  changeReadyStatus: (status: boolean) => void
 }
 
 const LobbyTabs = ({
@@ -82,16 +85,12 @@ const LobbyTabs = ({
             </button>
           </>
         )}
-        {!isPickingTeams && (
-          <h5>Write Your Phrases</h5>
-        )}
+        {!isPickingTeams && <h5>Write Your Phrases</h5>}
       </div>
       {currentTab === 0 && (
         <MakeEntriesTab onFinished={handleFinishedEntries} />
       )}
-      {currentTab === 1 && (
-        <PickTeamsTab onChooseTeam={handleTeamChosen} />
-      )}
+      {currentTab === 1 && <PickTeamsTab onChooseTeam={handleTeamChosen} />}
     </Container>
   )
 }

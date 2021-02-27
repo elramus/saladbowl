@@ -5,10 +5,12 @@ export const teamSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  userIds: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-  }],
+  userIds: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
   score: {
     type: Number,
     default: 0,
@@ -20,10 +22,10 @@ export const teamSchema = new mongoose.Schema({
 })
 
 export interface ITeam extends mongoose.Document {
-  name: string;
-  userIds: string[];
-  score: number;
-  lastPrompterIndex: number;
+  name: string
+  userIds: string[]
+  score: number
+  lastPrompterIndex: number
 }
 
 export const Team = mongoose.model<ITeam>('Team', teamSchema)

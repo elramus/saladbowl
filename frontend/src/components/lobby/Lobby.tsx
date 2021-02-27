@@ -62,10 +62,12 @@ const Lobby = () => {
   function changeReadyStatus(status: boolean) {
     // Tell the DB user changed status.
     if (game) {
-      dispatch(playerReadyStatus({
-        gameId: game._id,
-        status,
-      }))
+      dispatch(
+        playerReadyStatus({
+          gameId: game._id,
+          status,
+        }),
+      )
     }
   }
 
@@ -73,7 +75,10 @@ const Lobby = () => {
 
   return (
     <Container>
-      <LobbyHeader shouldAskIfReady={shouldAskIfReady} changeReadyStatus={changeReadyStatus} />
+      <LobbyHeader
+        shouldAskIfReady={shouldAskIfReady}
+        changeReadyStatus={changeReadyStatus}
+      />
       <LobbyTabs
         isPickingTeams={isPickingTeams}
         changeReadyStatus={changeReadyStatus}
@@ -82,9 +87,7 @@ const Lobby = () => {
       {showCreatorWelcome && (
         <CreatorWelcomeModal onClose={() => setShowCreatorWelcome(false)} />
       )}
-      {isReady && (
-        <ReadyModal changeReadyStatus={changeReadyStatus} />
-      )}
+      {isReady && <ReadyModal changeReadyStatus={changeReadyStatus} />}
     </Container>
   )
 }

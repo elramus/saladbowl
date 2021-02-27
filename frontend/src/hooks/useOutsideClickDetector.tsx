@@ -7,9 +7,10 @@ function useOutsideClickDetector(
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       const { target } = e
-      if (target
-        && containerRef.current
-        && !containerRef.current.contains(target as Element)
+      if (
+        target &&
+        containerRef.current &&
+        !containerRef.current.contains(target as Element)
       ) {
         handler()
       }

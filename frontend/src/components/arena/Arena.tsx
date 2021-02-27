@@ -1,6 +1,4 @@
-import React, {
-  useMemo, useState, useEffect, useRef,
-} from 'react'
+import React, { useMemo, useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import { AppState } from '../../store'
@@ -31,7 +29,9 @@ const Arena = () => {
   const user = useSelector((state: AppState) => state.user)
   const game = useSelector((state: AppState) => state.game)
 
-  const [showNewRoundScreen, setShowNewRoundScreen] = useState(isFirstTurnOfRound(game))
+  const [showNewRoundScreen, setShowNewRoundScreen] = useState(
+    isFirstTurnOfRound(game),
+  )
   const roundsSplashed = useRef<number[]>([])
 
   const isYourTurn = useMemo(() => {
@@ -40,16 +40,19 @@ const Arena = () => {
 
   const isYourTeam = useMemo(() => {
     const promptingId = game?.turns[0].userId
-    const promptingTeam = game?.teams.find(t => t.userIds.includes(promptingId ?? ''))
+    const promptingTeam = game?.teams.find(t =>
+      t.userIds.includes(promptingId ?? ''),
+    )
     return promptingTeam?.userIds.includes(user?._id ?? '') ?? false
   }, [user, game])
 
   useEffect(() => {
     // If we haven't splashed this round yet, do it now.
-    if (game
-      && game.turns[0].round > 0
-      && roundsSplashed.current
-      && !roundsSplashed.current.includes(game.turns[0].round)
+    if (
+      game &&
+      game.turns[0].round > 0 &&
+      roundsSplashed.current &&
+      !roundsSplashed.current.includes(game.turns[0].round)
     ) {
       // Show splash and mark that we've shown it.
       setShowNewRoundScreen(true)
@@ -92,9 +95,7 @@ const Arena = () => {
 
   return (
     <Container>
-      <div className="wrapped">
-        {getMainContent()}
-      </div>
+      <div className="wrapped">{getMainContent()}</div>
     </Container>
   )
 }

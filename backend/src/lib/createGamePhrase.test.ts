@@ -33,7 +33,9 @@ describe('createGamePhrase', () => {
     expect(updatedGame).toBeTruthy()
 
     // Our phrase should now be on the game.
-    const newPhrase = updatedGame?.phrases.filter(p => p.text === 'Best Phrase Ever')
+    const newPhrase = updatedGame?.phrases.filter(
+      p => p.text === 'Best Phrase Ever',
+    )
     expect(newPhrase).toHaveLength(1)
 
     // Should have broadcasted.

@@ -55,19 +55,19 @@ const Container = styled('div')`
 `
 
 interface Props {
-  onChooseTeam: () => void;
+  onChooseTeam: () => void
 }
 
-const PickTeamsTab = ({
-  onChooseTeam,
-}: Props) => {
+const PickTeamsTab = ({ onChooseTeam }: Props) => {
   const game = useSelector((state: AppState) => state.game)
   const user = useSelector((state: AppState) => state.user)
   const dispatch = useDispatch()
 
   const selectedTeamId = useMemo<string | null>(() => {
     if (game && user) {
-      const playerTeam = game.teams.find(team => team.userIds.some(pId => pId === user._id))
+      const playerTeam = game.teams.find(team =>
+        team.userIds.some(pId => pId === user._id),
+      )
       if (playerTeam) return playerTeam._id
     }
     return null
@@ -110,7 +110,9 @@ const PickTeamsTab = ({
             >
               <button type="button" onClick={() => handleTeamClick(t._id)}>
                 <span className="title">
-                  <h2>{t.name} ({getTeamPlayers(t).length})</h2>
+                  <h2>
+                    {t.name} ({getTeamPlayers(t).length})
+                  </h2>
                   <div className="icon-container">
                     <FontAwesomeIcon icon={['fas', 'check-circle']} />
                   </div>
