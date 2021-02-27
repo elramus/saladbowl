@@ -35,10 +35,11 @@
     "websocket": "^1.0.31"
   },
   "scripts": {
+    "build": "npm run lint && react-app-rewired build",
+    "eject": "react-scripts eject",
+    "lint": "eslint --max-warnings 0 ./src",
     "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "test": "react-scripts test"
   },
   "eslintConfig": {
     "extends": "react-app"

@@ -67,11 +67,11 @@ describe('decideNextPrompter', () => {
     // console.log('userId we started with', justWentUser._id.toString())
     // console.log('teamId we started with', justWentTeam._id.toString())
 
-    const [
-      originalPlayerIndex,
-      originalUserId,
-      originalTeam,
-    ] = decideNextPrompter(game, justWentUser)
+    // const [
+    //   originalPlayerIndex,
+    //   originalUserId,
+    //   originalTeam,
+    // ] = decideNextPrompter(game, justWentUser)
 
     // console.log('just picked...', originalUserId)
     // console.log(originalTeam._id.toString())

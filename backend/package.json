@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "npm run lint && tsc",
+    "lint": "eslint --max-warnings 0 ./src",
     "start": "nodemon -x ts-node src/server.ts",
-    "build": "tsc",
     "test": "jest --runInBand --detectOpenHandles"
   },
   "jest": {
