@@ -83,14 +83,16 @@ const PreRoll = () => {
     }
     if (currentScreen === 5) {
       // The first player is...
-      setTimeout(() => {
-        dispatch(
-          nextAction({
-            userId: user?._id,
-            gameId: game._id,
-          }),
-        )
-      }, 3000)
+      if (user?._id === game.creatorId) {
+        setTimeout(() => {
+          dispatch(
+            nextAction({
+              userId: user?._id,
+              gameId: game._id,
+            }),
+          )
+        }, 3000)
+      }
     }
   }, [currentScreen, dispatch, user, game])
 
