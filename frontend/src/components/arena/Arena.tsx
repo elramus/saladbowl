@@ -2,7 +2,6 @@ import React, { useMemo, useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import { AppState } from '../../store'
-import animateEntrance from '../../lib/animateEntrance'
 import Prompter from './Prompter'
 import Promptee from './Promptee'
 import GameOver from '../GameOver'
@@ -15,7 +14,6 @@ import useGaPageview from '../../hooks/useGaPageview'
 const Container = styled('div')`
   background: ${props => props.theme.green};
   min-height: 100vh;
-  ${animateEntrance('fade', 1000)};
   .wrapped {
     max-width: 30em;
     height: inherit;

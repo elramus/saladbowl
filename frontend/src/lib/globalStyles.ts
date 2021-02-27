@@ -154,6 +154,14 @@ const GlobalStyles = createGlobalStyle`
       transform: scale(1);
     }
   }
+  @keyframes becomeGreen {
+    0% {
+      background-color: white;
+    }
+    100% {
+      background-color: ${theme.green};
+    }
+  }
 `
 
 export default GlobalStyles

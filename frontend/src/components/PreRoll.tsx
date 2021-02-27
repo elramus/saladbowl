@@ -1,13 +1,13 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import animateEntrance from '../lib/animateEntrance'
 import { AppState } from '../store'
-import useMountEffect from '../hooks/useMountEffect'
 import { getUserFromUserId } from '../lib/getUserFromUserId'
 import { nextAction } from '../store/game/actions'
 import { getPlayerFromUserId } from '../lib/getPlayerFromId'
+import { useGame } from '../hooks/useGame'
 
 const Container = styled('div')`
   display: flex;
@@ -15,10 +15,12 @@ const Container = styled('div')`
   align-items: center;
   min-height: 100vh;
   padding: 10em 2em 0 2em;
-  color: ${props => props.theme.darkGreen};
+  color: white;
   font-weight: 900;
   font-style: italic;
   text-align: center;
+  animation: becomeGreen 5000ms forwards;
+  animation-delay: 500ms;
   .loading {
     position: relative;
     width: 5em;
@@ -29,7 +31,7 @@ const Container = styled('div')`
     .svg-inline--fa {
       position: absolute;
       font-size: ${props => props.theme.ms(2)};
-      color: ${props => props.theme.darkGreen};
+      color: white;
       &.fa-spinner-third {
         font-size: ${props => props.theme.ms(5)};
       }
@@ -50,41 +52,47 @@ const Container = styled('div')`
 
 const PreRoll = () => {
   const dispatch = useDispatch()
-  const game = useSelector((state: AppState) => state.game)
+  const game = useGame()
   const user = useSelector((state: AppState) => state.user)
+  const [currentScreen, setCurrentScreen] = useState(0)
 
-  const [currentScreen, setCurrentScreen] = useState(1)
+  const nextScreen = () => {
+    setCurrentScreen(prev => prev + 1)
+  }
 
-  useMountEffect(() => {
-    // Starts with "Tossing the salad..."
-    setTimeout(() => {
-      // "The teams are..."
-      setCurrentScreen(2)
-    }, 2000)
-    setTimeout(() => {
-      // "Team 1..."
-      setCurrentScreen(3)
-    }, 4000)
-    setTimeout(() => {
-      // "vs Team 2..."
-      setCurrentScreen(4)
-    }, 7000)
-    setTimeout(() => {
-      // "The first player is..."
-      setCurrentScreen(5)
-    }, 10000)
-    setTimeout(() => {
-      // After 12 seconds, send a next-action to the server.
-      if (user && game && user._id === game.creatorId) {
+  useEffect(() => {
+    // Transition to arena colors...
+    if (currentScreen === 0) {
+      setTimeout(nextScreen, 4000)
+    }
+    if (currentScreen === 1) {
+      // Tossing the salad...
+      setTimeout(nextScreen, 3000)
+    }
+    if (currentScreen === 2) {
+      // The teams are...
+      setTimeout(nextScreen, 2000)
+    }
+    if (currentScreen === 3) {
+      // Team 1...
+      setTimeout(nextScreen, 3500)
+    }
+    if (currentScreen === 4) {
+      // vs Team 2...
+      setTimeout(nextScreen, 3500)
+    }
+    if (currentScreen === 5) {
+      // The first player is...
+      setTimeout(() => {
         dispatch(
           nextAction({
-            userId: user._id,
+            userId: user?._id,
             gameId: game._id,
           }),
         )
-      }
-    }, 12000)
-  })
+      }, 3000)
+    }
+  }, [currentScreen, dispatch, user, game])
 
   const firstPlayer = useMemo(() => {
     const firstTeam = game?.teams.find(t => t._id === game?.preRoll.firstTeamId)
@@ -97,7 +105,12 @@ const PreRoll = () => {
     return null
   }, [game])
 
-  if (!game) return <div />
+  const sortedTeams = useMemo(() => {
+    const teams = [...game.teams]
+    teams.sort((t1, t2) => (t1.name > t2.name ? 1 : -1))
+
+    return teams
+  }, [game.teams])
 
   return (
     <Container>
@@ -106,6 +119,7 @@ const PreRoll = () => {
         <FontAwesomeIcon icon={['fas', 'salad']} />
       </div>
 
+      {currentScreen === 0 && <div />}
       {currentScreen === 1 && (
         <div className="message">
           <p>Tossing the salad...</p>
@@ -118,8 +132,8 @@ const PreRoll = () => {
       )}
       {currentScreen === 3 && (
         <div className="message">
-          <h1>{game.teams[0].name}</h1>
-          {game.teams[0].userIds.map(userId => (
+          <h1>{sortedTeams[0].name}</h1>
+          {sortedTeams[0].userIds.map(userId => (
             <p key={userId}>{getUserFromUserId({ userId, game }).name}</p>
           ))}
         </div>
@@ -127,8 +141,8 @@ const PreRoll = () => {
       {currentScreen === 4 && (
         <div className="message">
           <h4>vs</h4>
-          <h1>{game.teams[1].name}</h1>
-          {game.teams[1].userIds.map(userId => (
+          <h1>{sortedTeams[1].name}</h1>
+          {sortedTeams[1].userIds.map(userId => (
             <p key={userId}>{getUserFromUserId({ userId, game }).name}</p>
           ))}
         </div>
