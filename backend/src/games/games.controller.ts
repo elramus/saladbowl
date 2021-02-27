@@ -1,3 +1,4 @@
+import { NextActions } from "./../lib/constants"
 import { Request, Response } from 'express'
 import { Game, IGame } from './games.model'
 import { io } from '../server'
@@ -17,6 +18,7 @@ import { gameReadyChecklist } from '../lib/gameReadyChecklist'
 import { failPhrase } from '../lib/failPhrase'
 import { applyTurnResults } from '../lib/applyTurnResults'
 import { randomNum } from '../utils/randomNum'
+import { voteToSkip } from '../lib/voteToSkip'
 
 const gameController = {
   async fetchGame(req: Request, res: Response) {
@@ -335,6 +337,47 @@ const gameController = {
       })
       const action = await tR.nextAction()
       return res.send(action)
+    } catch (e) {
+      return res.status(500).send(e.message)
+    }
+  },
+
+  async voteToSkip(req: Request, res: Response) {
+    const { userId } = req
+    const { gameId } = req.params
+    if (!userId || !gameId) {
+      return res.status(400).send('Required param not present')
+    }
+
+    const game = await Game.findById(gameId)
+    if (!game) return res.status(400).send('Invalid game ID')
+
+    try {
+      // Stop voting at 3, so we don't accidentally trigger multiple turn skips.
+      if (game.turns[0].votesToSkip.length < 3) {
+        const updatedGame = await voteToSkip({ game, userId })
+
+        // Broadcast the update.
+        io.to(game._id).emit(SocketMessages.GameUpdate, updatedGame)
+
+        // Should we go ahead and skip?
+        if (updatedGame.turns[0].votesToSkip.length === 3) {
+          // We need to fire a turn runner that will trigger SAME_ROUND_NEXT_PLAYER_SAME_TEAM.
+          const user = await User.findById(userId)
+          if (!user) throw new Error('No user with supplied ID.')
+
+          const tR = new TurnRunner({
+            game: updatedGame,
+            user,
+            config: {
+              nextAction: NextActions.SAME_ROUND_NEXT_PLAYER_SAME_TEAM
+            }
+          })
+          const action = await tR.nextAction()
+
+          return res.send(action)
+        }
+      }
     } catch (e) {
       return res.status(500).send(e.message)
     }

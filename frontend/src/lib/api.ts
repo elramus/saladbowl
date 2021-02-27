@@ -108,6 +108,12 @@ const api = {
     return axios.post(`/games/${gameId}/submit-played-phrases`, { playedPhrases })
   },
 
+  voteToSkip: (
+    gameId: string,
+  ): AxiosPromise<string> => {
+    return axios.get(`/games/${gameId}/vote-to-skip-turn`)
+  },
+
   nextAction: ({
     gameId,
     userId,

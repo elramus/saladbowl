@@ -17,5 +17,6 @@ routes.put('/games/:gameId/undo-phrase', gameController.undoPhrase)
 routes.post('/games/:gameId/submit-played-phrases', gameController.submitTurnResults)
 routes.put('/games/:gameId/skip-phrase', gameController.failPhrase)
 routes.put('/games/:gameId/next-action', gameController.nextAction)
+routes.get('/games/:gameId/vote-to-skip-turn', gameController.voteToSkip)
 
 export default routes

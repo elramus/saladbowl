@@ -78,7 +78,7 @@ const Promptee = ({ isYourTeam }: Props) => {
         <FontAwesomeIcon icon={['fas', 'salad']} />
         <h4>
           {solvedPhraseIds.length} phrase
-          {solvedPhraseIds.length === 1 ? '' : 's'} solved this turn.
+          {solvedPhraseIds.length === 1 ? '' : 's'} solved
         </h4>
       </div>
     </Container>
