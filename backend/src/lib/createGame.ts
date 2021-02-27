@@ -39,6 +39,9 @@ export const createGame = async (
   }
   const teams = makeTeams()
 
+  // Alphabetize the teams.
+  teams.sort((t1, t2) => t1.name > t2.name ? 1 : -1)
+
   const newGame = new Game({
     shortId,
     creatorId: userId,

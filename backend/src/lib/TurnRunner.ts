@@ -229,6 +229,11 @@ export class TurnRunner {
     if (!this.game.teams.length) {
       // Will automatically create teams and assign players to them.
       await makeTeams({ game: this.game, numberOfTeams: 2 })
+
+      // Sort the teams alphabetically. This should just make sure "Team 1"
+      // is before "Team 2".
+      this.game.teams = this.game.teams.sort((t1, t2) => t1.name > t2.name ? 1 : -1)
+      await this.game.save()
     }
 
     // Now we pick a random player to go first.
