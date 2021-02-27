@@ -40,6 +40,7 @@ module.exports = {
     'no-underscore-dangle': 0,
     'no-unused-expressions': 0,
     'no-use-before-define': 'off',
+    'prefer-destructuring': 0,
     'react/jsx-filename-extension': [1, { extensions: ['.tsx', '.jsx'] }],
     'react/jsx-one-expression-per-line': 'off',
     'react/no-unescaped-entities': 'off',

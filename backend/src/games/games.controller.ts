@@ -21,6 +21,27 @@ import { voteToSkip } from '../lib/voteToSkip'
 import { randomNum } from '../utils/randomNum'
 
 const gameController = {
+  async createGame(req: Request, res: Response) {
+    const { userId } = req
+    if (!userId) return res.status(400).send('User ID not found in request')
+    const { teams } = req.body
+
+    try {
+      // Teams may be undefined, but that's okay.
+      const newGame = await createGame(userId, teams)
+
+      // Before we return, attach the creator as a game player.
+      const updatedGame = await joinPlayerToGame(userId, newGame)
+
+      // Broadcast the update
+      io.to(updatedGame.id).emit(SocketMessages.GameUpdate, updatedGame)
+
+      return res.send({ game: updatedGame })
+    } catch (e) {
+      return res.status(500).send(e)
+    }
+  },
+
   async fetchGame(req: Request, res: Response) {
     const { gameId } = req.params
     const { userId } = req
@@ -81,27 +102,6 @@ const gameController = {
 
       // If for some reason there's no userId, just send back the game we found.
       return res.send({ game })
-    } catch (e) {
-      return res.status(500).send(e)
-    }
-  },
-
-  async createGame(req: Request, res: Response) {
-    const { userId } = req
-    if (!userId) return res.status(400).send('User ID not found in request')
-    const { teams } = req.body
-
-    try {
-      // Teams may be undefined, but that's okay.
-      const newGame = await createGame(userId, teams)
-
-      // Before we return, attach the creator as a game player.
-      const updatedGame = await joinPlayerToGame(userId, newGame)
-
-      // Broadcast the update
-      io.to(updatedGame.id).emit(SocketMessages.GameUpdate, updatedGame)
-
-      return res.send({ game: updatedGame })
     } catch (e) {
       return res.status(500).send(e)
     }

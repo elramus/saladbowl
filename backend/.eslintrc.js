@@ -26,7 +26,7 @@ module.exports = {
     'import/no-extraneous-dependencies': 0,
     'import/prefer-default-export': 0,
     'lines-between-class-members': 0,
-    'no-console': 1,
+    'no-console': ['error', { allow: ['info', 'error'] }],
     'no-param-reassign': ['error', { props: false }],
     'no-undef': 0,
     'no-underscore-dangle': 0,

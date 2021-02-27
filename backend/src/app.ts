@@ -7,8 +7,9 @@ import { loggerMiddleware } from './middleware/logger.middleware'
 import { authMiddleware } from './middleware/auth.middleware'
 import userRoutes from './users/users.routes'
 import gamesRoutes from './games/games.routes'
+import dotenv from 'dotenv'
 
-require('dotenv').config()
+dotenv.config()
 
 const app = express()
 

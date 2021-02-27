@@ -52,7 +52,6 @@ const Login: React.FC = ({ children }) => {
             value={name}
             onChange={handleNameChange}
             onReturn={handleNameSubmit}
-            focusOnMount
           />
           <div className="go-container">
             <TextButton

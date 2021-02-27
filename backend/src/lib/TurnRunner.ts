@@ -256,9 +256,9 @@ export class TurnRunner {
         })
 
         this.emit()
-        console.log(
+        console.error(
           'next round next player? i do not really think this should happen...',
-        ) // eslint-disable-line
+        )
         return NextActions.NEXT_ROUND_NEXT_PLAYER
       }
     }
@@ -277,10 +277,10 @@ export class TurnRunner {
       await makeTeams({ game: this.game, numberOfTeams: 2 })
 
       // Sort the teams alphabetically. This should just make sure "Team 1"
-      // is before "Team 2".
-      this.game.teams = this.game.teams.sort((t1, t2) =>
-        t1.name > t2.name ? 1 : -1,
-      )
+      // is before "Team 2". We'll try anyway...
+      const sortedTeams = this.game.teams
+      sortedTeams.sort((t1, t2) => (t1.name > t2.name ? 1 : -1))
+      this.game.teams = sortedTeams
       await this.game.save()
     }
 
