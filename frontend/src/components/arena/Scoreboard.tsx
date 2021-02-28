@@ -25,7 +25,6 @@ const Container = styled('div')<StyleProps>`
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-end;
     text-align: center;
   }
   .round {
