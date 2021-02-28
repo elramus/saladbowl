@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
 import { Game } from '../store/game/types'
 
 export const useTurnCountdown = ({
@@ -9,8 +8,6 @@ export const useTurnCountdown = ({
   game: Game | null
   onZero?: () => void
 }) => {
-  const dispatch = useDispatch()
-
   const [remainingTime, setRemainingTime] = useState(
     game?.turns[0].turnLength ?? 60,
   )
@@ -42,7 +39,7 @@ export const useTurnCountdown = ({
     } else {
       handleEnd()
     }
-  }, [remainingTime, game, dispatch, onZero, onZeroHasFired])
+  }, [remainingTime, game, onZero, onZeroHasFired])
 
   return remainingTime
 }

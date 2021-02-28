@@ -10,6 +10,7 @@ import Clock from './Clock'
 import { useTurnCountdown } from '../../hooks/useTurnCountdown'
 import PrompterMenu from './PrompterMenu'
 import TimesUp from './TimesUp'
+import useScrollToTop from '../../hooks/useScrollToTop'
 
 const Container = styled('div')`
   display: grid;
@@ -49,6 +50,7 @@ const Container = styled('div')`
 `
 
 const Prompter = () => {
+  useScrollToTop()
   const dispatch = useDispatch()
   const game = useSelector((state: AppState) => state.game)
 

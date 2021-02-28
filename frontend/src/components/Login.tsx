@@ -52,6 +52,7 @@ const Login: React.FC = ({ children }) => {
             value={name}
             onChange={handleNameChange}
             onReturn={handleNameSubmit}
+            maxLength={20}
           />
           <div className="go-container">
             <TextButton

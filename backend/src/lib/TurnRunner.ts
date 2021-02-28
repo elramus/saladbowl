@@ -61,6 +61,7 @@ export class TurnRunner {
       await this.prepGame()
 
       this.emit()
+      console.info(NextActions.FIRED_PREPGAME)
       return NextActions.FIRED_PREPGAME
     }
 
@@ -93,6 +94,7 @@ export class TurnRunner {
       }
 
       this.emit()
+      console.info(NextActions.FINISH_PREROLL_ADD_TURN)
       return NextActions.FINISH_PREROLL_ADD_TURN
     }
 
@@ -106,6 +108,7 @@ export class TurnRunner {
       await this.game.save()
 
       this.emit()
+      console.info(NextActions.GAME_OVER)
       return NextActions.GAME_OVER
     }
 
@@ -142,6 +145,7 @@ export class TurnRunner {
         // then trigger nextAction.
       }, 3000)
 
+      console.info(NextActions.STARTING_COUNTDOWN)
       return NextActions.STARTING_COUNTDOWN
     }
 
@@ -175,6 +179,7 @@ export class TurnRunner {
         })
 
         this.emit()
+        console.info(NextActions.SAME_ROUND_NEXT_PLAYER_SAME_TEAM)
         return NextActions.SAME_ROUND_NEXT_PLAYER_SAME_TEAM
       } catch (e) {
         throw new Error(e)
@@ -207,6 +212,7 @@ export class TurnRunner {
         })
 
         this.emit()
+        console.info(NextActions.SAME_ROUND_NEXT_PLAYER)
         return NextActions.SAME_ROUND_NEXT_PLAYER
       } catch (e) {
         throw new Error(e)
@@ -237,6 +243,7 @@ export class TurnRunner {
           })
 
           this.emit()
+          console.info(NextActions.NEXT_ROUND_SAME_PLAYER)
           return NextActions.NEXT_ROUND_SAME_PLAYER
         }
 
@@ -259,10 +266,12 @@ export class TurnRunner {
         console.error(
           'next round next player? i do not really think this should happen...',
         )
+        console.info(NextActions.NEXT_ROUND_NEXT_PLAYER)
         return NextActions.NEXT_ROUND_NEXT_PLAYER
       }
     }
 
+    console.info(NextActions.NO_ACTION)
     return NextActions.NO_ACTION
   }
 
