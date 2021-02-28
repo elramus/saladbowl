@@ -4,8 +4,7 @@ module.exports = {
     es6: true,
   },
   extends: [
-    'airbnb',
-    'airbnb/hooks',
+    'eslint:recommended',
     'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
     'prettier',
@@ -14,15 +13,15 @@ module.exports = {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
   },
+  ignorePatterns: ['.eslintrc.js'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
     },
     ecmaVersion: 2018,
-    sourceType: 'module',
   },
-  plugins: ['react', '@typescript-eslint'],
+  plugins: ['react', 'react-hooks', '@typescript-eslint'],
   rules: {
     '@typescript-eslint/ban-types': 0,
     '@typescript-eslint/explicit-function-return-type': 0,
@@ -47,9 +46,14 @@ module.exports = {
     'react/prefer-stateless-function': 0,
     'react/prop-types': 0,
     'react/require-default-props': 0,
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
     semi: [1, 'never'],
   },
   settings: {
+    react: {
+      version: 'detect',
+    },
     'import/resolver': {
       node: {
         extensions: ['.js', '.jsx', '.ts', '.tsx'],
