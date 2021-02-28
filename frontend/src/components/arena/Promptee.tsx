@@ -6,6 +6,7 @@ import { AppState } from '../../store'
 import Clock from './Clock'
 import { useTurnCountdown } from '../../hooks/useTurnCountdown'
 import TimesUp from './TimesUp'
+import useScrollToTop from '../../hooks/useScrollToTop'
 
 const Container = styled('div')`
   text-align: center;
@@ -41,6 +42,7 @@ interface Props {
 }
 
 const Promptee = ({ isYourTeam }: Props) => {
+  useScrollToTop()
   const game = useSelector((state: AppState) => state.game)
   const prompter = game?.players.find(p => p.user._id === game?.turns[0].userId)
     ?.user
