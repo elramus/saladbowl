@@ -14,8 +14,12 @@ const api = {
     return axios.post('/login', { name })
   },
 
-  fetchGame: (shortId: string): AxiosPromise<{ game: Game | null }> => {
-    return axios.get(`/games/${shortId}`)
+  fetchGame: (gameId: string): AxiosPromise<{ game: Game | null }> => {
+    return axios.get(`/games/${gameId}`)
+  },
+
+  fetchAndJoinGame: (shortId: string): AxiosPromise<{ game: Game | null }> => {
+    return axios.get(`/games/${shortId}/fetch-and-join`)
   },
 
   createGame: (

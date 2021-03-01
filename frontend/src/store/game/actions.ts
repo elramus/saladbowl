@@ -17,6 +17,28 @@ export const receiveGame = (game: Game): GameActionTypes => ({
 })
 
 export const fetchGame = (
+  gameId: string,
+  cb?: (game: Game | null) => void,
+): ThunkAction<void, AppState, {}, AnyAction> => (
+  dispatch: ThunkDispatch<{}, {}, AnyAction>,
+) => {
+  dispatch(setLoadingStatus('games', true))
+  api
+    .fetchGame(gameId)
+    .then(({ data }) => {
+      if (data.game) {
+        dispatch(receiveGame(data.game))
+        dispatch(setLoadingStatus('games', false))
+      }
+      if (cb) cb(data.game || null)
+    })
+    .catch(() => {
+      dispatch(setLoadingStatus('games', false))
+      if (cb) cb(null)
+    })
+}
+
+export const fetchAndJoinGame = (
   shortId: string,
   cb?: (game: Game | null) => void,
 ): ThunkAction<void, AppState, {}, AnyAction> => (
@@ -24,7 +46,7 @@ export const fetchGame = (
 ) => {
   dispatch(setLoadingStatus('games', true))
   api
-    .fetchGame(shortId)
+    .fetchAndJoinGame(shortId)
     .then(({ data }) => {
       if (data.game) {
         dispatch(receiveGame(data.game))
