@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import ReactGA from 'react-ga'
-// import { hot } from 'react-hot-loader'
 import MainContentRouter from './MainContentRouter'
 import Login from './Login'
 import useGaPageview from '../hooks/useGaPageview'
@@ -42,5 +41,4 @@ const App: React.FC = () => {
   )
 }
 
-// export default hot(module)(App)
 export default App
