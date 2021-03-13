@@ -13,10 +13,11 @@ const Container = styled('button')`
   max-width: 30rem;
   border-radius: 15px;
   text-align: center;
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(0, 0, 0, 0.015);
   ${animateEntrance('fadeSlideUp')}
   span {
     font-weight: bold;
+    opacity: 0.75;
   }
 `
 

@@ -22,8 +22,8 @@ interface Props {
 }
 
 const BetweenTurns = ({ isYourTurn }: Props) => {
-  const game = useGame()
   const user = useAuth()
+  const game = useGame()
   const turn = useCurrentTurn()
   const [showSkipPrompt, setShowSkipPrompt] = useState(false)
   const [showVotingModal, setShowVotingModal] = useState(false)
@@ -75,7 +75,7 @@ const BetweenTurns = ({ isYourTurn }: Props) => {
       <Scoreboard />
       <UpNext />
       {isYourTurn && <BeginPromptingButton />}
-      {showSkipPrompt && <SkipPrompt onOpen={onOpen} />}
+      {showSkipPrompt && !isYourTurn && <SkipPrompt onOpen={onOpen} />}
       {showVotingModal && (
         <SkipTurnModal onClose={onClose} onVote={onVote} hasVoted={hasVoted} />
       )}
