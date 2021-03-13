@@ -105,17 +105,16 @@ const TimesUp = ({ isPrompter = false }: Props) => {
         {isPrompter && (
           <div className="controls">
             <TextButton
-              text="Next Turn"
-              trailingIcon={['fas', 'long-arrow-right']}
-              onClick={handleNextTurn}
-              variant="simple-reverse"
-            />
-            <span>or</span>
-            <TextButton
               text="Review My Results"
               trailingIcon={['fas', 'undo']}
               onClick={() => setShowTurnReview(true)}
               variant="simple-reverse"
+            />
+            <span>or</span>
+            <TextButton
+              text="Finish"
+              onClick={handleNextTurn}
+              variant="cta-reverse"
             />
           </div>
         )}

@@ -25,6 +25,7 @@ const Container = styled('button')<{ styles: StyleProps }>`
   border: ${props => props.styles.border};
   border-radius: 5px;
   width: ${props => props.styles.width};
+  max-width: 20rem;
   color: ${props => props.styles.color};
   text-transform: uppercase;
   font-weight: ${props => props.styles.weight};
@@ -64,7 +65,7 @@ interface Props {
   text: string | React.ReactNode
   onClick: () => void
   type?: 'button' | 'submit'
-  variant?: 'cta' | 'big' | 'simple' | 'simple-reverse'
+  variant?: 'cta' | 'cta-reverse' | 'big' | 'simple' | 'simple-reverse'
   color?: string
   bg?: string
   hoverBg?: string
@@ -112,6 +113,14 @@ const TextButton: React.FC<Props> = ({
     styles.color = theme.black
     styles.bg = theme.green
     styles.hoverBg = theme.green
+  }
+  if (variant === 'cta-reverse') {
+    styles.color = 'fff'
+    styles.fontSize = theme.ms(0)
+    styles.bg = theme.darkGreen
+    styles.hoverBg = theme.lightGreen
+    styles.padding = '1.5em 4em'
+    styles.width = '100%'
   }
   if (variant === 'big') {
     styles.fontSize = theme.ms(0)
