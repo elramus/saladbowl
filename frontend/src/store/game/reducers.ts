@@ -8,7 +8,11 @@ const game = (
 ): GameState => {
   switch (action.type) {
     case RECEIVE_GAME:
-      return action.game
+      // Update if it's a newer version.
+      if (!state || state.__v < action.game.__v) {
+        return action.game
+      }
+      return state
     default:
       return state
   }

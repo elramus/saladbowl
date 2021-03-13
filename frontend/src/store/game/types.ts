@@ -51,6 +51,7 @@ export interface Game {
   turns: Turn[]
   gameOver: boolean
   unsolvedPhraseIds: string[]
+  __v: number
 }
 
 export interface ManagerConfig {
