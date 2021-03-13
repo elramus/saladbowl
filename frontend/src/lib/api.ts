@@ -14,12 +14,14 @@ const api = {
     return axios.post('/login', { name })
   },
 
-  fetchGame: (gameId: string): AxiosPromise<{ game: Game | null }> => {
-    return axios.get(`/games/${gameId}`)
+  fetchGame: (gameIdOrShortId: string): AxiosPromise<{ game: Game | null }> => {
+    return axios.get(`/games/${gameIdOrShortId}`)
   },
 
-  fetchAndJoinGame: (shortId: string): AxiosPromise<{ game: Game | null }> => {
-    return axios.get(`/games/${shortId}/fetch-and-join`)
+  fetchAndJoinGame: (
+    gameIdOrShortId: string,
+  ): AxiosPromise<{ game: Game | null }> => {
+    return axios.get(`/games/${gameIdOrShortId}/fetch-and-join`)
   },
 
   createGame: (
