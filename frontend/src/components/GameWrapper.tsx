@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useParams, Route, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchGame } from '../store/game/actions'
+import { fetchAndJoinGame } from '../store/game/actions'
 import { AppState } from '../store'
 import Lobby from './lobby'
 import GameSocket from './GameSocket'
@@ -26,7 +26,7 @@ const GameWrapper: React.FC = () => {
   useEffect(() => {
     // We should have the game already from the select game process, where
     // you either join or create. But we'll try again here just in case.
-    dispatch(fetchGame(gameId))
+    dispatch(fetchAndJoinGame(gameId))
   }, [dispatch, gameId])
 
   useEffect(() => {

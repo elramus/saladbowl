@@ -44,6 +44,20 @@ const gameController = {
 
   async fetchGame(req: Request, res: Response) {
     const { gameId } = req.params
+    if (!gameId) return res.status(400).send('Required param not found')
+
+    try {
+      const game = await findGame(gameId)
+      if (!game) return res.send({ game: null })
+
+      return res.send({ game })
+    } catch (e) {
+      return res.status(500).send(e)
+    }
+  },
+
+  async fetchAndJoinGame(req: Request, res: Response) {
+    const { gameId } = req.params
     const { userId } = req
     if (!gameId) return res.status(400).send('Required param not found')
 

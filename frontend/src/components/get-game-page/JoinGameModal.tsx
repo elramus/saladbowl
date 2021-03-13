@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import Modal from '../Modal'
-import { fetchGame } from '../../store/game/actions'
+import { fetchAndJoinGame } from '../../store/game/actions'
 import { Game } from '../../store/game/types'
 import animateEntrance from '../../lib/animateEntrance'
 
@@ -69,7 +69,7 @@ const JoinGameModal = ({ onClose }: Props) => {
   function attemptFind(inputCode: string) {
     setIsLoading(true)
     dispatch(
-      fetchGame(inputCode, (game: Game | null) => {
+      fetchAndJoinGame(inputCode, (game: Game | null) => {
         setIsLoading(false)
         if (game) {
           // Successfully found game.

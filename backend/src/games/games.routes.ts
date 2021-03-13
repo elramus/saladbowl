@@ -5,6 +5,7 @@ const routes = express.Router()
 
 routes.post('/games', gameController.createGame)
 routes.get('/games/:gameId', gameController.fetchGame)
+routes.get('/games/:gameId/fetch-and-join', gameController.fetchAndJoinGame)
 routes.put(
   '/games/:gameId/player-ready-status',
   gameController.playerReadyStatus,
