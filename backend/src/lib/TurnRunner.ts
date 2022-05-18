@@ -1,13 +1,16 @@
 import { IGame } from '../games/games.model'
 import { io } from '../server'
 import { SocketMessages } from '../socket'
-import { shuffleArray } from '../utils/shuffleArray'
-import { IUser, User } from '../users/users.model'
-import { decideNextPrompter } from './decideNextPrompter'
 import { ITurn } from '../turns/turns.model'
+import {
+  IUser,
+  User,
+} from '../users/users.model'
+import { shuffleArray } from '../utils/shuffleArray'
 import { chooseFirstPlayer } from './chooseFirstPlayer'
-import { makeTeams } from './makeTeams'
 import { NextActions } from './constants'
+import { decideNextPrompter } from './decideNextPrompter'
+import { makeTeams } from './makeTeams'
 
 interface TurnRunnerConfig {
   playerStatus?: boolean
@@ -87,11 +90,7 @@ export class TurnRunner {
       const nextUserId = firstTeam.userIds[firstTeam.lastPrompterIndex]
       if (!nextUserId) throw new Error('could not get next prompter')
 
-      try {
-        await this.addNewTurn({ roundNum: 1, nextUserId })
-      } catch (e) {
-        throw new Error(e)
-      }
+      await this.addNewTurn({ roundNum: 1, nextUserId })
 
       this.emit()
       console.info(NextActions.FINISH_PREROLL_ADD_TURN)
@@ -156,34 +155,30 @@ export class TurnRunner {
       // Basically the same as a normal turn ending, except we need to pick someone from the same team.
 
       // Stay in this round, but make a new turn for the next person.
-      try {
-        const userBeingSkipped = await User.findById(this.game.turns[0].userId)
-        if (!userBeingSkipped)
-          throw new Error('trying to skip user that does not exist')
+      const userBeingSkipped = await User.findById(this.game.turns[0].userId)
+      if (!userBeingSkipped)
+        throw new Error('trying to skip user that does not exist')
 
-        const [nextPlayerIndex, nextPlayerId, teamUpNext] = decideNextPrompter(
-          this.game,
-          userBeingSkipped,
-          true,
-        )
+      const [nextPlayerIndex, nextPlayerId, teamUpNext] = decideNextPrompter(
+        this.game,
+        userBeingSkipped,
+        true,
+      )
 
-        // Update the last prompter on the team.
-        this.game.teams.pull(teamUpNext._id)
-        teamUpNext.lastPrompterIndex = nextPlayerIndex
-        this.game.teams.push(teamUpNext)
+      // Update the last prompter on the team.
+      this.game.teams.pull(teamUpNext._id)
+      teamUpNext.lastPrompterIndex = nextPlayerIndex
+      this.game.teams.push(teamUpNext)
 
-        // Prep for the next turn. Same round since there are more phrases.
-        await this.addNewTurn({
-          roundNum: currentRound,
-          nextUserId: nextPlayerId,
-        })
+      // Prep for the next turn. Same round since there are more phrases.
+      await this.addNewTurn({
+        roundNum: currentRound,
+        nextUserId: nextPlayerId,
+      })
 
-        this.emit()
-        console.info(NextActions.SAME_ROUND_NEXT_PLAYER_SAME_TEAM)
-        return NextActions.SAME_ROUND_NEXT_PLAYER_SAME_TEAM
-      } catch (e) {
-        throw new Error(e)
-      }
+      this.emit()
+      console.info(NextActions.SAME_ROUND_NEXT_PLAYER_SAME_TEAM)
+      return NextActions.SAME_ROUND_NEXT_PLAYER_SAME_TEAM
     }
 
     // If the prompting player just ran out of time...
@@ -194,29 +189,25 @@ export class TurnRunner {
       this.game.unsolvedPhraseIds.length > 0
     ) {
       // Stay in this round, but make a new turn for the next person.
-      try {
-        const [nextPlayerIndex, nextPlayerId, teamUpNext] = decideNextPrompter(
-          this.game,
-          this.user,
-        )
+      const [nextPlayerIndex, nextPlayerId, teamUpNext] = decideNextPrompter(
+        this.game,
+        this.user,
+      )
 
-        // Update the last prompter on the team.
-        this.game.teams.pull(teamUpNext._id)
-        teamUpNext.lastPrompterIndex = nextPlayerIndex
-        this.game.teams.push(teamUpNext)
+      // Update the last prompter on the team.
+      this.game.teams.pull(teamUpNext._id)
+      teamUpNext.lastPrompterIndex = nextPlayerIndex
+      this.game.teams.push(teamUpNext)
 
-        // Prep for the next turn. Same round since there are more phrases.
-        await this.addNewTurn({
-          roundNum: currentRound,
-          nextUserId: nextPlayerId,
-        })
+      // Prep for the next turn. Same round since there are more phrases.
+      await this.addNewTurn({
+        roundNum: currentRound,
+        nextUserId: nextPlayerId,
+      })
 
-        this.emit()
-        console.info(NextActions.SAME_ROUND_NEXT_PLAYER)
-        return NextActions.SAME_ROUND_NEXT_PLAYER
-      } catch (e) {
-        throw new Error(e)
-      }
+      this.emit()
+      console.info(NextActions.SAME_ROUND_NEXT_PLAYER)
+      return NextActions.SAME_ROUND_NEXT_PLAYER
     }
 
     // If we're out of phrases...
@@ -346,11 +337,7 @@ export class TurnRunner {
     const shuffled = shuffleArray(this.game.unsolvedPhraseIds)
     this.game.unsolvedPhraseIds = shuffled
 
-    try {
-      await this.game.save()
-    } catch (e) {
-      throw new Error(e.message)
-    }
+    await this.game.save()
 
     // The frontend is now waiting on the prompter to push Ready,
     // triggering another reflow of next().

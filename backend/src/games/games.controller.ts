@@ -1,24 +1,32 @@
-import { Request, Response } from 'express'
-import { Game, IGame } from './games.model'
-import { io } from '../server'
-import { SocketMessages } from '../socket'
+import {
+  Request,
+  Response,
+} from 'express'
+
+import { applyTurnResults } from '../lib/applyTurnResults'
+import { changeReadyStatus } from '../lib/changeReadyStatus'
 import { NextActions } from '../lib/constants'
-import joinTeam from '../lib/joinTeam'
+import { createGame } from '../lib/createGame'
 import { createGamePhrase } from '../lib/createGamePhrase'
 import deletePhrase from '../lib/deletePhrase'
-import { joinPlayerToGame } from '../lib/joinPlayerToGame'
-import { TurnRunner } from '../lib/TurnRunner'
-import { User } from '../users/users.model'
-import { solvePhrase } from '../lib/solvePhrase'
-import { undoSolvePhrase } from '../lib/undoSolvePhrase'
-import { createGame } from '../lib/createGame'
-import { findGame } from '../lib/findGame'
-import { changeReadyStatus } from '../lib/changeReadyStatus'
-import { gameReadyChecklist } from '../lib/gameReadyChecklist'
 import { failPhrase } from '../lib/failPhrase'
-import { applyTurnResults } from '../lib/applyTurnResults'
+import { findGame } from '../lib/findGame'
+import { gameReadyChecklist } from '../lib/gameReadyChecklist'
+import { joinPlayerToGame } from '../lib/joinPlayerToGame'
+import joinTeam from '../lib/joinTeam'
+import { solvePhrase } from '../lib/solvePhrase'
+import { TurnRunner } from '../lib/TurnRunner'
+import { undoSolvePhrase } from '../lib/undoSolvePhrase'
 import { voteToSkip } from '../lib/voteToSkip'
+import { io } from '../server'
+import { SocketMessages } from '../socket'
+import { User } from '../users/users.model'
+import { getErrorMessage } from '../utils/get-error-message'
 import { randomNum } from '../utils/randomNum'
+import {
+  Game,
+  IGame,
+} from './games.model'
 
 const gameController = {
   async createGame(req: Request, res: Response) {
@@ -160,7 +168,7 @@ const gameController = {
       io.to(updatedGame._id).emit(SocketMessages.GameUpdate, updatedGame)
       return res.send({ game: updatedGame })
     } catch (e) {
-      return res.status(500).send(e.message)
+      return res.status(500).send(getErrorMessage(e))
     }
   },
 
@@ -183,7 +191,7 @@ const gameController = {
       const action = await tR.nextAction()
       return res.send(action)
     } catch (e) {
-      return res.status(500).send(e.message)
+      return res.status(500).send(getErrorMessage(e))
     }
   },
 
@@ -299,7 +307,7 @@ const gameController = {
       io.to(game._id).emit(SocketMessages.GameUpdate, updatedGame)
       return res.send({ game: updatedGame })
     } catch (e) {
-      return res.status(500).send(e.message)
+      return res.status(500).send(getErrorMessage(e))
     }
   },
 
@@ -318,7 +326,7 @@ const gameController = {
       io.to(game._id).emit(SocketMessages.GameUpdate, updatedGame)
       return res.send({ game: updatedGame })
     } catch (e) {
-      return res.status(500).send(e.message)
+      return res.status(500).send(getErrorMessage(e))
     }
   },
 
@@ -338,7 +346,7 @@ const gameController = {
       io.to(game._id).emit(SocketMessages.GameUpdate, updatedGame)
       return res.send({ game: updatedGame })
     } catch (e) {
-      return res.status(500).send(e.message)
+      return res.status(500).send(getErrorMessage(e))
     }
   },
 
@@ -369,7 +377,7 @@ const gameController = {
       const action = await tR.nextAction()
       return res.send(action)
     } catch (e) {
-      return res.status(500).send(e.message)
+      return res.status(500).send(getErrorMessage(e))
     }
   },
 
@@ -410,7 +418,7 @@ const gameController = {
         }
       }
     } catch (e) {
-      return res.status(500).send(e.message)
+      return res.status(500).send(getErrorMessage(e))
     }
   },
 
@@ -438,7 +446,7 @@ const gameController = {
       const action = await tR.nextAction()
       return res.send(action)
     } catch (e) {
-      return res.status(500).send(e.message)
+      return res.status(500).send(getErrorMessage(e))
     }
   },
 }

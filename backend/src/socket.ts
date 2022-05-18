@@ -1,6 +1,10 @@
-import socketIo from 'socket.io'
 import { Server } from 'http'
-import { User, IUser } from './users/users.model'
+import socketIo from 'socket.io'
+
+import {
+  IUser,
+  User,
+} from './users/users.model'
 
 export enum SocketMessages {
   PlayersUpdate = 'players-update',
@@ -27,31 +31,27 @@ function initSocket(server: Server) {
       socket.join(gameId)
 
       // Now update the game w/ their socket id and broadcast the update.
-      try {
-        const user = await User.findById(userId)
-        if (!user) throw new Error('User not found')
+      const user = await User.findById(userId)
+      if (!user) throw new Error('User not found')
 
-        // If this is the first person in the game, instantiate the game as a property.
-        if (!playersIndex[gameId]) playersIndex[gameId] = []
+      // If this is the first person in the game, instantiate the game as a property.
+      if (!playersIndex[gameId]) playersIndex[gameId] = []
 
-        // The player might already be on there, so clear them out first so we don't duplicate.
-        const updatedPlayers = playersIndex[gameId].filter(
-          p => p.user._id.toString() !== userId,
-        )
+      // The player might already be on there, so clear them out first so we don't duplicate.
+      const updatedPlayers = playersIndex[gameId].filter(
+        p => p.user._id.toString() !== userId,
+      )
 
-        // Update the index.
-        updatedPlayers.push({
-          user,
-          socketId: socket.id,
-        })
-        playersIndex[gameId] = updatedPlayers
+      // Update the index.
+      updatedPlayers.push({
+        user,
+        socketId: socket.id,
+      })
+      playersIndex[gameId] = updatedPlayers
 
-        // Now broadcast an update of the players in the game.
-        console.log('Player has joined: ', user.name) /*eslint-disable-line*/
-        // io.to(gameId).emit(SocketMessages.PlayersUpdate, playersIndex[gameId])
-      } catch (e) {
-        throw new Error(e)
-      }
+      // Now broadcast an update of the players in the game.
+      console.log('Player has joined: ', user.name) /*eslint-disable-line*/
+      // io.to(gameId).emit(SocketMessages.PlayersUpdate, playersIndex[gameId])
     }
 
     socket.on('disconnect', async () => {
@@ -62,15 +62,11 @@ function initSocket(server: Server) {
       )
       playersIndex[gameId] = updatedPlayers
 
-      try {
-        const user = await User.findById(userId)
-        if (!user) throw new Error('User not found')
+      const user = await User.findById(userId)
+      if (!user) throw new Error('User not found')
 
-        // Now broadcast an update of the players in the game.
-        console.log('Player has left: ', user.name) /*eslint-disable-line*/
-      } catch (e) {
-        throw new Error(e.message)
-      }
+      // Now broadcast an update of the players in the game.
+      console.log('Player has left: ', user.name) /*eslint-disable-line*/
 
       // io.to(gameId).emit(SocketMessages.PlayersUpdate, playersIndex[gameId])
     })
