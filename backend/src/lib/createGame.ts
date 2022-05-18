@@ -1,6 +1,9 @@
-import { randomNum } from '../utils/randomNum'
 import { Game } from '../games/games.model'
-import { Team, ITeam } from '../teams/teams.model'
+import {
+  ITeam,
+  Team,
+} from '../teams/teams.model'
+import { randomNum } from '../utils/randomNum'
 
 export const createGame = async (userId: string, teamNames?: string[]) => {
   let shortId: number | null = null
@@ -45,11 +48,7 @@ export const createGame = async (userId: string, teamNames?: string[]) => {
     teams,
   })
 
-  try {
-    await newGame.save()
-  } catch (e) {
-    throw new Error(e.message)
-  }
+  await newGame.save()
 
   return newGame
 }

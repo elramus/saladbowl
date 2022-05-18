@@ -4,11 +4,11 @@ import mongoose from 'mongoose'
 const dbConnect = () => {
   const url = process.env.DB_URL || ''
   mongoose.connect(url, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
+    // useNewUrlParser: true,
+    // useUnifiedTopology: true,
+    // useCreateIndex: true,
     dbName: 'saladbowl',
-    useFindAndModify: false,
+    // useFindAndModify: false,
   })
   mongoose.connection.on('open', () => {
     console.log('Connected to Mongo') /* eslint-disable-line */

@@ -1,6 +1,7 @@
 import { IGame } from '../games/games.model'
-import { shuffleArray } from '../utils/shuffleArray'
 import { IPlayer } from '../players/players.model'
+import { shuffleArray } from '../utils/shuffleArray'
+
 // import { animals, adjectives } from '../content/teamNames'
 // import { upperCaseFirstLetter } from '../utils/upperCaseFirstLetter'
 // import { Team } from "../teams/teams.model"
@@ -28,11 +29,7 @@ export const makeTeams = async ({
     // newTeam.save()
     // game.teams.push(newTeam)
   }
-  try {
-    await game.save()
-  } catch (e) {
-    throw new Error(e.message)
-  }
+  await game.save()
 
   // Now go through the players and add each one to a team.
   const shuffledPlayers = shuffleArray<IPlayer>(game.players)

@@ -11,14 +11,10 @@ export const joinPlayerToGame = async (
 
   // Make sure they're not already attached.
   if (!game.players.some(p => p.user._id.toString() === userId)) {
-    try {
-      game.players.push({ user })
-      await game.save()
+    game.players.push({ user })
+    await game.save()
 
-      return game
-    } catch (e) {
-      throw new Error(e)
-    }
+    return game
   }
 
   return game

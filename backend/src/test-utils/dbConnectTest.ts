@@ -3,10 +3,10 @@ import mongoose from 'mongoose'
 /* Connect to the DB */
 const dbConnectTest = async () => {
   await mongoose.connect('mongodb://localhost', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
+    // useNewUrlParser: true,
+    // useUnifiedTopology: true,
+    // useCreateIndex: true,
+    // useFindAndModify: false,
   })
 }
 
