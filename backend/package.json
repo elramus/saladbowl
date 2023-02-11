@@ -63,7 +63,7 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "faker": "^4.1.0",
     "jest": "^26.1.0",
-    "nodemon": "^2.0.2",
+    "nodemon": "^2.0.20",
     "onchange": "^7.0.2",
     "serve": "^11.3.2",
     "source-map-support": "^0.5.19",
